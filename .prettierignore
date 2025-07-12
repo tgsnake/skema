@@ -1,0 +1,9 @@
+# build 
+lib/**
+# yarn cache 
+.yarn/**
+# node module 
+node_modules/**
+# changelog 
+CHANGELOG.md
+./browser/**

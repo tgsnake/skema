@@ -1,0 +1,48 @@
+{
+  "name": "skema",
+  "version": "1.0.0",
+  "description": "A compiled Telegram TL Schema and Telegram errors Schema into usable JavaScript classes with full TypeScript support",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "packageManager": "yarn@4.9.2",
+  "homepage": "https://tgsnake.js.org",
+  "keywords": [
+    "tgsnake",
+    "mtproto",
+    "telegram"
+  ],
+  "bugs": "https://github.com/tgsnake/skema/issues",
+  "repository": "https://github.com/tgsnake/skema",
+  "author": "butthx",
+  "files": [
+    "dist/**/**"
+  ],
+  "license": "MIT",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=12.0.0",
+    "npm": ">=6.0.0",
+    "yarn": ">=1.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:api": "node ./generator/api",
+    "build:sync": "node ./generator/sync-tl",
+    "build:error": "node ./generator/error",
+    "build:docs": "typedoc --tsconfig tsconfig.json --out docs src/index.ts",
+    "prepare": "yarn build",
+    "prettier": "NODE_OPTIONS=--max_old_space_size=4096 prettier -w ."
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.18",
+    "@types/node": "^24.0.13",
+    "prettier": "^3.6.2",
+    "typedoc": "^0.28.7",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@tgsnake/bytesio": "^1.0.0",
+    "@tgsnake/log": "^1.6.4",
+    "big-integer": "^1.6.52"
+  }
+}

@@ -1,0 +1,47 @@
+/**
+ * tgsnake - Telegram MTProto library for javascript or typescript.
+ * Copyright (C) {{ Copyright-Date }} tgsnake <https://github.com/tgsnake>
+ * 
+ * THIS FILE IS PART OF TGSNAKE
+ * 
+ * tgsnake is a free software: you can redistribute it and/or modify
+ * it under the terms of the MIT License as published.
+*/
+
+/***********************************************************
+*                         Warning!!                        *
+*               This file is auto generate.                *
+*         All change made in this file will be lost!       *
+***********************************************************/
+import { TLObject, Primitive } from "@/raw/core/index.js";
+import { Buffer, BytesIO } from '@/deps.js';
+import { UpdateSecretChatMessage } from "@/raw/UpdateSecretChat.js";
+
+/**
+  * This is a telegram schema, so you can see the documentation in https://core.telegram.org/schema.
+  * All schema wrapped in Raw namespace.
+*/
+export namespace Raw {
+  export type X = TLObject;
+  export type Type = TLObject;
+  export type Bool = boolean;
+  export type int = number; 
+  export type double = number;
+  export type float = number;
+  export type int128 = bigint;
+  export type int256 = bigint;
+  export type long = bigint;
+  export type bytes = Buffer;
+  export type Vector<T> = Array<T>;
+  /**
+    * The Telegram layer we using.
+  */
+  export const Layer:number = {{ TL-Layer }};
+  /**
+    * The highest telegram secret chat schema layer.
+  */
+  export const HighestSCLayer:number = {{ HSC-Layer }};
+  // Start telegram schema
+{{ Classes }}
+  // End telegram schema
+}
