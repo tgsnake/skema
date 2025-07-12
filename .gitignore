@@ -122,3 +122,5 @@ test/**
 browser/**
 
 deno.lock
+
+./docs/**
