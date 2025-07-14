@@ -21,23 +21,37 @@ jobs:
           yarn install --frozen-lockfile
       - name: Update version
         run: |
-          npm version patch --no-git-tag-version
+          npm version minor --no-git-tag-version
       - name: Build package
         run: |
           yarn build
           yarn prettier
           npm pack
       - name: Publish to NPM
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public
+  
       - name: Push changes
         run: |
           git config user.email github-actions[bot]@users.noreply.github.com
           git config user.name github-actions[bot]
           git add package.json
           git commit -m "chore: Bump version to $(node -p "require('./package.json').version")" || echo "No changes to commit"
-          git push origin master || echo "No changes to push"
+          git push origin master || echo "No changes to push
+
+      - name: Get version from package.json
+        id: get_version
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+    
+      - name: Notify success
+        run: echo "Package published successfully to NPM with version $(node -p "require('./package.json').version")"
+        if: success()
+    
+      - name: Notify failure
+        run: echo "Failed to publish package to NPM"
+        if: failure()
+
       - name: Create GitHub Release
         if: success()
         uses: softprops/action-gh-release@v1
@@ -48,15 +62,7 @@ jobs:
           files: ./*.tgz
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      - name: Get version from package.json
-        id: get_version
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-      - name: Notify success
-        run: echo "Package published successfully to NPM with version $(node -p "require('./package.json').version")"
-        if: success()
-      - name: Notify failure
-        run: echo "Failed to publish package to NPM"
-        if: failure()
+      
       - name: Cleanup
         run: |
           rm -f *.tgz
