@@ -1902,6 +1902,10 @@ export class StarrefAwaitingEnd extends BadRequest {
   override message: string =
     'The previous referral program was terminated less than 24 hours ago: further changes can be made after the date specified in userFull.starref_program.end_date.';
 }
+export class StarrefExpired extends BadRequest {
+  override id: string = 'STARREF_EXPIRED';
+  override message: string = 'The specified referral link is invalid.';
+}
 export class StarrefHashRevoked extends BadRequest {
   override id: string = 'STARREF_HASH_REVOKED';
   override message: string = 'The specified affiliate link was already revoked.';

@@ -14,7 +14,7 @@
  *         All change made in this file will be lost!       *
  ***********************************************************/
 
-const count = 743;
+const count = 744;
 const Exceptions = {
   303: {
     _: 'SeeOther.SeeOther',
@@ -476,6 +476,7 @@ const Exceptions = {
     STARGIFT_INVALID: 'BadRequest.StargiftInvalid',
     STARGIFT_USAGE_LIMITED: 'BadRequest.StargiftUsageLimited',
     STARREF_AWAITING_END: 'BadRequest.StarrefAwaitingEnd',
+    STARREF_EXPIRED: 'BadRequest.StarrefExpired',
     STARREF_HASH_REVOKED: 'BadRequest.StarrefHashRevoked',
     STARREF_PERMILLE_INVALID: 'BadRequest.StarrefPermilleInvalid',
     STARREF_PERMILLE_TOO_LOW: 'BadRequest.StarrefPermilleTooLow',

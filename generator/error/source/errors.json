@@ -701,6 +701,7 @@
       "channels.ViewSponsoredMessage",
       "chatlists.EditExportedInvite",
       "chatlists.ExportChatlistInvite",
+      "folders.EditPeerFolders",
       "messages.EditChatAbout",
       "messages.EditMessage",
       "messages.ExportChatInvite",
@@ -2521,7 +2522,7 @@
     "code": 400,
     "msg": "METHOD_INVALID",
     "desc": "The specified method is invalid.",
-    "affected": ["bots.SendCustomRequest", "messages.SearchGifs"]
+    "affected": ["bots.InvokeWebViewCustomMethod", "bots.SendCustomRequest", "messages.SearchGifs"]
   },
   {
     "code": 400,
@@ -2691,7 +2692,7 @@
     "code": 400,
     "msg": "OPTION_INVALID",
     "desc": "Invalid option selected.",
-    "affected": ["messages.SendVote"]
+    "affected": ["messages.Report", "messages.SendVote"]
   },
   {
     "code": 400,
@@ -3820,6 +3821,12 @@
     "msg": "STARREF_AWAITING_END",
     "desc": "The previous referral program was terminated less than 24 hours ago: further changes can be made after the date specified in userFull.starref_program.end_date.",
     "affected": ["bots.UpdateStarRefProgram"]
+  },
+  {
+    "code": 400,
+    "msg": "STARREF_EXPIRED",
+    "desc": "The specified referral link is invalid.",
+    "affected": ["contacts.ResolveUsername"]
   },
   {
     "code": 400,
