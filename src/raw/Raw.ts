@@ -65223,6 +65223,7 @@ export namespace Raw {
     stargiftUpgrade?: boolean;
     businessTransfer?: boolean;
     stargiftResale?: boolean;
+    postsSearch?: boolean;
     id!: string;
     amount!: Raw.TypeStarsAmount;
     date!: int;
@@ -65256,6 +65257,7 @@ export namespace Raw {
       stargiftUpgrade?: boolean;
       businessTransfer?: boolean;
       stargiftResale?: boolean;
+      postsSearch?: boolean;
       id: string;
       amount: Raw.TypeStarsAmount;
       date: int;
@@ -65294,6 +65296,7 @@ export namespace Raw {
         'stargiftUpgrade',
         'businessTransfer',
         'stargiftResale',
+        'postsSearch',
         'id',
         'amount',
         'date',
@@ -65326,6 +65329,7 @@ export namespace Raw {
       this.stargiftUpgrade = params.stargiftUpgrade;
       this.businessTransfer = params.businessTransfer;
       this.stargiftResale = params.stargiftResale;
+      this.postsSearch = params.postsSearch;
       this.id = params.id;
       this.amount = params.amount;
       this.date = params.date;
@@ -65368,6 +65372,7 @@ export namespace Raw {
       let stargiftUpgrade = flags & (1 << 18) ? true : false;
       let businessTransfer = flags & (1 << 21) ? true : false;
       let stargiftResale = flags & (1 << 22) ? true : false;
+      let postsSearch = flags & (1 << 24) ? true : false;
       let id = await Primitive.String.read(_data);
       let amount = await TLObject.read(_data);
       let date = await Primitive.Int.read(_data);
@@ -65401,6 +65406,7 @@ export namespace Raw {
         stargiftUpgrade: stargiftUpgrade,
         businessTransfer: businessTransfer,
         stargiftResale: stargiftResale,
+        postsSearch: postsSearch,
         id: id,
         amount: amount,
         date: date,
@@ -65443,6 +65449,7 @@ export namespace Raw {
       flags |= this.stargiftUpgrade ? 1 << 18 : 0;
       flags |= this.businessTransfer ? 1 << 21 : 0;
       flags |= this.stargiftResale ? 1 << 22 : 0;
+      flags |= this.postsSearch ? 1 << 24 : 0;
       flags |= this.title !== undefined ? 1 << 0 : 0;
       flags |= this.description !== undefined ? 1 << 1 : 0;
       flags |= this.photo !== undefined ? 1 << 2 : 0;
