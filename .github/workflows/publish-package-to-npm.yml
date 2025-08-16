@@ -46,7 +46,7 @@ jobs:
         id: get_version
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          echo $PACKAGE_VERSION >> $GITHUB_OUTPUT
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
 
       - name: Notify success
         run: |
@@ -62,8 +62,8 @@ jobs:
         if: success()
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ steps.get_version.outputs.version }}
-          name: Release v${{ steps.get_version.outputs.version }}
+          tag_name: v${{ steps.get_version.outputs.PACKAGE_VERSION }}
+          name: Release v${{ steps.get_version.outputs.PACKAGE_VERSION }}
           generate_release_notes: true
           files: ./*.tgz
         env:
