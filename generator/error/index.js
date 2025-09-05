@@ -20,6 +20,7 @@ const name = {
   420: 'FLOOD',
   500: 'INTERNAL_SERVER_ERROR',
   503: 'SERVICE_UNAVAILABLE',
+  504: 'UNHANDLED_EXCEPTION',
 };
 function Uppercase(text) {
   return text.replace(text[0], text[0].toUpperCase());
