@@ -36,7 +36,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 218;
+  export const Layer: number = 220;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -89,6 +89,8 @@ export namespace Raw {
     | Raw.auth.ResetLoginEmail
     | Raw.auth.ReportMissingCode
     | Raw.auth.CheckPaidAuth
+    | Raw.auth.InitPasskeyLogin
+    | Raw.auth.FinishPasskeyLogin
     | Raw.account.RegisterDevice
     | Raw.account.UnregisterDevice
     | Raw.account.UpdateNotifySettings
@@ -208,6 +210,10 @@ export namespace Raw {
     | Raw.account.SaveMusic
     | Raw.account.GetSavedMusicIds
     | Raw.account.GetUniqueGiftChatThemes
+    | Raw.account.InitPasskeyRegistration
+    | Raw.account.RegisterPasskey
+    | Raw.account.GetPasskeys
+    | Raw.account.DeletePasskey
     | Raw.users.GetUsers
     | Raw.users.GetFullUser
     | Raw.users.SetSecureValueErrors
@@ -670,6 +676,9 @@ export namespace Raw {
     | Raw.payments.GetStarGiftAuctionState
     | Raw.payments.GetStarGiftAuctionAcquiredGifts
     | Raw.payments.GetStarGiftActiveAuctions
+    | Raw.payments.ResolveStarGiftOffer
+    | Raw.payments.SendStarGiftOffer
+    | Raw.payments.GetStarGiftUpgradeAttributes
     | Raw.stickers.CreateStickerSet
     | Raw.stickers.RemoveStickerFromSet
     | Raw.stickers.ChangeStickerPosition
@@ -1033,6 +1042,7 @@ export namespace Raw {
     | Raw.InputNotifyChats
     | Raw.InputNotifyBroadcasts
     | Raw.InputNotifyForumTopic;
+  export type TypeInputPasskeyCredential = Raw.InputPasskeyCredentialPublicKey;
   export type TypeInputCheckPasswordSRP = Raw.InputCheckPasswordEmpty | Raw.InputCheckPasswordSRP;
   export type TypeEmailVerification =
     | Raw.EmailVerificationCode
@@ -1040,8 +1050,15 @@ export namespace Raw {
     | Raw.EmailVerificationApple;
   export type TypeCodeSettings = Raw.CodeSettings;
   export type TypeInputClientProxy = Raw.InputClientProxy;
+  export type TypeInputPasskeyResponse =
+    | Raw.InputPasskeyResponseRegister
+    | Raw.InputPasskeyResponseLogin;
+  export type TypePasskey = Raw.Passkey;
   export type TypeStarGiftActiveAuctionState = Raw.StarGiftActiveAuctionState;
   export type TypeStarGiftAuctionAcquiredGift = Raw.StarGiftAuctionAcquiredGift;
+  export type TypeStarGiftAuctionRound =
+    | Raw.StarGiftAuctionRound
+    | Raw.StarGiftAuctionRoundExtendable;
   export type TypeAuctionBidLevel = Raw.AuctionBidLevel;
   export type TypeGroupCallDonor = Raw.GroupCallDonor;
   export type TypeStoryAlbum = Raw.StoryAlbum;
@@ -1061,6 +1078,7 @@ export namespace Raw {
     | Raw.StarGiftAttributePattern
     | Raw.StarGiftAttributeBackdrop
     | Raw.StarGiftAttributeOriginalDetails;
+  export type TypeStarGiftBackground = Raw.StarGiftBackground;
   export type TypeStarsGiveawayWinnersOption = Raw.StarsGiveawayWinnersOption;
   export type TypeBotPreviewMedia = Raw.BotPreviewMedia;
   export type TypeFoundStory = Raw.FoundStory;
@@ -1893,7 +1911,9 @@ export namespace Raw {
     | Raw.MessageActionSuggestedPostSuccess
     | Raw.MessageActionSuggestedPostRefund
     | Raw.MessageActionGiftTon
-    | Raw.MessageActionSuggestBirthday;
+    | Raw.MessageActionSuggestBirthday
+    | Raw.MessageActionStarGiftPurchaseOffer
+    | Raw.MessageActionStarGiftPurchaseOfferDeclined;
   export type TypeSuggestedPost = Raw.SuggestedPost;
   export type TypeFactCheck = Raw.FactCheck;
   export type TypeMessageReactions = Raw.MessageReactions;
@@ -14371,6 +14391,7 @@ export namespace Raw {
     prepaidUpgradeHash?: string;
     giftMsgId?: int;
     toId?: Raw.TypePeer;
+    giftNum?: int;
 
     constructor(params: {
       nameHidden?: boolean;
@@ -14393,11 +14414,12 @@ export namespace Raw {
       prepaidUpgradeHash?: string;
       giftMsgId?: int;
       toId?: Raw.TypePeer;
+      giftNum?: int;
     }) {
       super();
       this.classType = 'types';
       this.className = 'MessageActionStarGift';
-      this.constructorId = 0xdb596550;
+      this.constructorId = 0xea2c31d3;
       this.subclassOfId = 0x8680d126;
       this._slots = [
         'nameHidden',
@@ -14420,6 +14442,7 @@ export namespace Raw {
         'prepaidUpgradeHash',
         'giftMsgId',
         'toId',
+        'giftNum',
       ];
       this.nameHidden = params.nameHidden;
       this.saved = params.saved;
@@ -14441,6 +14464,7 @@ export namespace Raw {
       this.prepaidUpgradeHash = params.prepaidUpgradeHash;
       this.giftMsgId = params.giftMsgId;
       this.toId = params.toId;
+      this.giftNum = params.giftNum;
     }
     /**
      * Generate the TLObject from buffer.
@@ -14472,6 +14496,7 @@ export namespace Raw {
       let prepaidUpgradeHash = flags & (1 << 14) ? await Primitive.String.read(_data) : undefined;
       let giftMsgId = flags & (1 << 15) ? await Primitive.Int.read(_data) : undefined;
       let toId = flags & (1 << 18) ? await TLObject.read(_data) : undefined;
+      let giftNum = flags & (1 << 19) ? await Primitive.Int.read(_data) : undefined;
       return new Raw.MessageActionStarGift({
         nameHidden: nameHidden,
         saved: saved,
@@ -14493,6 +14518,7 @@ export namespace Raw {
         prepaidUpgradeHash: prepaidUpgradeHash,
         giftMsgId: giftMsgId,
         toId: toId,
+        giftNum: giftNum,
       });
     }
     /**
@@ -14523,6 +14549,7 @@ export namespace Raw {
       flags |= this.prepaidUpgradeHash !== undefined ? 1 << 14 : 0;
       flags |= this.giftMsgId !== undefined ? 1 << 15 : 0;
       flags |= this.toId !== undefined ? 1 << 18 : 0;
+      flags |= this.giftNum !== undefined ? 1 << 19 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.gift !== undefined) {
@@ -14558,6 +14585,9 @@ export namespace Raw {
       if (this.toId !== undefined) {
         b.write(this.toId.write() as unknown as Buffer);
       }
+      if (this.giftNum !== undefined) {
+        b.write(Primitive.Int.write(this.giftNum) as unknown as Buffer);
+      }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
   }
@@ -14568,6 +14598,7 @@ export namespace Raw {
     refunded?: boolean;
     prepaidUpgrade?: boolean;
     assigned?: boolean;
+    fromOffer?: boolean;
     gift!: Raw.TypeStarGift;
     canExportAt?: int;
     transferStars?: long;
@@ -14586,6 +14617,7 @@ export namespace Raw {
       refunded?: boolean;
       prepaidUpgrade?: boolean;
       assigned?: boolean;
+      fromOffer?: boolean;
       gift: Raw.TypeStarGift;
       canExportAt?: int;
       transferStars?: long;
@@ -14609,6 +14641,7 @@ export namespace Raw {
         'refunded',
         'prepaidUpgrade',
         'assigned',
+        'fromOffer',
         'gift',
         'canExportAt',
         'transferStars',
@@ -14626,6 +14659,7 @@ export namespace Raw {
       this.refunded = params.refunded;
       this.prepaidUpgrade = params.prepaidUpgrade;
       this.assigned = params.assigned;
+      this.fromOffer = params.fromOffer;
       this.gift = params.gift;
       this.canExportAt = params.canExportAt;
       this.transferStars = params.transferStars;
@@ -14653,6 +14687,7 @@ export namespace Raw {
       let refunded = flags & (1 << 5) ? true : false;
       let prepaidUpgrade = flags & (1 << 11) ? true : false;
       let assigned = flags & (1 << 13) ? true : false;
+      let fromOffer = flags & (1 << 14) ? true : false;
       let gift = await TLObject.read(_data);
       let canExportAt = flags & (1 << 3) ? await Primitive.Int.read(_data) : undefined;
       let transferStars = flags & (1 << 4) ? await Primitive.Long.read(_data) : undefined;
@@ -14671,6 +14706,7 @@ export namespace Raw {
         refunded: refunded,
         prepaidUpgrade: prepaidUpgrade,
         assigned: assigned,
+        fromOffer: fromOffer,
         gift: gift,
         canExportAt: canExportAt,
         transferStars: transferStars,
@@ -14698,6 +14734,7 @@ export namespace Raw {
       flags |= this.refunded ? 1 << 5 : 0;
       flags |= this.prepaidUpgrade ? 1 << 11 : 0;
       flags |= this.assigned ? 1 << 13 : 0;
+      flags |= this.fromOffer ? 1 << 14 : 0;
       flags |= this.canExportAt !== undefined ? 1 << 3 : 0;
       flags |= this.transferStars !== undefined ? 1 << 4 : 0;
       flags |= this.fromId !== undefined ? 1 << 6 : 0;
@@ -15265,6 +15302,136 @@ export namespace Raw {
       // no flags
       if (this.birthday !== undefined) {
         b.write(this.birthday.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class MessageActionStarGiftPurchaseOffer extends TLObject {
+    accepted?: boolean;
+    declined?: boolean;
+    gift!: Raw.TypeStarGift;
+    price!: Raw.TypeStarsAmount;
+    expiresAt!: int;
+
+    constructor(params: {
+      accepted?: boolean;
+      declined?: boolean;
+      gift: Raw.TypeStarGift;
+      price: Raw.TypeStarsAmount;
+      expiresAt: int;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'MessageActionStarGiftPurchaseOffer';
+      this.constructorId = 0x774278d4;
+      this.subclassOfId = 0x8680d126;
+      this._slots = ['accepted', 'declined', 'gift', 'price', 'expiresAt'];
+      this.accepted = params.accepted;
+      this.declined = params.declined;
+      this.gift = params.gift;
+      this.price = params.price;
+      this.expiresAt = params.expiresAt;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.MessageActionStarGiftPurchaseOffer> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let accepted = flags & (1 << 0) ? true : false;
+      let declined = flags & (1 << 1) ? true : false;
+      let gift = await TLObject.read(_data);
+      let price = await TLObject.read(_data);
+      let expiresAt = await Primitive.Int.read(_data);
+      return new Raw.MessageActionStarGiftPurchaseOffer({
+        accepted: accepted,
+        declined: declined,
+        gift: gift,
+        price: price,
+        expiresAt: expiresAt,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.accepted ? 1 << 0 : 0;
+      flags |= this.declined ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.gift !== undefined) {
+        b.write(this.gift.write() as unknown as Buffer);
+      }
+      if (this.price !== undefined) {
+        b.write(this.price.write() as unknown as Buffer);
+      }
+      if (this.expiresAt !== undefined) {
+        b.write(Primitive.Int.write(this.expiresAt) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class MessageActionStarGiftPurchaseOfferDeclined extends TLObject {
+    expired?: boolean;
+    gift!: Raw.TypeStarGift;
+    price!: Raw.TypeStarsAmount;
+
+    constructor(params: { expired?: boolean; gift: Raw.TypeStarGift; price: Raw.TypeStarsAmount }) {
+      super();
+      this.classType = 'types';
+      this.className = 'MessageActionStarGiftPurchaseOfferDeclined';
+      this.constructorId = 0x73ada76b;
+      this.subclassOfId = 0x8680d126;
+      this._slots = ['expired', 'gift', 'price'];
+      this.expired = params.expired;
+      this.gift = params.gift;
+      this.price = params.price;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.MessageActionStarGiftPurchaseOfferDeclined> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let expired = flags & (1 << 0) ? true : false;
+      let gift = await TLObject.read(_data);
+      let price = await TLObject.read(_data);
+      return new Raw.MessageActionStarGiftPurchaseOfferDeclined({
+        expired: expired,
+        gift: gift,
+        price: price,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.expired ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.gift !== undefined) {
+        b.write(this.gift.write() as unknown as Buffer);
+      }
+      if (this.price !== undefined) {
+        b.write(this.price.write() as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -52753,28 +52920,16 @@ export namespace Raw {
   export class WebPageAttributeStarGiftAuction extends TLObject {
     gift!: Raw.TypeStarGift;
     endDate!: int;
-    centerColor!: int;
-    edgeColor!: int;
-    textColor!: int;
 
-    constructor(params: {
-      gift: Raw.TypeStarGift;
-      endDate: int;
-      centerColor: int;
-      edgeColor: int;
-      textColor: int;
-    }) {
+    constructor(params: { gift: Raw.TypeStarGift; endDate: int }) {
       super();
       this.classType = 'types';
       this.className = 'WebPageAttributeStarGiftAuction';
-      this.constructorId = 0x34986ab;
+      this.constructorId = 0x1c641c2;
       this.subclassOfId = 0xafcfe9c7;
-      this._slots = ['gift', 'endDate', 'centerColor', 'edgeColor', 'textColor'];
+      this._slots = ['gift', 'endDate'];
       this.gift = params.gift;
       this.endDate = params.endDate;
-      this.centerColor = params.centerColor;
-      this.edgeColor = params.edgeColor;
-      this.textColor = params.textColor;
     }
     /**
      * Generate the TLObject from buffer.
@@ -52787,16 +52942,7 @@ export namespace Raw {
       // no flags
       let gift = await TLObject.read(_data);
       let endDate = await Primitive.Int.read(_data);
-      let centerColor = await Primitive.Int.read(_data);
-      let edgeColor = await Primitive.Int.read(_data);
-      let textColor = await Primitive.Int.read(_data);
-      return new Raw.WebPageAttributeStarGiftAuction({
-        gift: gift,
-        endDate: endDate,
-        centerColor: centerColor,
-        edgeColor: edgeColor,
-        textColor: textColor,
-      });
+      return new Raw.WebPageAttributeStarGiftAuction({ gift: gift, endDate: endDate });
     }
     /**
      * Generate buffer from TLObject.
@@ -52810,15 +52956,6 @@ export namespace Raw {
       }
       if (this.endDate !== undefined) {
         b.write(Primitive.Int.write(this.endDate) as unknown as Buffer);
-      }
-      if (this.centerColor !== undefined) {
-        b.write(Primitive.Int.write(this.centerColor) as unknown as Buffer);
-      }
-      if (this.edgeColor !== undefined) {
-        b.write(Primitive.Int.write(this.edgeColor) as unknown as Buffer);
-      }
-      if (this.textColor !== undefined) {
-        b.write(Primitive.Int.write(this.textColor) as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -66489,6 +66626,7 @@ export namespace Raw {
     stargiftDropOriginalDetails?: boolean;
     phonegroupMessage?: boolean;
     stargiftAuctionBid?: boolean;
+    offer?: boolean;
     id!: string;
     amount!: Raw.TypeStarsAmount;
     date!: int;
@@ -66527,6 +66665,7 @@ export namespace Raw {
       stargiftDropOriginalDetails?: boolean;
       phonegroupMessage?: boolean;
       stargiftAuctionBid?: boolean;
+      offer?: boolean;
       id: string;
       amount: Raw.TypeStarsAmount;
       date: int;
@@ -66570,6 +66709,7 @@ export namespace Raw {
         'stargiftDropOriginalDetails',
         'phonegroupMessage',
         'stargiftAuctionBid',
+        'offer',
         'id',
         'amount',
         'date',
@@ -66607,6 +66747,7 @@ export namespace Raw {
       this.stargiftDropOriginalDetails = params.stargiftDropOriginalDetails;
       this.phonegroupMessage = params.phonegroupMessage;
       this.stargiftAuctionBid = params.stargiftAuctionBid;
+      this.offer = params.offer;
       this.id = params.id;
       this.amount = params.amount;
       this.date = params.date;
@@ -66654,6 +66795,7 @@ export namespace Raw {
       let stargiftDropOriginalDetails = flags & (1 << 26) ? true : false;
       let phonegroupMessage = flags & (1 << 27) ? true : false;
       let stargiftAuctionBid = flags & (1 << 28) ? true : false;
+      let offer = flags & (1 << 29) ? true : false;
       let id = await Primitive.String.read(_data);
       let amount = await TLObject.read(_data);
       let date = await Primitive.Int.read(_data);
@@ -66692,6 +66834,7 @@ export namespace Raw {
         stargiftDropOriginalDetails: stargiftDropOriginalDetails,
         phonegroupMessage: phonegroupMessage,
         stargiftAuctionBid: stargiftAuctionBid,
+        offer: offer,
         id: id,
         amount: amount,
         date: date,
@@ -66739,6 +66882,7 @@ export namespace Raw {
       flags |= this.stargiftDropOriginalDetails ? 1 << 26 : 0;
       flags |= this.phonegroupMessage ? 1 << 27 : 0;
       flags |= this.stargiftAuctionBid ? 1 << 28 : 0;
+      flags |= this.offer ? 1 << 29 : 0;
       flags |= this.title !== undefined ? 1 << 0 : 0;
       flags |= this.description !== undefined ? 1 << 1 : 0;
       flags |= this.photo !== undefined ? 1 << 2 : 0;
@@ -67626,6 +67770,9 @@ export namespace Raw {
     lockedUntilDate?: int;
     auctionSlug?: string;
     giftsPerRound?: int;
+    auctionStartDate?: int;
+    upgradeVariants?: int;
+    background?: Raw.TypeStarGiftBackground;
 
     constructor(params: {
       limited?: boolean;
@@ -67653,11 +67800,14 @@ export namespace Raw {
       lockedUntilDate?: int;
       auctionSlug?: string;
       giftsPerRound?: int;
+      auctionStartDate?: int;
+      upgradeVariants?: int;
+      background?: Raw.TypeStarGiftBackground;
     }) {
       super();
       this.classType = 'types';
       this.className = 'StarGift';
-      this.constructorId = 0x1b9a4d7f;
+      this.constructorId = 0x313a9547;
       this.subclassOfId = 0xc31c590b;
       this._slots = [
         'limited',
@@ -67685,6 +67835,9 @@ export namespace Raw {
         'lockedUntilDate',
         'auctionSlug',
         'giftsPerRound',
+        'auctionStartDate',
+        'upgradeVariants',
+        'background',
       ];
       this.limited = params.limited;
       this.soldOut = params.soldOut;
@@ -67711,6 +67864,9 @@ export namespace Raw {
       this.lockedUntilDate = params.lockedUntilDate;
       this.auctionSlug = params.auctionSlug;
       this.giftsPerRound = params.giftsPerRound;
+      this.auctionStartDate = params.auctionStartDate;
+      this.upgradeVariants = params.upgradeVariants;
+      this.background = params.background;
     }
     /**
      * Generate the TLObject from buffer.
@@ -67744,6 +67900,9 @@ export namespace Raw {
       let lockedUntilDate = flags & (1 << 9) ? await Primitive.Int.read(_data) : undefined;
       let auctionSlug = flags & (1 << 11) ? await Primitive.String.read(_data) : undefined;
       let giftsPerRound = flags & (1 << 11) ? await Primitive.Int.read(_data) : undefined;
+      let auctionStartDate = flags & (1 << 11) ? await Primitive.Int.read(_data) : undefined;
+      let upgradeVariants = flags & (1 << 12) ? await Primitive.Int.read(_data) : undefined;
+      let background = flags & (1 << 13) ? await TLObject.read(_data) : undefined;
       return new Raw.StarGift({
         limited: limited,
         soldOut: soldOut,
@@ -67770,6 +67929,9 @@ export namespace Raw {
         lockedUntilDate: lockedUntilDate,
         auctionSlug: auctionSlug,
         giftsPerRound: giftsPerRound,
+        auctionStartDate: auctionStartDate,
+        upgradeVariants: upgradeVariants,
+        background: background,
       });
     }
     /**
@@ -67802,6 +67964,9 @@ export namespace Raw {
       flags |= this.lockedUntilDate !== undefined ? 1 << 9 : 0;
       flags |= this.auctionSlug !== undefined ? 1 << 11 : 0;
       flags |= this.giftsPerRound !== undefined ? 1 << 11 : 0;
+      flags |= this.auctionStartDate !== undefined ? 1 << 11 : 0;
+      flags |= this.upgradeVariants !== undefined ? 1 << 12 : 0;
+      flags |= this.background !== undefined ? 1 << 13 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.id !== undefined) {
@@ -67858,6 +68023,15 @@ export namespace Raw {
       if (this.giftsPerRound !== undefined) {
         b.write(Primitive.Int.write(this.giftsPerRound) as unknown as Buffer);
       }
+      if (this.auctionStartDate !== undefined) {
+        b.write(Primitive.Int.write(this.auctionStartDate) as unknown as Buffer);
+      }
+      if (this.upgradeVariants !== undefined) {
+        b.write(Primitive.Int.write(this.upgradeVariants) as unknown as Buffer);
+      }
+      if (this.background !== undefined) {
+        b.write(this.background.write() as unknown as Buffer);
+      }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
   }
@@ -67881,9 +68055,11 @@ export namespace Raw {
     releasedBy?: Raw.TypePeer;
     valueAmount?: long;
     valueCurrency?: string;
+    valueUsdAmount?: long;
     themePeer?: Raw.TypePeer;
     peerColor?: Raw.TypePeerColor;
     hostId?: Raw.TypePeer;
+    offerMinStars?: int;
 
     constructor(params: {
       requirePremium?: boolean;
@@ -67905,14 +68081,16 @@ export namespace Raw {
       releasedBy?: Raw.TypePeer;
       valueAmount?: long;
       valueCurrency?: string;
+      valueUsdAmount?: long;
       themePeer?: Raw.TypePeer;
       peerColor?: Raw.TypePeerColor;
       hostId?: Raw.TypePeer;
+      offerMinStars?: int;
     }) {
       super();
       this.classType = 'types';
       this.className = 'StarGiftUnique';
-      this.constructorId = 0xb0bf741b;
+      this.constructorId = 0x569d64c9;
       this.subclassOfId = 0xc31c590b;
       this._slots = [
         'requirePremium',
@@ -67934,9 +68112,11 @@ export namespace Raw {
         'releasedBy',
         'valueAmount',
         'valueCurrency',
+        'valueUsdAmount',
         'themePeer',
         'peerColor',
         'hostId',
+        'offerMinStars',
       ];
       this.requirePremium = params.requirePremium;
       this.resaleTonOnly = params.resaleTonOnly;
@@ -67957,9 +68137,11 @@ export namespace Raw {
       this.releasedBy = params.releasedBy;
       this.valueAmount = params.valueAmount;
       this.valueCurrency = params.valueCurrency;
+      this.valueUsdAmount = params.valueUsdAmount;
       this.themePeer = params.themePeer;
       this.peerColor = params.peerColor;
       this.hostId = params.hostId;
+      this.offerMinStars = params.offerMinStars;
     }
     /**
      * Generate the TLObject from buffer.
@@ -67987,9 +68169,11 @@ export namespace Raw {
       let releasedBy = flags & (1 << 5) ? await TLObject.read(_data) : undefined;
       let valueAmount = flags & (1 << 8) ? await Primitive.Long.read(_data) : undefined;
       let valueCurrency = flags & (1 << 8) ? await Primitive.String.read(_data) : undefined;
+      let valueUsdAmount = flags & (1 << 8) ? await Primitive.Long.read(_data) : undefined;
       let themePeer = flags & (1 << 10) ? await TLObject.read(_data) : undefined;
       let peerColor = flags & (1 << 11) ? await TLObject.read(_data) : undefined;
       let hostId = flags & (1 << 12) ? await TLObject.read(_data) : undefined;
+      let offerMinStars = flags & (1 << 13) ? await Primitive.Int.read(_data) : undefined;
       return new Raw.StarGiftUnique({
         requirePremium: requirePremium,
         resaleTonOnly: resaleTonOnly,
@@ -68010,9 +68194,11 @@ export namespace Raw {
         releasedBy: releasedBy,
         valueAmount: valueAmount,
         valueCurrency: valueCurrency,
+        valueUsdAmount: valueUsdAmount,
         themePeer: themePeer,
         peerColor: peerColor,
         hostId: hostId,
+        offerMinStars: offerMinStars,
       });
     }
     /**
@@ -68035,9 +68221,11 @@ export namespace Raw {
       flags |= this.releasedBy !== undefined ? 1 << 5 : 0;
       flags |= this.valueAmount !== undefined ? 1 << 8 : 0;
       flags |= this.valueCurrency !== undefined ? 1 << 8 : 0;
+      flags |= this.valueUsdAmount !== undefined ? 1 << 8 : 0;
       flags |= this.themePeer !== undefined ? 1 << 10 : 0;
       flags |= this.peerColor !== undefined ? 1 << 11 : 0;
       flags |= this.hostId !== undefined ? 1 << 12 : 0;
+      flags |= this.offerMinStars !== undefined ? 1 << 13 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.id !== undefined) {
@@ -68088,6 +68276,9 @@ export namespace Raw {
       if (this.valueCurrency !== undefined) {
         b.write(Primitive.String.write(this.valueCurrency) as unknown as Buffer);
       }
+      if (this.valueUsdAmount !== undefined) {
+        b.write(Primitive.Long.write(this.valueUsdAmount) as unknown as Buffer);
+      }
       if (this.themePeer !== undefined) {
         b.write(this.themePeer.write() as unknown as Buffer);
       }
@@ -68096,6 +68287,9 @@ export namespace Raw {
       }
       if (this.hostId !== undefined) {
         b.write(this.hostId.write() as unknown as Buffer);
+      }
+      if (this.offerMinStars !== undefined) {
+        b.write(Primitive.Int.write(this.offerMinStars) as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -69028,6 +69222,7 @@ export namespace Raw {
     collectionId?: Vector<int>;
     prepaidUpgradeHash?: string;
     dropOriginalDetailsStars?: long;
+    giftNum?: int;
 
     constructor(params: {
       nameHidden?: boolean;
@@ -69051,11 +69246,12 @@ export namespace Raw {
       collectionId?: Vector<int>;
       prepaidUpgradeHash?: string;
       dropOriginalDetailsStars?: long;
+      giftNum?: int;
     }) {
       super();
       this.classType = 'types';
       this.className = 'SavedStarGift';
-      this.constructorId = 0x8983a452;
+      this.constructorId = 0xead6805e;
       this.subclassOfId = 0x8e2b3c14;
       this._slots = [
         'nameHidden',
@@ -69079,6 +69275,7 @@ export namespace Raw {
         'collectionId',
         'prepaidUpgradeHash',
         'dropOriginalDetailsStars',
+        'giftNum',
       ];
       this.nameHidden = params.nameHidden;
       this.unsaved = params.unsaved;
@@ -69101,6 +69298,7 @@ export namespace Raw {
       this.collectionId = params.collectionId;
       this.prepaidUpgradeHash = params.prepaidUpgradeHash;
       this.dropOriginalDetailsStars = params.dropOriginalDetailsStars;
+      this.giftNum = params.giftNum;
     }
     /**
      * Generate the TLObject from buffer.
@@ -69131,6 +69329,7 @@ export namespace Raw {
       let prepaidUpgradeHash = flags & (1 << 16) ? await Primitive.String.read(_data) : undefined;
       let dropOriginalDetailsStars =
         flags & (1 << 18) ? await Primitive.Long.read(_data) : undefined;
+      let giftNum = flags & (1 << 19) ? await Primitive.Int.read(_data) : undefined;
       return new Raw.SavedStarGift({
         nameHidden: nameHidden,
         unsaved: unsaved,
@@ -69153,6 +69352,7 @@ export namespace Raw {
         collectionId: collectionId,
         prepaidUpgradeHash: prepaidUpgradeHash,
         dropOriginalDetailsStars: dropOriginalDetailsStars,
+        giftNum: giftNum,
       });
     }
     /**
@@ -69183,6 +69383,7 @@ export namespace Raw {
       flags |= this.collectionId ? 1 << 15 : 0;
       flags |= this.prepaidUpgradeHash !== undefined ? 1 << 16 : 0;
       flags |= this.dropOriginalDetailsStars !== undefined ? 1 << 18 : 0;
+      flags |= this.giftNum !== undefined ? 1 << 19 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.fromId !== undefined) {
@@ -69229,6 +69430,9 @@ export namespace Raw {
       }
       if (this.dropOriginalDetailsStars !== undefined) {
         b.write(Primitive.Long.write(this.dropOriginalDetailsStars) as unknown as Buffer);
+      }
+      if (this.giftNum !== undefined) {
+        b.write(Primitive.Int.write(this.giftNum) as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -70998,26 +71202,18 @@ export namespace Raw {
   export class GroupCallDonor extends TLObject {
     top?: boolean;
     my?: boolean;
-    anonymous?: boolean;
     peerId?: Raw.TypePeer;
     stars!: long;
 
-    constructor(params: {
-      top?: boolean;
-      my?: boolean;
-      anonymous?: boolean;
-      peerId?: Raw.TypePeer;
-      stars: long;
-    }) {
+    constructor(params: { top?: boolean; my?: boolean; peerId?: Raw.TypePeer; stars: long }) {
       super();
       this.classType = 'types';
       this.className = 'GroupCallDonor';
       this.constructorId = 0xee430c85;
       this.subclassOfId = 0x14f28bb0;
-      this._slots = ['top', 'my', 'anonymous', 'peerId', 'stars'];
+      this._slots = ['top', 'my', 'peerId', 'stars'];
       this.top = params.top;
       this.my = params.my;
-      this.anonymous = params.anonymous;
       this.peerId = params.peerId;
       this.stars = params.stars;
     }
@@ -71030,16 +71226,9 @@ export namespace Raw {
       let flags = await Primitive.Int.read(_data);
       let top = flags & (1 << 0) ? true : false;
       let my = flags & (1 << 1) ? true : false;
-      let anonymous = flags & (1 << 2) ? true : false;
       let peerId = flags & (1 << 3) ? await TLObject.read(_data) : undefined;
       let stars = await Primitive.Long.read(_data);
-      return new Raw.GroupCallDonor({
-        top: top,
-        my: my,
-        anonymous: anonymous,
-        peerId: peerId,
-        stars: stars,
-      });
+      return new Raw.GroupCallDonor({ top: top, my: my, peerId: peerId, stars: stars });
     }
     /**
      * Generate buffer from TLObject.
@@ -71052,7 +71241,6 @@ export namespace Raw {
       let flags = 0;
       flags |= this.top ? 1 << 0 : 0;
       flags |= this.my ? 1 << 1 : 0;
-      flags |= this.anonymous ? 1 << 2 : 0;
       flags |= this.peerId !== undefined ? 1 << 3 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
@@ -71193,9 +71381,11 @@ export namespace Raw {
     bidLevels!: Vector<Raw.TypeAuctionBidLevel>;
     topBidders!: Vector<long>;
     nextRoundAt!: int;
+    lastGiftNum!: int;
     giftsLeft!: int;
     currentRound!: int;
     totalRounds!: int;
+    rounds!: Vector<Raw.TypeStarGiftAuctionRound>;
 
     constructor(params: {
       version: int;
@@ -71205,14 +71395,16 @@ export namespace Raw {
       bidLevels: Vector<Raw.TypeAuctionBidLevel>;
       topBidders: Vector<long>;
       nextRoundAt: int;
+      lastGiftNum: int;
       giftsLeft: int;
       currentRound: int;
       totalRounds: int;
+      rounds: Vector<Raw.TypeStarGiftAuctionRound>;
     }) {
       super();
       this.classType = 'types';
       this.className = 'StarGiftAuctionState';
-      this.constructorId = 0x5db04f4b;
+      this.constructorId = 0x771a4e66;
       this.subclassOfId = 0x229414fb;
       this._slots = [
         'version',
@@ -71222,9 +71414,11 @@ export namespace Raw {
         'bidLevels',
         'topBidders',
         'nextRoundAt',
+        'lastGiftNum',
         'giftsLeft',
         'currentRound',
         'totalRounds',
+        'rounds',
       ];
       this.version = params.version;
       this.startDate = params.startDate;
@@ -71233,9 +71427,11 @@ export namespace Raw {
       this.bidLevels = params.bidLevels;
       this.topBidders = params.topBidders;
       this.nextRoundAt = params.nextRoundAt;
+      this.lastGiftNum = params.lastGiftNum;
       this.giftsLeft = params.giftsLeft;
       this.currentRound = params.currentRound;
       this.totalRounds = params.totalRounds;
+      this.rounds = params.rounds;
     }
     /**
      * Generate the TLObject from buffer.
@@ -71253,9 +71449,11 @@ export namespace Raw {
       let bidLevels = await TLObject.read(_data);
       let topBidders = await TLObject.read(_data, Primitive.Long);
       let nextRoundAt = await Primitive.Int.read(_data);
+      let lastGiftNum = await Primitive.Int.read(_data);
       let giftsLeft = await Primitive.Int.read(_data);
       let currentRound = await Primitive.Int.read(_data);
       let totalRounds = await Primitive.Int.read(_data);
+      let rounds = await TLObject.read(_data);
       return new Raw.StarGiftAuctionState({
         version: version,
         startDate: startDate,
@@ -71264,9 +71462,11 @@ export namespace Raw {
         bidLevels: bidLevels,
         topBidders: topBidders,
         nextRoundAt: nextRoundAt,
+        lastGiftNum: lastGiftNum,
         giftsLeft: giftsLeft,
         currentRound: currentRound,
         totalRounds: totalRounds,
+        rounds: rounds,
       });
     }
     /**
@@ -71297,6 +71497,9 @@ export namespace Raw {
       if (this.nextRoundAt !== undefined) {
         b.write(Primitive.Int.write(this.nextRoundAt) as unknown as Buffer);
       }
+      if (this.lastGiftNum !== undefined) {
+        b.write(Primitive.Int.write(this.lastGiftNum) as unknown as Buffer);
+      }
       if (this.giftsLeft !== undefined) {
         b.write(Primitive.Int.write(this.giftsLeft) as unknown as Buffer);
       }
@@ -71306,6 +71509,9 @@ export namespace Raw {
       if (this.totalRounds !== undefined) {
         b.write(Primitive.Int.write(this.totalRounds) as unknown as Buffer);
       }
+      if (this.rounds) {
+        b.write(Primitive.Vector.write(this.rounds) as unknown as Buffer);
+      }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
   }
@@ -71313,17 +71519,37 @@ export namespace Raw {
     startDate!: int;
     endDate!: int;
     averagePrice!: long;
+    listedCount?: int;
+    fragmentListedCount?: int;
+    fragmentListedUrl?: string;
 
-    constructor(params: { startDate: int; endDate: int; averagePrice: long }) {
+    constructor(params: {
+      startDate: int;
+      endDate: int;
+      averagePrice: long;
+      listedCount?: int;
+      fragmentListedCount?: int;
+      fragmentListedUrl?: string;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'StarGiftAuctionStateFinished';
-      this.constructorId = 0x7d967c3a;
+      this.constructorId = 0x972dabbf;
       this.subclassOfId = 0x229414fb;
-      this._slots = ['startDate', 'endDate', 'averagePrice'];
+      this._slots = [
+        'startDate',
+        'endDate',
+        'averagePrice',
+        'listedCount',
+        'fragmentListedCount',
+        'fragmentListedUrl',
+      ];
       this.startDate = params.startDate;
       this.endDate = params.endDate;
       this.averagePrice = params.averagePrice;
+      this.listedCount = params.listedCount;
+      this.fragmentListedCount = params.fragmentListedCount;
+      this.fragmentListedUrl = params.fragmentListedUrl;
     }
     /**
      * Generate the TLObject from buffer.
@@ -71333,14 +71559,21 @@ export namespace Raw {
       _data: BytesIO,
       ..._args: Array<any>
     ): Promise<Raw.StarGiftAuctionStateFinished> {
-      // no flags
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
       let startDate = await Primitive.Int.read(_data);
       let endDate = await Primitive.Int.read(_data);
       let averagePrice = await Primitive.Long.read(_data);
+      let listedCount = flags & (1 << 0) ? await Primitive.Int.read(_data) : undefined;
+      let fragmentListedCount = flags & (1 << 1) ? await Primitive.Int.read(_data) : undefined;
+      let fragmentListedUrl = flags & (1 << 1) ? await Primitive.String.read(_data) : undefined;
       return new Raw.StarGiftAuctionStateFinished({
         startDate: startDate,
         endDate: endDate,
         averagePrice: averagePrice,
+        listedCount: listedCount,
+        fragmentListedCount: fragmentListedCount,
+        fragmentListedUrl: fragmentListedUrl,
       });
     }
     /**
@@ -71349,7 +71582,14 @@ export namespace Raw {
     override write(): Buffer {
       const b: BytesIO = new BytesIO();
       b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-      // no flags
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.listedCount !== undefined ? 1 << 0 : 0;
+      flags |= this.fragmentListedCount !== undefined ? 1 << 1 : 0;
+      flags |= this.fragmentListedUrl !== undefined ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
       if (this.startDate !== undefined) {
         b.write(Primitive.Int.write(this.startDate) as unknown as Buffer);
       }
@@ -71358,6 +71598,15 @@ export namespace Raw {
       }
       if (this.averagePrice !== undefined) {
         b.write(Primitive.Long.write(this.averagePrice) as unknown as Buffer);
+      }
+      if (this.listedCount !== undefined) {
+        b.write(Primitive.Int.write(this.listedCount) as unknown as Buffer);
+      }
+      if (this.fragmentListedCount !== undefined) {
+        b.write(Primitive.Int.write(this.fragmentListedCount) as unknown as Buffer);
+      }
+      if (this.fragmentListedUrl !== undefined) {
+        b.write(Primitive.String.write(this.fragmentListedUrl) as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -71465,6 +71714,7 @@ export namespace Raw {
     round!: int;
     pos!: int;
     message?: Raw.TypeTextWithEntities;
+    giftNum?: int;
 
     constructor(params: {
       nameHidden?: boolean;
@@ -71474,13 +71724,23 @@ export namespace Raw {
       round: int;
       pos: int;
       message?: Raw.TypeTextWithEntities;
+      giftNum?: int;
     }) {
       super();
       this.classType = 'types';
       this.className = 'StarGiftAuctionAcquiredGift';
-      this.constructorId = 0xab60e20b;
+      this.constructorId = 0x42b00348;
       this.subclassOfId = 0x270d5233;
-      this._slots = ['nameHidden', 'peer', 'date', 'bidAmount', 'round', 'pos', 'message'];
+      this._slots = [
+        'nameHidden',
+        'peer',
+        'date',
+        'bidAmount',
+        'round',
+        'pos',
+        'message',
+        'giftNum',
+      ];
       this.nameHidden = params.nameHidden;
       this.peer = params.peer;
       this.date = params.date;
@@ -71488,6 +71748,7 @@ export namespace Raw {
       this.round = params.round;
       this.pos = params.pos;
       this.message = params.message;
+      this.giftNum = params.giftNum;
     }
     /**
      * Generate the TLObject from buffer.
@@ -71506,6 +71767,7 @@ export namespace Raw {
       let round = await Primitive.Int.read(_data);
       let pos = await Primitive.Int.read(_data);
       let message = flags & (1 << 1) ? await TLObject.read(_data) : undefined;
+      let giftNum = flags & (1 << 2) ? await Primitive.Int.read(_data) : undefined;
       return new Raw.StarGiftAuctionAcquiredGift({
         nameHidden: nameHidden,
         peer: peer,
@@ -71514,6 +71776,7 @@ export namespace Raw {
         round: round,
         pos: pos,
         message: message,
+        giftNum: giftNum,
       });
     }
     /**
@@ -71527,6 +71790,7 @@ export namespace Raw {
       let flags = 0;
       flags |= this.nameHidden ? 1 << 0 : 0;
       flags |= this.message !== undefined ? 1 << 1 : 0;
+      flags |= this.giftNum !== undefined ? 1 << 2 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.peer !== undefined) {
@@ -71546,6 +71810,9 @@ export namespace Raw {
       }
       if (this.message !== undefined) {
         b.write(this.message.write() as unknown as Buffer);
+      }
+      if (this.giftNum !== undefined) {
+        b.write(Primitive.Int.write(this.giftNum) as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -71673,6 +71940,399 @@ export namespace Raw {
       // no flags
       if (this.slug !== undefined) {
         b.write(Primitive.String.write(this.slug) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class Passkey extends TLObject {
+    id!: string;
+    name!: string;
+    date!: int;
+    softwareEmojiId?: long;
+    lastUsageDate?: int;
+
+    constructor(params: {
+      id: string;
+      name: string;
+      date: int;
+      softwareEmojiId?: long;
+      lastUsageDate?: int;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'Passkey';
+      this.constructorId = 0x98613ebf;
+      this.subclassOfId = 0xcf380de0;
+      this._slots = ['id', 'name', 'date', 'softwareEmojiId', 'lastUsageDate'];
+      this.id = params.id;
+      this.name = params.name;
+      this.date = params.date;
+      this.softwareEmojiId = params.softwareEmojiId;
+      this.lastUsageDate = params.lastUsageDate;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(_data: BytesIO, ..._args: Array<any>): Promise<Raw.Passkey> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let id = await Primitive.String.read(_data);
+      let name = await Primitive.String.read(_data);
+      let date = await Primitive.Int.read(_data);
+      let softwareEmojiId = flags & (1 << 0) ? await Primitive.Long.read(_data) : undefined;
+      let lastUsageDate = flags & (1 << 1) ? await Primitive.Int.read(_data) : undefined;
+      return new Raw.Passkey({
+        id: id,
+        name: name,
+        date: date,
+        softwareEmojiId: softwareEmojiId,
+        lastUsageDate: lastUsageDate,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.softwareEmojiId !== undefined ? 1 << 0 : 0;
+      flags |= this.lastUsageDate !== undefined ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.id !== undefined) {
+        b.write(Primitive.String.write(this.id) as unknown as Buffer);
+      }
+      if (this.name !== undefined) {
+        b.write(Primitive.String.write(this.name) as unknown as Buffer);
+      }
+      if (this.date !== undefined) {
+        b.write(Primitive.Int.write(this.date) as unknown as Buffer);
+      }
+      if (this.softwareEmojiId !== undefined) {
+        b.write(Primitive.Long.write(this.softwareEmojiId) as unknown as Buffer);
+      }
+      if (this.lastUsageDate !== undefined) {
+        b.write(Primitive.Int.write(this.lastUsageDate) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class InputPasskeyResponseRegister extends TLObject {
+    clientData!: Raw.TypeDataJSON;
+    attestationData!: bytes;
+
+    constructor(params: { clientData: Raw.TypeDataJSON; attestationData: bytes }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputPasskeyResponseRegister';
+      this.constructorId = 0x3e63935c;
+      this.subclassOfId = 0x1ef0c7cd;
+      this._slots = ['clientData', 'attestationData'];
+      this.clientData = params.clientData;
+      this.attestationData = params.attestationData;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.InputPasskeyResponseRegister> {
+      // no flags
+      let clientData = await TLObject.read(_data);
+      let attestationData = await Primitive.Bytes.read(_data);
+      return new Raw.InputPasskeyResponseRegister({
+        clientData: clientData,
+        attestationData: attestationData,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.clientData !== undefined) {
+        b.write(this.clientData.write() as unknown as Buffer);
+      }
+      if (this.attestationData !== undefined) {
+        b.write(Primitive.Bytes.write(this.attestationData) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class InputPasskeyResponseLogin extends TLObject {
+    clientData!: Raw.TypeDataJSON;
+    authenticatorData!: bytes;
+    signature!: bytes;
+    userHandle!: string;
+
+    constructor(params: {
+      clientData: Raw.TypeDataJSON;
+      authenticatorData: bytes;
+      signature: bytes;
+      userHandle: string;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputPasskeyResponseLogin';
+      this.constructorId = 0xc31fc14a;
+      this.subclassOfId = 0x1ef0c7cd;
+      this._slots = ['clientData', 'authenticatorData', 'signature', 'userHandle'];
+      this.clientData = params.clientData;
+      this.authenticatorData = params.authenticatorData;
+      this.signature = params.signature;
+      this.userHandle = params.userHandle;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.InputPasskeyResponseLogin> {
+      // no flags
+      let clientData = await TLObject.read(_data);
+      let authenticatorData = await Primitive.Bytes.read(_data);
+      let signature = await Primitive.Bytes.read(_data);
+      let userHandle = await Primitive.String.read(_data);
+      return new Raw.InputPasskeyResponseLogin({
+        clientData: clientData,
+        authenticatorData: authenticatorData,
+        signature: signature,
+        userHandle: userHandle,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.clientData !== undefined) {
+        b.write(this.clientData.write() as unknown as Buffer);
+      }
+      if (this.authenticatorData !== undefined) {
+        b.write(Primitive.Bytes.write(this.authenticatorData) as unknown as Buffer);
+      }
+      if (this.signature !== undefined) {
+        b.write(Primitive.Bytes.write(this.signature) as unknown as Buffer);
+      }
+      if (this.userHandle !== undefined) {
+        b.write(Primitive.String.write(this.userHandle) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class InputPasskeyCredentialPublicKey extends TLObject {
+    id!: string;
+    rawId!: string;
+    response!: Raw.TypeInputPasskeyResponse;
+
+    constructor(params: { id: string; rawId: string; response: Raw.TypeInputPasskeyResponse }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputPasskeyCredentialPublicKey';
+      this.constructorId = 0x3c27b78f;
+      this.subclassOfId = 0x1eb1222e;
+      this._slots = ['id', 'rawId', 'response'];
+      this.id = params.id;
+      this.rawId = params.rawId;
+      this.response = params.response;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.InputPasskeyCredentialPublicKey> {
+      // no flags
+      let id = await Primitive.String.read(_data);
+      let rawId = await Primitive.String.read(_data);
+      let response = await TLObject.read(_data);
+      return new Raw.InputPasskeyCredentialPublicKey({ id: id, rawId: rawId, response: response });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.id !== undefined) {
+        b.write(Primitive.String.write(this.id) as unknown as Buffer);
+      }
+      if (this.rawId !== undefined) {
+        b.write(Primitive.String.write(this.rawId) as unknown as Buffer);
+      }
+      if (this.response !== undefined) {
+        b.write(this.response.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class StarGiftBackground extends TLObject {
+    centerColor!: int;
+    edgeColor!: int;
+    textColor!: int;
+
+    constructor(params: { centerColor: int; edgeColor: int; textColor: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'StarGiftBackground';
+      this.constructorId = 0xaff56398;
+      this.subclassOfId = 0x3c51a28;
+      this._slots = ['centerColor', 'edgeColor', 'textColor'];
+      this.centerColor = params.centerColor;
+      this.edgeColor = params.edgeColor;
+      this.textColor = params.textColor;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.StarGiftBackground> {
+      // no flags
+      let centerColor = await Primitive.Int.read(_data);
+      let edgeColor = await Primitive.Int.read(_data);
+      let textColor = await Primitive.Int.read(_data);
+      return new Raw.StarGiftBackground({
+        centerColor: centerColor,
+        edgeColor: edgeColor,
+        textColor: textColor,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.centerColor !== undefined) {
+        b.write(Primitive.Int.write(this.centerColor) as unknown as Buffer);
+      }
+      if (this.edgeColor !== undefined) {
+        b.write(Primitive.Int.write(this.edgeColor) as unknown as Buffer);
+      }
+      if (this.textColor !== undefined) {
+        b.write(Primitive.Int.write(this.textColor) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class StarGiftAuctionRound extends TLObject {
+    num!: int;
+    duration!: int;
+
+    constructor(params: { num: int; duration: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'StarGiftAuctionRound';
+      this.constructorId = 0x3aae0528;
+      this.subclassOfId = 0x44e92c34;
+      this._slots = ['num', 'duration'];
+      this.num = params.num;
+      this.duration = params.duration;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.StarGiftAuctionRound> {
+      // no flags
+      let num = await Primitive.Int.read(_data);
+      let duration = await Primitive.Int.read(_data);
+      return new Raw.StarGiftAuctionRound({ num: num, duration: duration });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.num !== undefined) {
+        b.write(Primitive.Int.write(this.num) as unknown as Buffer);
+      }
+      if (this.duration !== undefined) {
+        b.write(Primitive.Int.write(this.duration) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class StarGiftAuctionRoundExtendable extends TLObject {
+    num!: int;
+    duration!: int;
+    extendTop!: int;
+    extendWindow!: int;
+
+    constructor(params: { num: int; duration: int; extendTop: int; extendWindow: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'StarGiftAuctionRoundExtendable';
+      this.constructorId = 0xaa021e5;
+      this.subclassOfId = 0x44e92c34;
+      this._slots = ['num', 'duration', 'extendTop', 'extendWindow'];
+      this.num = params.num;
+      this.duration = params.duration;
+      this.extendTop = params.extendTop;
+      this.extendWindow = params.extendWindow;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.StarGiftAuctionRoundExtendable> {
+      // no flags
+      let num = await Primitive.Int.read(_data);
+      let duration = await Primitive.Int.read(_data);
+      let extendTop = await Primitive.Int.read(_data);
+      let extendWindow = await Primitive.Int.read(_data);
+      return new Raw.StarGiftAuctionRoundExtendable({
+        num: num,
+        duration: duration,
+        extendTop: extendTop,
+        extendWindow: extendWindow,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.num !== undefined) {
+        b.write(Primitive.Int.write(this.num) as unknown as Buffer);
+      }
+      if (this.duration !== undefined) {
+        b.write(Primitive.Int.write(this.duration) as unknown as Buffer);
+      }
+      if (this.extendTop !== undefined) {
+        b.write(Primitive.Int.write(this.extendTop) as unknown as Buffer);
+      }
+      if (this.extendWindow !== undefined) {
+        b.write(Primitive.Int.write(this.extendWindow) as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -78296,6 +78956,7 @@ export namespace Raw {
     }
   }
   export namespace auth {
+    export type TypePasskeyLoginOptions = Raw.auth.PasskeyLoginOptions;
     export type TypeLoginToken =
       | Raw.auth.LoginToken
       | Raw.auth.LoginTokenMigrateTo
@@ -79601,6 +80262,43 @@ export namespace Raw {
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
     }
+    export class PasskeyLoginOptions extends TLObject {
+      options!: Raw.TypeDataJSON;
+
+      constructor(params: { options: Raw.TypeDataJSON }) {
+        super();
+        this.classType = 'types';
+        this.className = 'auth.PasskeyLoginOptions';
+        this.constructorId = 0xe2037789;
+        this.subclassOfId = 0xd9793032;
+        this._slots = ['options'];
+        this.options = params.options;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.auth.PasskeyLoginOptions> {
+        // no flags
+        let options = await TLObject.read(_data);
+        return new Raw.auth.PasskeyLoginOptions({ options: options });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.options !== undefined) {
+          b.write(this.options.write() as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
     export class SendCode extends TLObject {
       __response__!: Raw.auth.TypeSentCode;
       phoneNumber!: string;
@@ -80807,6 +81505,115 @@ export namespace Raw {
         }
         if (this.formId !== undefined) {
           b.write(Primitive.Long.write(this.formId) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class InitPasskeyLogin extends TLObject {
+      __response__!: Raw.auth.TypePasskeyLoginOptions;
+      apiId!: int;
+      apiHash!: string;
+
+      constructor(params: { apiId: int; apiHash: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'auth.InitPasskeyLogin';
+        this.constructorId = 0x518ad0b7;
+        this.subclassOfId = 0xd9793032;
+        this._slots = ['apiId', 'apiHash'];
+        this.apiId = params.apiId;
+        this.apiHash = params.apiHash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.auth.InitPasskeyLogin> {
+        // no flags
+        let apiId = await Primitive.Int.read(_data);
+        let apiHash = await Primitive.String.read(_data);
+        return new Raw.auth.InitPasskeyLogin({ apiId: apiId, apiHash: apiHash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.apiId !== undefined) {
+          b.write(Primitive.Int.write(this.apiId) as unknown as Buffer);
+        }
+        if (this.apiHash !== undefined) {
+          b.write(Primitive.String.write(this.apiHash) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class FinishPasskeyLogin extends TLObject {
+      __response__!: Raw.auth.TypeAuthorization;
+      credential!: Raw.TypeInputPasskeyCredential;
+      fromDcId?: int;
+      fromAuthKeyId?: long;
+
+      constructor(params: {
+        credential: Raw.TypeInputPasskeyCredential;
+        fromDcId?: int;
+        fromAuthKeyId?: long;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'auth.FinishPasskeyLogin';
+        this.constructorId = 0x9857ad07;
+        this.subclassOfId = 0xb9e04e39;
+        this._slots = ['credential', 'fromDcId', 'fromAuthKeyId'];
+        this.credential = params.credential;
+        this.fromDcId = params.fromDcId;
+        this.fromAuthKeyId = params.fromAuthKeyId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.auth.FinishPasskeyLogin> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let credential = await TLObject.read(_data);
+        let fromDcId = flags & (1 << 0) ? await Primitive.Int.read(_data) : undefined;
+        let fromAuthKeyId = flags & (1 << 0) ? await Primitive.Long.read(_data) : undefined;
+        return new Raw.auth.FinishPasskeyLogin({
+          credential: credential,
+          fromDcId: fromDcId,
+          fromAuthKeyId: fromAuthKeyId,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.fromDcId !== undefined ? 1 << 0 : 0;
+        flags |= this.fromAuthKeyId !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.credential !== undefined) {
+          b.write(this.credential.write() as unknown as Buffer);
+        }
+        if (this.fromDcId !== undefined) {
+          b.write(Primitive.Int.write(this.fromDcId) as unknown as Buffer);
+        }
+        if (this.fromAuthKeyId !== undefined) {
+          b.write(Primitive.Long.write(this.fromAuthKeyId) as unknown as Buffer);
         }
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
@@ -88655,6 +89462,7 @@ export namespace Raw {
       scheduleRepeatPeriod?: int;
       sendAs?: Raw.TypeInputPeer;
       quickReplyShortcut?: Raw.TypeInputQuickReplyShortcut;
+      effect?: long;
       videoTimestamp?: int;
       allowPaidStars?: long;
       suggestedPost?: Raw.TypeSuggestedPost;
@@ -88677,6 +89485,7 @@ export namespace Raw {
         scheduleRepeatPeriod?: int;
         sendAs?: Raw.TypeInputPeer;
         quickReplyShortcut?: Raw.TypeInputQuickReplyShortcut;
+        effect?: long;
         videoTimestamp?: int;
         allowPaidStars?: long;
         suggestedPost?: Raw.TypeSuggestedPost;
@@ -88684,7 +89493,7 @@ export namespace Raw {
         super();
         this.classType = 'functions';
         this.className = 'messages.ForwardMessages';
-        this.constructorId = 0x41d41ade;
+        this.constructorId = 0x13704a7c;
         this.subclassOfId = 0x8af52aac;
         this._slots = [
           'silent',
@@ -88704,6 +89513,7 @@ export namespace Raw {
           'scheduleRepeatPeriod',
           'sendAs',
           'quickReplyShortcut',
+          'effect',
           'videoTimestamp',
           'allowPaidStars',
           'suggestedPost',
@@ -88725,6 +89535,7 @@ export namespace Raw {
         this.scheduleRepeatPeriod = params.scheduleRepeatPeriod;
         this.sendAs = params.sendAs;
         this.quickReplyShortcut = params.quickReplyShortcut;
+        this.effect = params.effect;
         this.videoTimestamp = params.videoTimestamp;
         this.allowPaidStars = params.allowPaidStars;
         this.suggestedPost = params.suggestedPost;
@@ -88756,6 +89567,7 @@ export namespace Raw {
         let scheduleRepeatPeriod = flags & (1 << 24) ? await Primitive.Int.read(_data) : undefined;
         let sendAs = flags & (1 << 13) ? await TLObject.read(_data) : undefined;
         let quickReplyShortcut = flags & (1 << 17) ? await TLObject.read(_data) : undefined;
+        let effect = flags & (1 << 18) ? await Primitive.Long.read(_data) : undefined;
         let videoTimestamp = flags & (1 << 20) ? await Primitive.Int.read(_data) : undefined;
         let allowPaidStars = flags & (1 << 21) ? await Primitive.Long.read(_data) : undefined;
         let suggestedPost = flags & (1 << 23) ? await TLObject.read(_data) : undefined;
@@ -88777,6 +89589,7 @@ export namespace Raw {
           scheduleRepeatPeriod: scheduleRepeatPeriod,
           sendAs: sendAs,
           quickReplyShortcut: quickReplyShortcut,
+          effect: effect,
           videoTimestamp: videoTimestamp,
           allowPaidStars: allowPaidStars,
           suggestedPost: suggestedPost,
@@ -88804,6 +89617,7 @@ export namespace Raw {
         flags |= this.scheduleRepeatPeriod !== undefined ? 1 << 24 : 0;
         flags |= this.sendAs !== undefined ? 1 << 13 : 0;
         flags |= this.quickReplyShortcut !== undefined ? 1 << 17 : 0;
+        flags |= this.effect !== undefined ? 1 << 18 : 0;
         flags |= this.videoTimestamp !== undefined ? 1 << 20 : 0;
         flags |= this.allowPaidStars !== undefined ? 1 << 21 : 0;
         flags |= this.suggestedPost !== undefined ? 1 << 23 : 0;
@@ -88838,6 +89652,9 @@ export namespace Raw {
         }
         if (this.quickReplyShortcut !== undefined) {
           b.write(this.quickReplyShortcut.write() as unknown as Buffer);
+        }
+        if (this.effect !== undefined) {
+          b.write(Primitive.Long.write(this.effect) as unknown as Buffer);
         }
         if (this.videoTimestamp !== undefined) {
           b.write(Primitive.Int.write(this.videoTimestamp) as unknown as Buffer);
@@ -103512,6 +104329,8 @@ export namespace Raw {
     }
   }
   export namespace account {
+    export type TypePasskeys = Raw.account.Passkeys;
+    export type TypePasskeyRegistrationOptions = Raw.account.PasskeyRegistrationOptions;
     export type TypeChatThemes = Raw.account.ChatThemesNotModified | Raw.account.ChatThemes;
     export type TypeSavedMusicIds =
       | Raw.account.SavedMusicIdsNotModified
@@ -105306,6 +106125,80 @@ export namespace Raw {
         // no flags
         if (this.ids) {
           b.write(Primitive.Vector.write(this.ids, Primitive.Long) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class Passkeys extends TLObject {
+      passkeys!: Vector<Raw.TypePasskey>;
+
+      constructor(params: { passkeys: Vector<Raw.TypePasskey> }) {
+        super();
+        this.classType = 'types';
+        this.className = 'account.Passkeys';
+        this.constructorId = 0xf8e0aa1c;
+        this.subclassOfId = 0x24dd205e;
+        this._slots = ['passkeys'];
+        this.passkeys = params.passkeys;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.account.Passkeys> {
+        // no flags
+        let passkeys = await TLObject.read(_data);
+        return new Raw.account.Passkeys({ passkeys: passkeys });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.passkeys) {
+          b.write(Primitive.Vector.write(this.passkeys) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class PasskeyRegistrationOptions extends TLObject {
+      options!: Raw.TypeDataJSON;
+
+      constructor(params: { options: Raw.TypeDataJSON }) {
+        super();
+        this.classType = 'types';
+        this.className = 'account.PasskeyRegistrationOptions';
+        this.constructorId = 0xe16b5ce1;
+        this.subclassOfId = 0x341d83e4;
+        this._slots = ['options'];
+        this.options = params.options;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.account.PasskeyRegistrationOptions> {
+        // no flags
+        let options = await TLObject.read(_data);
+        return new Raw.account.PasskeyRegistrationOptions({ options: options });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.options !== undefined) {
+          b.write(this.options.write() as unknown as Buffer);
         }
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
@@ -110624,6 +111517,146 @@ export namespace Raw {
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
     }
+    export class InitPasskeyRegistration extends TLObject {
+      __response__!: Raw.account.TypePasskeyRegistrationOptions;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.InitPasskeyRegistration';
+        this.constructorId = 0x429547e8;
+        this.subclassOfId = 0x341d83e4;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.account.InitPasskeyRegistration> {
+        // no flags
+        return new Raw.account.InitPasskeyRegistration();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class RegisterPasskey extends TLObject {
+      __response__!: Raw.TypePasskey;
+      credential!: Raw.TypeInputPasskeyCredential;
+
+      constructor(params: { credential: Raw.TypeInputPasskeyCredential }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.RegisterPasskey';
+        this.constructorId = 0x55b41fd6;
+        this.subclassOfId = 0xcf380de0;
+        this._slots = ['credential'];
+        this.credential = params.credential;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.account.RegisterPasskey> {
+        // no flags
+        let credential = await TLObject.read(_data);
+        return new Raw.account.RegisterPasskey({ credential: credential });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.credential !== undefined) {
+          b.write(this.credential.write() as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetPasskeys extends TLObject {
+      __response__!: Raw.account.TypePasskeys;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.GetPasskeys';
+        this.constructorId = 0xea1f0c52;
+        this.subclassOfId = 0x24dd205e;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.account.GetPasskeys> {
+        // no flags
+        return new Raw.account.GetPasskeys();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class DeletePasskey extends TLObject {
+      __response__!: Bool;
+      id!: string;
+
+      constructor(params: { id: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'account.DeletePasskey';
+        this.constructorId = 0xf5b5563f;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['id'];
+        this.id = params.id;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.account.DeletePasskey> {
+        // no flags
+        let id = await Primitive.String.read(_data);
+        return new Raw.account.DeletePasskey({ id: id });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.id !== undefined) {
+          b.write(Primitive.String.write(this.id) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
   }
   export namespace channels {
     export type TypeSendAsPeers = Raw.channels.SendAsPeers;
@@ -113964,6 +114997,7 @@ export namespace Raw {
     }
   }
   export namespace payments {
+    export type TypeStarGiftUpgradeAttributes = Raw.payments.StarGiftUpgradeAttributes;
     export type TypeStarGiftActiveAuctions =
       | Raw.payments.StarGiftActiveAuctionsNotModified
       | Raw.payments.StarGiftActiveAuctions;
@@ -116355,6 +117389,7 @@ export namespace Raw {
       userState!: Raw.TypeStarGiftAuctionUserState;
       timeout!: int;
       users!: Vector<Raw.TypeUser>;
+      chats!: Vector<Raw.TypeChat>;
 
       constructor(params: {
         gift: Raw.TypeStarGift;
@@ -116362,18 +117397,20 @@ export namespace Raw {
         userState: Raw.TypeStarGiftAuctionUserState;
         timeout: int;
         users: Vector<Raw.TypeUser>;
+        chats: Vector<Raw.TypeChat>;
       }) {
         super();
         this.classType = 'types';
         this.className = 'payments.StarGiftAuctionState';
-        this.constructorId = 0xe98e474;
+        this.constructorId = 0x6b39f4ec;
         this.subclassOfId = 0x1a318599;
-        this._slots = ['gift', 'state', 'userState', 'timeout', 'users'];
+        this._slots = ['gift', 'state', 'userState', 'timeout', 'users', 'chats'];
         this.gift = params.gift;
         this.state = params.state;
         this.userState = params.userState;
         this.timeout = params.timeout;
         this.users = params.users;
+        this.chats = params.chats;
       }
       /**
        * Generate the TLObject from buffer.
@@ -116389,12 +117426,14 @@ export namespace Raw {
         let userState = await TLObject.read(_data);
         let timeout = await Primitive.Int.read(_data);
         let users = await TLObject.read(_data);
+        let chats = await TLObject.read(_data);
         return new Raw.payments.StarGiftAuctionState({
           gift: gift,
           state: state,
           userState: userState,
           timeout: timeout,
           users: users,
+          chats: chats,
         });
       }
       /**
@@ -116418,6 +117457,9 @@ export namespace Raw {
         }
         if (this.users) {
           b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
+        }
+        if (this.chats) {
+          b.write(Primitive.Vector.write(this.chats) as unknown as Buffer);
         }
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
@@ -116512,19 +117554,22 @@ export namespace Raw {
     export class StarGiftActiveAuctions extends TLObject {
       auctions!: Vector<Raw.TypeStarGiftActiveAuctionState>;
       users!: Vector<Raw.TypeUser>;
+      chats!: Vector<Raw.TypeChat>;
 
       constructor(params: {
         auctions: Vector<Raw.TypeStarGiftActiveAuctionState>;
         users: Vector<Raw.TypeUser>;
+        chats: Vector<Raw.TypeChat>;
       }) {
         super();
         this.classType = 'types';
         this.className = 'payments.StarGiftActiveAuctions';
-        this.constructorId = 0x97f187d8;
+        this.constructorId = 0xaef6abbc;
         this.subclassOfId = 0x917dd0c7;
-        this._slots = ['auctions', 'users'];
+        this._slots = ['auctions', 'users', 'chats'];
         this.auctions = params.auctions;
         this.users = params.users;
+        this.chats = params.chats;
       }
       /**
        * Generate the TLObject from buffer.
@@ -116537,7 +117582,12 @@ export namespace Raw {
         // no flags
         let auctions = await TLObject.read(_data);
         let users = await TLObject.read(_data);
-        return new Raw.payments.StarGiftActiveAuctions({ auctions: auctions, users: users });
+        let chats = await TLObject.read(_data);
+        return new Raw.payments.StarGiftActiveAuctions({
+          auctions: auctions,
+          users: users,
+          chats: chats,
+        });
       }
       /**
        * Generate buffer from TLObject.
@@ -116551,6 +117601,46 @@ export namespace Raw {
         }
         if (this.users) {
           b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
+        }
+        if (this.chats) {
+          b.write(Primitive.Vector.write(this.chats) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class StarGiftUpgradeAttributes extends TLObject {
+      attributes!: Vector<Raw.TypeStarGiftAttribute>;
+
+      constructor(params: { attributes: Vector<Raw.TypeStarGiftAttribute> }) {
+        super();
+        this.classType = 'types';
+        this.className = 'payments.StarGiftUpgradeAttributes';
+        this.constructorId = 0x46c6e36f;
+        this.subclassOfId = 0xf46acef;
+        this._slots = ['attributes'];
+        this.attributes = params.attributes;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.payments.StarGiftUpgradeAttributes> {
+        // no flags
+        let attributes = await TLObject.read(_data);
+        return new Raw.payments.StarGiftUpgradeAttributes({ attributes: attributes });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.attributes) {
+          b.write(Primitive.Vector.write(this.attributes) as unknown as Buffer);
         }
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
@@ -119627,6 +120717,179 @@ export namespace Raw {
         // no flags
         if (this.hash !== undefined) {
           b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class ResolveStarGiftOffer extends TLObject {
+      __response__!: Raw.TypeUpdates;
+      decline?: boolean;
+      offerMsgId!: int;
+
+      constructor(params: { decline?: boolean; offerMsgId: int }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.ResolveStarGiftOffer';
+        this.constructorId = 0xe9ce781c;
+        this.subclassOfId = 0x8af52aac;
+        this._slots = ['decline', 'offerMsgId'];
+        this.decline = params.decline;
+        this.offerMsgId = params.offerMsgId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.payments.ResolveStarGiftOffer> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let decline = flags & (1 << 0) ? true : false;
+        let offerMsgId = await Primitive.Int.read(_data);
+        return new Raw.payments.ResolveStarGiftOffer({ decline: decline, offerMsgId: offerMsgId });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.decline ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.offerMsgId !== undefined) {
+          b.write(Primitive.Int.write(this.offerMsgId) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class SendStarGiftOffer extends TLObject {
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
+      slug!: string;
+      price!: Raw.TypeStarsAmount;
+      duration!: int;
+      randomId!: long;
+      allowPaidStars?: long;
+
+      constructor(params: {
+        peer: Raw.TypeInputPeer;
+        slug: string;
+        price: Raw.TypeStarsAmount;
+        duration: int;
+        randomId: long;
+        allowPaidStars?: long;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.SendStarGiftOffer';
+        this.constructorId = 0x8fb86b41;
+        this.subclassOfId = 0x8af52aac;
+        this._slots = ['peer', 'slug', 'price', 'duration', 'randomId', 'allowPaidStars'];
+        this.peer = params.peer;
+        this.slug = params.slug;
+        this.price = params.price;
+        this.duration = params.duration;
+        this.randomId = params.randomId;
+        this.allowPaidStars = params.allowPaidStars;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.payments.SendStarGiftOffer> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let peer = await TLObject.read(_data);
+        let slug = await Primitive.String.read(_data);
+        let price = await TLObject.read(_data);
+        let duration = await Primitive.Int.read(_data);
+        let randomId = await Primitive.Long.read(_data);
+        let allowPaidStars = flags & (1 << 0) ? await Primitive.Long.read(_data) : undefined;
+        return new Raw.payments.SendStarGiftOffer({
+          peer: peer,
+          slug: slug,
+          price: price,
+          duration: duration,
+          randomId: randomId,
+          allowPaidStars: allowPaidStars,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.allowPaidStars !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.slug !== undefined) {
+          b.write(Primitive.String.write(this.slug) as unknown as Buffer);
+        }
+        if (this.price !== undefined) {
+          b.write(this.price.write() as unknown as Buffer);
+        }
+        if (this.duration !== undefined) {
+          b.write(Primitive.Int.write(this.duration) as unknown as Buffer);
+        }
+        if (this.randomId !== undefined) {
+          b.write(Primitive.Long.write(this.randomId) as unknown as Buffer);
+        }
+        if (this.allowPaidStars !== undefined) {
+          b.write(Primitive.Long.write(this.allowPaidStars) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetStarGiftUpgradeAttributes extends TLObject {
+      __response__!: Raw.payments.TypeStarGiftUpgradeAttributes;
+      giftId!: long;
+
+      constructor(params: { giftId: long }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.GetStarGiftUpgradeAttributes';
+        this.constructorId = 0x6d038b58;
+        this.subclassOfId = 0xf46acef;
+        this._slots = ['giftId'];
+        this.giftId = params.giftId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.payments.GetStarGiftUpgradeAttributes> {
+        // no flags
+        let giftId = await Primitive.Long.read(_data);
+        return new Raw.payments.GetStarGiftUpgradeAttributes({ giftId: giftId });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.giftId !== undefined) {
+          b.write(Primitive.Long.write(this.giftId) as unknown as Buffer);
         }
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
