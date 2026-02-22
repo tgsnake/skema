@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -18,6 +18,15 @@ import { RPCError } from '@/errors/RpcError.js';
 export class NotAcceptable extends RPCError {
   override code: number = 406;
   override name: string = 'NOT_ACCEPTABLE';
+}
+export class AllowPaymentRequired extends NotAcceptable {
+  override id: string = 'ALLOW_PAYMENT_REQUIRED';
+  override message: string =
+    'This peer only accepts [paid messages &raquo;](https://core.telegram.org/api/paid-messages): this error is only emitted for older layers without paid messages support, so the client must be updated in order to use paid messages.  .';
+}
+export class ApiGiftRestrictedUpdateApp extends NotAcceptable {
+  override id: string = 'API_GIFT_RESTRICTED_UPDATE_APP';
+  override message: string = 'Please update the app to access the gift API.';
 }
 export class AuthKeyDuplicated extends NotAcceptable {
   override id: string = 'AUTH_KEY_DUPLICATED';
@@ -54,7 +63,7 @@ export class ChatForwardsRestricted extends NotAcceptable {
 export class FilerefUpgradeNeeded extends NotAcceptable {
   override id: string = 'FILEREF_UPGRADE_NEEDED';
   override message: string =
-    'The client has to be updated in order to support [file references](https://core.telegram.org/api/file_reference).';
+    'The client has to be updated in order to support [file references](https://core.telegram.org/api/file-references).';
 }
 export class FreshChangeAdminsForbidden extends NotAcceptable {
   override id: string = 'FRESH_CHANGE_ADMINS_FORBIDDEN';
@@ -84,6 +93,10 @@ export class PaymentUnsupported extends NotAcceptable {
   override message: string =
     'A detailed description of the error will be received separately as described [here &raquo;](https://core.telegram.org/api/errors#406-not-acceptable).';
 }
+export class PeerIdInvalid extends NotAcceptable {
+  override id: string = 'PEER_ID_INVALID';
+  override message: string = 'The provided peer id is invalid.';
+}
 export class PhoneNumberInvalid extends NotAcceptable {
   override id: string = 'PHONE_NUMBER_INVALID';
   override message: string = 'The phone number is invalid.';
@@ -91,6 +104,11 @@ export class PhoneNumberInvalid extends NotAcceptable {
 export class PhonePasswordFlood extends NotAcceptable {
   override id: string = 'PHONE_PASSWORD_FLOOD';
   override message: string = 'You have tried logging in too many times.';
+}
+export class PrecheckoutFailed extends NotAcceptable {
+  override id: string = 'PRECHECKOUT_FAILED';
+  override message: string =
+    'Precheckout failed, a detailed and localized description for the error will be emitted via an [updateServiceNotification as specified here &raquo;](https://core.telegram.org/api/errors#406-not-acceptable).';
 }
 export class PremiumCurrentlyUnavailable extends NotAcceptable {
   override id: string = 'PREMIUM_CURRENTLY_UNAVAILABLE';
@@ -111,6 +129,16 @@ export class SendCodeUnavailable extends NotAcceptable {
   override message: string =
     'Returned when all available options for this type of number were already used (e.g. flash-call, then SMS, then this error might be returned to trigger a second resend).';
 }
+export class StargiftExportInProgress extends NotAcceptable {
+  override id: string = 'STARGIFT_EXPORT_IN_PROGRESS';
+  override message: string =
+    'A gift export is in progress, a detailed and localized description for the error will be emitted via an [updateServiceNotification as specified here &raquo;](https://core.telegram.org/api/errors#406-not-acceptable).';
+}
+export class StarsFormAmountMismatch extends NotAcceptable {
+  override id: string = 'STARS_FORM_AMOUNT_MISMATCH';
+  override message: string =
+    'The form amount has changed, please fetch the new form using [payments.getPaymentForm](https://core.telegram.org/method/payments.getPaymentForm) and restart the process.';
+}
 export class StickersetInvalid extends NotAcceptable {
   override id: string = 'STICKERSET_INVALID';
   override message: string = 'The provided sticker set is invalid.';
@@ -127,6 +155,11 @@ export class TopicClosed extends NotAcceptable {
 export class TopicDeleted extends NotAcceptable {
   override id: string = 'TOPIC_DELETED';
   override message: string = 'The specified topic was deleted.';
+}
+export class TranslationsDisabled extends NotAcceptable {
+  override id: string = 'TRANSLATIONS_DISABLED';
+  override message: string =
+    'Translations are unavailable, a detailed and localized description for the error will be emitted via an [updateServiceNotification as specified here &raquo;](https://core.telegram.org/api/errors#406-not-acceptable).';
 }
 export class UpdateAppToLogin extends NotAcceptable {
   override id: string = 'UPDATE_APP_TO_LOGIN';

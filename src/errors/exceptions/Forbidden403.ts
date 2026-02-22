@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -19,10 +19,25 @@ export class Forbidden extends RPCError {
   override code: number = 403;
   override name: string = 'FORBIDDEN';
 }
+export class AllowPaymentRequired extends Forbidden {
+  override id: string = 'ALLOW_PAYMENT_REQUIRED_X';
+  override message: string =
+    'This peer charges {value} [Telegram Stars](https://core.telegram.org/api/stars) per message, but the `allow_paid_stars` was not set or its value is smaller than {value}.';
+}
 export class AnonymousReactionsDisabled extends Forbidden {
   override id: string = 'ANONYMOUS_REACTIONS_DISABLED';
   override message: string =
     'Sorry, anonymous administrators cannot leave reactions or participate in polls.';
+}
+export class BotAccessForbidden extends Forbidden {
+  override id: string = 'BOT_ACCESS_FORBIDDEN';
+  override message: string =
+    'The specified method *can* be used over a [business connection](https://core.telegram.org/api/bots/connected-business-bots) for some operations, but the specified query attempted an operation that is not allowed over a business connection.';
+}
+export class BotVerifierForbidden extends Forbidden {
+  override id: string = 'BOT_VERIFIER_FORBIDDEN';
+  override message: string =
+    'This bot cannot assign [verification icons](https://core.telegram.org/api/bots/verification).';
 }
 export class BroadcastForbidden extends Forbidden {
   override id: string = 'BROADCAST_FORBIDDEN';
@@ -105,6 +120,10 @@ export class ChatSendVideosForbidden extends Forbidden {
 export class ChatSendVoicesForbidden extends Forbidden {
   override id: string = 'CHAT_SEND_VOICES_FORBIDDEN';
   override message: string = "You can't send voice recordings in this chat.";
+}
+export class ChatSendWebpageForbidden extends Forbidden {
+  override id: string = 'CHAT_SEND_WEBPAGE_FORBIDDEN';
+  override message: string = "You can't send webpage previews to this chat.";
 }
 export class ChatTypeInvalid extends Forbidden {
   override id: string = 'CHAT_TYPE_INVALID';
@@ -215,6 +234,11 @@ export class UserNotMutualContact extends Forbidden {
 export class UserNotParticipant extends Forbidden {
   override id: string = 'USER_NOT_PARTICIPANT';
   override message: string = "You're not a member of this supergroup/channel.";
+}
+export class UserPermissionDenied extends Forbidden {
+  override id: string = 'USER_PERMISSION_DENIED';
+  override message: string =
+    "The user hasn't granted or has revoked the bot's access to change their emoji status using [bots.toggleUserEmojiStatusPermission](https://core.telegram.org/method/bots.toggleUserEmojiStatusPermission).";
 }
 export class UserPrivacyRestricted extends Forbidden {
   override id: string = 'USER_PRIVACY_RESTRICTED';

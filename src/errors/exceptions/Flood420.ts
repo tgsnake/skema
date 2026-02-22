@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -40,6 +40,11 @@ export class FloodTestPhoneWait extends Flood {
 export class FloodWait extends Flood {
   override id: string = 'FLOOD_WAIT_X';
   override message: string = 'Please wait {value} seconds before repeating the action.';
+}
+export class FrozenMethodInvalid extends Flood {
+  override id: string = 'FROZEN_METHOD_INVALID';
+  override message: string =
+    'The current account is [frozen](https://core.telegram.org/api/auth#frozen-accounts), and thus cannot execute the specified action.';
 }
 export class PremiumSubActiveUntil extends Flood {
   override id: string = 'PREMIUM_SUB_ACTIVE_UNTIL_X';

@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -18,6 +18,10 @@ import { RPCError } from '@/errors/RpcError.js';
 export class NotFound extends RPCError {
   override code: number = 404;
   override name: string = 'NOT_FOUND';
+}
+export class MethodInvalid extends NotFound {
+  override id: string = 'METHOD_INVALID';
+  override message: string = 'The specified method is invalid.';
 }
 export class PeerIdInvalid extends NotFound {
   override id: string = 'PEER_ID_INVALID';

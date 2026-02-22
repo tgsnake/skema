@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -232,6 +232,10 @@ export class StoreInvalidScalarType extends InternalServerError {
 export class TranslateReqFailed extends InternalServerError {
   override id: string = 'TRANSLATE_REQ_FAILED';
   override message: string = 'Translation failed, please try again later.';
+}
+export class TranslationTimeout extends InternalServerError {
+  override id: string = 'TRANSLATION_TIMEOUT';
+  override message: string = 'A timeout occurred while translating the specified text.';
 }
 export class UnknownMethod extends InternalServerError {
   override id: string = 'UNKNOWN_METHOD';
