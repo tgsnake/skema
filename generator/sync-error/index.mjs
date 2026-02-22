@@ -14,7 +14,7 @@ import * as cheerio from 'https://esm.sh/cheerio@1.0.0-rc.12';
 import * as denoPath from 'https://deno.land/std@0.209.0/path/mod.ts';
 
 const __dirname = denoPath.dirname(denoPath.fromFileUrl(import.meta.url));
-const reHref = /^\/file\/\d+\/\d+\/[aA-zZ0-9]+\.\d+\.json\/[aA-zZ0-9]+/gm;
+const reHref = /^\/file\/\d+\/\d+\/[^/]+?(?<extension>\.json+)\/(?<hash>[a-fA-F0-9]+)$/;
 const base = 'https://corefork.telegram.org';
 async function getHref() {
   const html = await fetch(`${base}/api/errors`, { method: 'GET', mode: 'cors' }).then((res) =>
