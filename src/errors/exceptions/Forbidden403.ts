@@ -19,6 +19,10 @@ export class Forbidden extends RPCError {
   override code: number = 403;
   override name: string = 'FORBIDDEN';
 }
+export class AccessDenied extends Forbidden {
+  override id: string = 'ACCESS_DENIED';
+  override message: string = '';
+}
 export class AllowPaymentRequired extends Forbidden {
   override id: string = 'ALLOW_PAYMENT_REQUIRED_X';
   override message: string =

@@ -563,6 +563,10 @@ export class CollectibleNotFound extends BadRequest {
   override id: string = 'COLLECTIBLE_NOT_FOUND';
   override message: string = 'The specified collectible could not be found.';
 }
+export class CollectionIdInvalid extends BadRequest {
+  override id: string = 'COLLECTION_ID_INVALID';
+  override message: string = '';
+}
 export class ColorInvalid extends BadRequest {
   override id: string = 'COLOR_INVALID';
   override message: string = 'The specified color palette ID was invalid.';
@@ -628,6 +632,10 @@ export class CreateCallFailed extends BadRequest {
   override id: string = 'CREATE_CALL_FAILED';
   override message: string = 'An error occurred while creating the call.';
 }
+export class CredentialInvalid extends BadRequest {
+  override id: string = 'CREDENTIAL_INVALID';
+  override message: string = '';
+}
 export class CurrencyTotalAmountInvalid extends BadRequest {
   override id: string = 'CURRENCY_TOTAL_AMOUNT_INVALID';
   override message: string = 'The total amount of all prices is invalid.';
@@ -668,6 +676,10 @@ export class DocumentInvalid extends BadRequest {
   override id: string = 'DOCUMENT_INVALID';
   override message: string = 'The specified document is invalid.';
 }
+export class EffectChatInvalid extends BadRequest {
+  override id: string = 'EFFECT_CHAT_INVALID';
+  override message: string = '';
+}
 export class EffectIdInvalid extends BadRequest {
   override id: string = 'EFFECT_ID_INVALID';
   override message: string = 'The specified effect ID is invalid.';
@@ -675,6 +687,10 @@ export class EffectIdInvalid extends BadRequest {
 export class EmailHashExpired extends BadRequest {
   override id: string = 'EMAIL_HASH_EXPIRED';
   override message: string = 'Email hash expired.';
+}
+export class EmailInstallMissing extends BadRequest {
+  override id: string = 'EMAIL_INSTALL_MISSING';
+  override message: string = '';
 }
 export class EmailInvalid extends BadRequest {
   override id: string = 'EMAIL_INVALID';
@@ -780,6 +796,10 @@ export class ExtendedMediaAmountInvalid extends BadRequest {
   override message: string =
     'The specified `stars_amount` of the passed [inputMediaPaidMedia](https://core.telegram.org/constructor/inputMediaPaidMedia) is invalid.';
 }
+export class ExtendedMediaEmpty extends BadRequest {
+  override id: string = 'EXTENDED_MEDIA_EMPTY';
+  override message: string = '';
+}
 export class ExtendedMediaInvalid extends BadRequest {
   override id: string = 'EXTENDED_MEDIA_INVALID';
   override message: string = 'The specified paid media is invalid.';
@@ -870,6 +890,10 @@ export class FileReferenceInvalid extends BadRequest {
   override id: string = 'FILE_REFERENCE_INVALID';
   override message: string =
     'The specified [file reference](https://core.telegram.org/api/file-references) is invalid.';
+}
+export class FileReferenceXEmpty extends BadRequest {
+  override id: string = 'FILE_REFERENCE_X_EMPTY';
+  override message: string = '';
 }
 export class FileReferenceXExpired extends BadRequest {
   override id: string = 'FILE_REFERENCE_X_EXPIRED';
@@ -1143,6 +1167,14 @@ export class InputRequestTooLong extends BadRequest {
   override id: string = 'INPUT_REQUEST_TOO_LONG';
   override message: string = 'The request payload is too long.';
 }
+export class InputStarsAmountInvalid extends BadRequest {
+  override id: string = 'INPUT_STARS_AMOUNT_INVALID';
+  override message: string = '';
+}
+export class InputStarsNanosInvalid extends BadRequest {
+  override id: string = 'INPUT_STARS_NANOS_INVALID';
+  override message: string = '';
+}
 export class InputTextEmpty extends BadRequest {
   override id: string = 'INPUT_TEXT_EMPTY';
   override message: string = 'The specified text is empty.';
@@ -1349,6 +1381,10 @@ export class MessagePollClosed extends BadRequest {
   override id: string = 'MESSAGE_POLL_CLOSED';
   override message: string = 'Poll closed.';
 }
+export class MessageRequired extends BadRequest {
+  override id: string = 'MESSAGE_REQUIRED';
+  override message: string = '';
+}
 export class MessageTooLong extends BadRequest {
   override id: string = 'MESSAGE_TOO_LONG';
   override message: string = 'The provided message is too long.';
@@ -1390,6 +1426,10 @@ export class MsgWaitFailed extends BadRequest {
 export class MultiMediaTooLong extends BadRequest {
   override id: string = 'MULTI_MEDIA_TOO_LONG';
   override message: string = 'Too many media files for album.';
+}
+export class NeedActionMissing extends BadRequest {
+  override id: string = 'NEED_ACTION_MISSING';
+  override message: string = '';
 }
 export class NewSaltInvalid extends BadRequest {
   override id: string = 'NEW_SALT_INVALID';
@@ -1670,6 +1710,10 @@ export class PinnedTooMuch extends BadRequest {
   override id: string = 'PINNED_TOO_MUCH';
   override message: string = 'There are too many pinned topics, unpin some first.';
 }
+export class PinnedTopicNotModified extends BadRequest {
+  override id: string = 'PINNED_TOPIC_NOT_MODIFIED';
+  override message: string = '';
+}
 export class PinRestricted extends BadRequest {
   override id: string = 'PIN_RESTRICTED';
   override message: string = "You can't pin messages.";
@@ -1705,6 +1749,10 @@ export class PollVoteRequired extends BadRequest {
 export class PremiumAccountRequired extends BadRequest {
   override id: string = 'PREMIUM_ACCOUNT_REQUIRED';
   override message: string = 'A premium account is required to execute this action.';
+}
+export class PremiumPurposeInvalid extends BadRequest {
+  override id: string = 'PREMIUM_PURPOSE_INVALID';
+  override message: string = '';
 }
 export class PricingChatInvalid extends BadRequest {
   override id: string = 'PRICING_CHAT_INVALID';
@@ -1872,6 +1920,14 @@ export class RequestTokenInvalid extends BadRequest {
   override message: string =
     'The master DC did not accept the `request_token` from the CDN DC. Continue downloading the file from the master DC using upload.getFile.';
 }
+export class ResellStarsTooFew extends BadRequest {
+  override id: string = 'RESELL_STARS_TOO_FEW';
+  override message: string = '';
+}
+export class ResellStarsTooMuch extends BadRequest {
+  override id: string = 'RESELL_STARS_TOO_MUCH';
+  override message: string = '';
+}
 export class ResetRequestMissing extends BadRequest {
   override id: string = 'RESET_REQUEST_MISSING';
   override message: string = 'No password reset is in progress.';
@@ -1920,6 +1976,10 @@ export class RsaDecryptFailed extends BadRequest {
 export class SavedIdEmpty extends BadRequest {
   override id: string = 'SAVED_ID_EMPTY';
   override message: string = 'The passed inputSavedStarGiftChat.saved_id is empty.';
+}
+export class SavedPeerInvalid extends BadRequest {
+  override id: string = 'SAVED_PEER_INVALID';
+  override message: string = '';
 }
 export class ScheduleBotNotAllowed extends BadRequest {
   override id: string = 'SCHEDULE_BOT_NOT_ALLOWED';
@@ -2060,13 +2120,37 @@ export class StargiftAlreadyUpgraded extends BadRequest {
   override id: string = 'STARGIFT_ALREADY_UPGRADED';
   override message: string = 'The specified gift was already upgraded to a collectible gift.';
 }
+export class StargiftAttributeInvalid extends BadRequest {
+  override id: string = 'STARGIFT_ATTRIBUTE_INVALID';
+  override message: string = '';
+}
 export class StargiftInvalid extends BadRequest {
   override id: string = 'STARGIFT_INVALID';
   override message: string = 'The passed gift is invalid.';
 }
+export class StargiftMessageInvalid extends BadRequest {
+  override id: string = 'STARGIFT_MESSAGE_INVALID';
+  override message: string = '';
+}
 export class StargiftNotFound extends BadRequest {
   override id: string = 'STARGIFT_NOT_FOUND';
   override message: string = 'The specified gift was not found.';
+}
+export class StargiftNotOwner extends BadRequest {
+  override id: string = 'STARGIFT_NOT_OWNER';
+  override message: string = '';
+}
+export class StargiftNotUnique extends BadRequest {
+  override id: string = 'STARGIFT_NOT_UNIQUE';
+  override message: string = '';
+}
+export class StargiftOfferInvalid extends BadRequest {
+  override id: string = 'STARGIFT_OFFER_INVALID';
+  override message: string = '';
+}
+export class StargiftOfferNotAllowed extends BadRequest {
+  override id: string = 'STARGIFT_OFFER_NOT_ALLOWED';
+  override message: string = '';
 }
 export class StargiftOwnerInvalid extends BadRequest {
   override id: string = 'STARGIFT_OWNER_INVALID';
@@ -2080,6 +2164,10 @@ export class StargiftResellCurrencyNotAllowed extends BadRequest {
   override id: string = 'STARGIFT_RESELL_CURRENCY_NOT_ALLOWED';
   override message: string =
     "You can't buy the gift using the specified currency (i.e. trying to pay in Stars for TON gifts).";
+}
+export class StargiftResellTooEarly extends BadRequest {
+  override id: string = 'STARGIFT_RESELL_TOO_EARLY_X';
+  override message: string = '';
 }
 export class StargiftSlugInvalid extends BadRequest {
   override id: string = 'STARGIFT_SLUG_INVALID';

@@ -103,6 +103,7 @@
       "auth.ExportLoginToken",
       "auth.ImportBotAuthorization",
       "auth.ImportWebTokenAuthorization",
+      "auth.InitPasskeyLogin",
       "auth.SendCode"
     ]
   },
@@ -471,6 +472,7 @@
       "account.DeclinePasswordReset",
       "account.DeleteAutoSaveExceptions",
       "account.DeleteBusinessChatLink",
+      "account.DeletePasskey",
       "account.DeleteSecureValue",
       "account.DisablePeerConnectedBot",
       "account.EditBusinessChatLink",
@@ -499,6 +501,7 @@
       "account.GetNotifyExceptions",
       "account.GetNotifySettings",
       "account.GetPaidMessagesRevenue",
+      "account.GetPasskeys",
       "account.GetPassword",
       "account.GetPasswordSettings",
       "account.GetPrivacy",
@@ -514,11 +517,13 @@
       "account.GetWallPaper",
       "account.GetWallPapers",
       "account.GetWebAuthorizations",
+      "account.InitPasskeyRegistration",
       "account.InitTakeoutSession",
       "account.InstallTheme",
       "account.InstallWallPaper",
       "account.InvalidateSignInCodes",
       "account.RegisterDevice",
+      "account.RegisterPasskey",
       "account.ReorderUsernames",
       "account.ReportPeer",
       "account.ReportProfilePhoto",
@@ -576,14 +581,17 @@
       "auth.AcceptLoginToken",
       "auth.BindTempAuthKey",
       "auth.CancelCode",
+      "auth.CheckPaidAuth",
       "auth.CheckPassword",
       "auth.CheckRecoveryPassword",
       "auth.ExportAuthorization",
       "auth.ExportLoginToken",
+      "auth.FinishPasskeyLogin",
       "auth.ImportAuthorization",
       "auth.ImportBotAuthorization",
       "auth.ImportLoginToken",
       "auth.ImportWebTokenAuthorization",
+      "auth.InitPasskeyLogin",
       "auth.RecoverPassword",
       "auth.ReportMissingCode",
       "auth.RequestFirebaseSms",
@@ -649,6 +657,7 @@
       "channels.GetForumTopics",
       "channels.GetForumTopicsByID",
       "channels.GetFullChannel",
+      "channels.GetFutureCreatorAfterLeave",
       "channels.GetGroupsForDiscussion",
       "channels.GetInactiveChannels",
       "channels.GetLeftChannels",
@@ -727,6 +736,7 @@
       "contacts.SetBlocked",
       "contacts.ToggleTopPeers",
       "contacts.Unblock",
+      "contacts.UpdateContactNote",
       "folders.EditPeerFolders",
       "fragment.GetCollectibleInfo",
       "help.AcceptTermsOfService",
@@ -772,6 +782,7 @@
       "messages.ClearRecentStickers",
       "messages.ClickSponsoredMessage",
       "messages.CreateChat",
+      "messages.CreateForumTopic",
       "messages.DeleteChat",
       "messages.DeleteChatUser",
       "messages.DeleteExportedChatInvite",
@@ -784,6 +795,7 @@
       "messages.DeleteRevokedExportedChatInvites",
       "messages.DeleteSavedHistory",
       "messages.DeleteScheduledMessages",
+      "messages.DeleteTopicHistory",
       "messages.DiscardEncryption",
       "messages.EditChatAbout",
       "messages.EditChatAdmin",
@@ -792,6 +804,7 @@
       "messages.EditChatTitle",
       "messages.EditExportedChatInvite",
       "messages.EditFactCheck",
+      "messages.EditForumTopic",
       "messages.EditInlineBotMessage",
       "messages.EditMessage",
       "messages.EditQuickReplyShortcut",
@@ -821,6 +834,7 @@
       "messages.GetDialogUnreadMarks",
       "messages.GetDiscussionMessage",
       "messages.GetDocumentByHash",
+      "messages.GetEmojiGameInfo",
       "messages.GetEmojiGroups",
       "messages.GetEmojiKeywords",
       "messages.GetEmojiKeywordsDifference",
@@ -837,6 +851,8 @@
       "messages.GetFavedStickers",
       "messages.GetFeaturedEmojiStickers",
       "messages.GetFeaturedStickers",
+      "messages.GetForumTopics",
+      "messages.GetForumTopicsByID",
       "messages.GetFullChat",
       "messages.GetGameHighScores",
       "messages.GetHistory",
@@ -908,6 +924,7 @@
       "messages.ReceivedMessages",
       "messages.ReceivedQueue",
       "messages.ReorderPinnedDialogs",
+      "messages.ReorderPinnedForumTopics",
       "messages.ReorderPinnedSavedDialogs",
       "messages.ReorderQuickReplies",
       "messages.ReorderStickerSets",
@@ -967,6 +984,7 @@
       "messages.SetTyping",
       "messages.StartBot",
       "messages.StartHistoryImport",
+      "messages.SummarizeText",
       "messages.ToggleBotInAttachMenu",
       "messages.ToggleDialogFilterTags",
       "messages.ToggleDialogPin",
@@ -983,6 +1001,7 @@
       "messages.UnpinAllMessages",
       "messages.UpdateDialogFilter",
       "messages.UpdateDialogFiltersOrder",
+      "messages.UpdatePinnedForumTopic",
       "messages.UpdatePinnedMessage",
       "messages.UpdateSavedReactionTag",
       "messages.UploadEncryptedFile",
@@ -1000,6 +1019,7 @@
       "payments.ClearSavedInfo",
       "payments.ConnectStarRefBot",
       "payments.ConvertStarGift",
+      "payments.CraftStarGift",
       "payments.CreateStarGiftCollection",
       "payments.DeleteStarGiftCollection",
       "payments.EditConnectedStarRefBot",
@@ -1008,6 +1028,7 @@
       "payments.GetBankCardData",
       "payments.GetConnectedStarRefBot",
       "payments.GetConnectedStarRefBots",
+      "payments.GetCraftStarGifts",
       "payments.GetGiveawayInfo",
       "payments.GetPaymentForm",
       "payments.GetPaymentReceipt",
@@ -1016,8 +1037,12 @@
       "payments.GetSavedInfo",
       "payments.GetSavedStarGift",
       "payments.GetSavedStarGifts",
+      "payments.GetStarGiftActiveAuctions",
+      "payments.GetStarGiftAuctionAcquiredGifts",
+      "payments.GetStarGiftAuctionState",
       "payments.GetStarGiftCollections",
       "payments.GetStarGifts",
+      "payments.GetStarGiftUpgradeAttributes",
       "payments.GetStarGiftUpgradePreview",
       "payments.GetStarGiftWithdrawalUrl",
       "payments.GetStarsGiftOptions",
@@ -1038,6 +1063,7 @@
       "payments.ReorderStarGiftCollections",
       "payments.SaveStarGift",
       "payments.SendPaymentForm",
+      "payments.SendStarGiftOffer",
       "payments.SendStarsForm",
       "payments.ToggleChatStarGiftNotifications",
       "payments.ToggleStarGiftsPinnedToTop",
@@ -1053,6 +1079,8 @@
       "phone.CreateGroupCall",
       "phone.DeclineConferenceCallInvite",
       "phone.DeleteConferenceCallParticipants",
+      "phone.DeleteGroupCallMessages",
+      "phone.DeleteGroupCallParticipantMessages",
       "phone.DiscardCall",
       "phone.DiscardGroupCall",
       "phone.EditGroupCallParticipant",
@@ -1062,6 +1090,7 @@
       "phone.GetGroupCall",
       "phone.GetGroupCallChainBlocks",
       "phone.GetGroupCallJoinAs",
+      "phone.GetGroupCallStars",
       "phone.GetGroupCallStreamChannels",
       "phone.GetGroupCallStreamRtmpUrl",
       "phone.GetGroupParticipants",
@@ -1076,7 +1105,10 @@
       "phone.SaveCallDebug",
       "phone.SaveCallLog",
       "phone.SaveDefaultGroupCallJoinAs",
+      "phone.SaveDefaultSendAs",
       "phone.SendConferenceCallBroadcast",
+      "phone.SendGroupCallEncryptedMessage",
+      "phone.SendGroupCallMessage",
       "phone.SendSignalingData",
       "phone.SetCallRating",
       "phone.StartScheduledGroupCall",
@@ -1143,6 +1175,7 @@
       "stories.SearchPosts",
       "stories.SendReaction",
       "stories.SendStory",
+      "stories.StartLive",
       "stories.ToggleAllStoriesHidden",
       "stories.TogglePeerStoriesHidden",
       "stories.TogglePinned",
@@ -1164,7 +1197,8 @@
       "users.GetSavedMusic",
       "users.GetSavedMusicByID",
       "users.GetUsers",
-      "users.SetSecureValueErrors"
+      "users.SetSecureValueErrors",
+      "users.SuggestBirthday"
     ]
   },
   {
@@ -1184,7 +1218,7 @@
     "code": 400,
     "msg": "BUSINESS_PEER_USAGE_MISSING",
     "desc": "You cannot send a message to a user through a [business connection](https://core.telegram.org/api/business#connected-bots) if the user hasn't recently contacted us.",
-    "affected": ["messages.SendMessage", "messages.SetTyping"]
+    "affected": ["messages.SendMedia", "messages.SendMessage", "messages.SetTyping"]
   },
   {
     "code": 400,
@@ -1380,7 +1414,9 @@
       "channels.DeleteTopicHistory",
       "channels.EditForumTopic",
       "channels.GetForumTopics",
-      "channels.GetForumTopicsByID"
+      "channels.GetForumTopicsByID",
+      "channels.UpdatePinnedForumTopic",
+      "messages.CreateForumTopic"
     ]
   },
   {
@@ -1410,6 +1446,7 @@
       "channels.EditAbout",
       "channels.EditAdmin",
       "channels.EditBanned",
+      "channels.EditCreator",
       "channels.EditForumTopic",
       "channels.EditLocation",
       "channels.EditPhoto",
@@ -1422,6 +1459,7 @@
       "channels.GetForumTopics",
       "channels.GetForumTopicsByID",
       "channels.GetFullChannel",
+      "channels.GetFutureCreatorAfterLeave",
       "channels.GetMessageAuthor",
       "channels.GetMessages",
       "channels.GetParticipant",
@@ -1466,8 +1504,12 @@
       "chatlists.EditExportedInvite",
       "chatlists.ExportChatlistInvite",
       "folders.EditPeerFolders",
+      "messages.CreateForumTopic",
+      "messages.DeleteScheduledMessages",
+      "messages.DeleteTopicHistory",
       "messages.EditChatAbout",
       "messages.EditChatDefaultBannedRights",
+      "messages.EditForumTopic",
       "messages.EditMessage",
       "messages.ExportChatInvite",
       "messages.ForwardMessages",
@@ -1476,18 +1518,23 @@
       "messages.GetDiscussionMessage",
       "messages.GetExportedChatInvite",
       "messages.GetExportedChatInvites",
+      "messages.GetForumTopics",
+      "messages.GetForumTopicsByID",
       "messages.GetHistory",
       "messages.GetInlineBotResults",
+      "messages.GetMessageReactionsList",
       "messages.GetMessagesReactions",
       "messages.GetMessagesViews",
       "messages.GetPeerDialogs",
       "messages.GetPeerSettings",
       "messages.GetReplies",
+      "messages.GetScheduledMessages",
       "messages.GetSponsoredMessages",
       "messages.GetUnreadMentions",
       "messages.HideAllChatJoinRequests",
       "messages.ImportChatInvite",
       "messages.ReadMentions",
+      "messages.ReorderPinnedForumTopics",
       "messages.Report",
       "messages.SaveDefaultSendAs",
       "messages.Search",
@@ -1499,6 +1546,7 @@
       "messages.SendReaction",
       "messages.SendVote",
       "messages.SetTyping",
+      "messages.UpdatePinnedForumTopic",
       "messages.UploadMedia",
       "phone.GetGroupCallJoinAs",
       "premium.GetBoostsStatus",
@@ -1537,7 +1585,8 @@
       "channels.UpdatePaidMessagesPrice",
       "messages.ExportChatInvite",
       "messages.GetPeerSettings",
-      "messages.SendMessage"
+      "messages.SendMessage",
+      "users.GetUsers"
     ]
   },
   {
@@ -1743,6 +1792,7 @@
       "channels.InviteToChannel",
       "channels.ReportSpam",
       "channels.SetDiscussionGroup",
+      "channels.ToggleForum",
       "channels.ToggleInvites",
       "channels.ToggleJoinRequest",
       "channels.ToggleJoinToSend",
@@ -1779,6 +1829,7 @@
       "messages.InitHistoryImport",
       "messages.MigrateChat",
       "messages.ReadSavedHistory",
+      "messages.SaveDraft",
       "messages.Search",
       "messages.SendInlineBotResult",
       "messages.SendMedia",
@@ -1787,6 +1838,7 @@
       "messages.SetChatAvailableReactions",
       "messages.SetTyping",
       "messages.StartBot",
+      "messages.StartHistoryImport",
       "messages.ToggleNoForwards",
       "messages.UnpinAllMessages",
       "messages.UpdatePinnedMessage",
@@ -1795,6 +1847,7 @@
       "payments.GetStarsTransactions",
       "phone.CreateGroupCall",
       "phone.GetGroupCallStreamRtmpUrl",
+      "phone.JoinGroupCall",
       "premium.GetBoostsList",
       "stats.GetBroadcastRevenueStats",
       "stats.GetBroadcastStats",
@@ -1839,6 +1892,7 @@
       "channels.CheckUsername",
       "channels.GetSendAs",
       "channels.SetStickers",
+      "channels.ToggleForum",
       "channels.ToggleJoinRequest",
       "channels.ToggleJoinToSend",
       "channels.ToggleParticipantsHidden",
@@ -2030,7 +2084,7 @@
     "code": 400,
     "msg": "CODE_INVALID",
     "desc": "Code invalid.",
-    "affected": ["account.ConfirmPasswordEmail"]
+    "affected": ["account.ConfirmPasswordEmail", "account.VerifyEmail"]
   },
   {
     "code": 400,
@@ -2043,6 +2097,12 @@
     "msg": "COLLECTIBLE_NOT_FOUND",
     "desc": "The specified collectible could not be found.",
     "affected": ["fragment.GetCollectibleInfo"]
+  },
+  {
+    "code": 400,
+    "msg": "COLLECTION_ID_INVALID",
+    "desc": "",
+    "affected": ["payments.GetSavedStarGifts"]
   },
   {
     "code": 400,
@@ -2119,7 +2179,8 @@
       "contacts.AddContact",
       "contacts.Block",
       "contacts.DeleteContact",
-      "contacts.Unblock"
+      "contacts.Unblock",
+      "contacts.UpdateContactNote"
     ]
   },
   {
@@ -2145,6 +2206,12 @@
     "msg": "CREATE_CALL_FAILED",
     "desc": "An error occurred while creating the call.",
     "affected": ["phone.CreateGroupCall"]
+  },
+  {
+    "code": 400,
+    "msg": "CREDENTIAL_INVALID",
+    "desc": "",
+    "affected": ["account.RegisterPasskey", "auth.FinishPasskeyLogin"]
   },
   {
     "code": 400,
@@ -2218,9 +2285,11 @@
     "msg": "DOCUMENT_INVALID",
     "desc": "The specified document is invalid.",
     "affected": [
+      "account.CreateBusinessChatLink",
       "account.SaveMusic",
       "account.UpdateColor",
       "account.UpdateEmojiStatus",
+      "channels.CreateForumTopic",
       "channels.EditForumTopic",
       "messages.EditMessage",
       "messages.SendMedia",
@@ -2230,6 +2299,12 @@
       "messages.SetInlineBotResults",
       "upload.GetWebFile"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "EFFECT_CHAT_INVALID",
+    "desc": "",
+    "affected": ["messages.SendMedia", "messages.SendMessage"]
   },
   {
     "code": 400,
@@ -2246,6 +2321,12 @@
       "account.ConfirmPasswordEmail",
       "account.ResendPasswordEmail"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "EMAIL_INSTALL_MISSING",
+    "desc": "",
+    "affected": ["auth.ResendCode", "auth.ResetLoginEmail"]
   },
   {
     "code": 400,
@@ -2416,6 +2497,7 @@
     "desc": "The specified `stars_amount` of the passed [inputMediaPaidMedia](https://core.telegram.org/constructor/inputMediaPaidMedia) is invalid.",
     "affected": ["messages.SendMedia"]
   },
+  { "code": 400, "msg": "EXTENDED_MEDIA_EMPTY", "desc": "", "affected": ["messages.SendMedia"] },
   {
     "code": 400,
     "msg": "EXTENDED_MEDIA_INVALID",
@@ -2549,6 +2631,12 @@
     "msg": "FILE_REFERENCE_INVALID",
     "desc": "The specified [file reference](https://core.telegram.org/api/file-references) is invalid.",
     "affected": ["channels.EditPhoto", "upload.GetFile"]
+  },
+  {
+    "code": 400,
+    "msg": "FILE_REFERENCE_X_EMPTY",
+    "desc": "",
+    "affected": ["messages.SendMultiMedia"]
   },
   {
     "code": 400,
@@ -2745,7 +2833,7 @@
     "code": 400,
     "msg": "GIFT_STARS_INVALID",
     "desc": "The specified amount of stars is invalid.",
-    "affected": ["payments.SendStarsForm"]
+    "affected": ["payments.GetPaymentForm", "payments.SendStarsForm"]
   },
   {
     "code": 400,
@@ -2796,12 +2884,15 @@
     "affected": [
       "phone.CheckGroupCall",
       "phone.DeleteConferenceCallParticipants",
+      "phone.DeleteGroupCallMessages",
+      "phone.DeleteGroupCallParticipantMessages",
       "phone.DiscardGroupCall",
       "phone.EditGroupCallParticipant",
       "phone.EditGroupCallTitle",
       "phone.ExportGroupCallInvite",
       "phone.GetGroupCall",
       "phone.GetGroupCallChainBlocks",
+      "phone.GetGroupCallStars",
       "phone.GetGroupCallStreamChannels",
       "phone.GetGroupParticipants",
       "phone.InviteConferenceCallParticipant",
@@ -2810,7 +2901,10 @@
       "phone.JoinGroupCallPresentation",
       "phone.LeaveGroupCall",
       "phone.LeaveGroupCallPresentation",
+      "phone.SaveDefaultSendAs",
       "phone.SendConferenceCallBroadcast",
+      "phone.SendGroupCallEncryptedMessage",
+      "phone.SendGroupCallMessage",
       "phone.StartScheduledGroupCall",
       "phone.ToggleGroupCallRecord",
       "phone.ToggleGroupCallSettings",
@@ -3003,6 +3097,18 @@
   },
   {
     "code": 400,
+    "msg": "INPUT_STARS_AMOUNT_INVALID",
+    "desc": "",
+    "affected": ["payments.SendStarGiftOffer"]
+  },
+  {
+    "code": 400,
+    "msg": "INPUT_STARS_NANOS_INVALID",
+    "desc": "",
+    "affected": ["payments.SendStarGiftOffer"]
+  },
+  {
+    "code": 400,
     "msg": "INPUT_TEXT_EMPTY",
     "desc": "The specified text is empty.",
     "affected": ["messages.TranslateText"]
@@ -3020,6 +3126,7 @@
     "affected": [
       "channels.EditAdmin",
       "channels.EditBanned",
+      "channels.EditCreator",
       "channels.InviteToChannel",
       "channels.ReportSpam",
       "contacts.Block",
@@ -3027,6 +3134,7 @@
       "messages.CreateChat",
       "messages.DeleteChatUser",
       "messages.EditMessage",
+      "messages.ExportChatInvite",
       "messages.ForwardMessages",
       "messages.GetInlineBotResults",
       "messages.HideChatJoinRequest",
@@ -3131,7 +3239,11 @@
     "code": 400,
     "msg": "INVOICE_INVALID",
     "desc": "The specified invoice is invalid.",
-    "affected": ["payments.GetPaymentForm", "payments.SendPaymentForm"]
+    "affected": [
+      "payments.GetPaymentForm",
+      "payments.SendPaymentForm",
+      "payments.SendStarGiftOffer"
+    ]
   },
   {
     "code": 400,
@@ -3239,7 +3351,12 @@
     "code": 400,
     "msg": "MEDIA_CAPTION_TOO_LONG",
     "desc": "The caption is too long.",
-    "affected": ["messages.EditMessage", "messages.SendMedia", "messages.SendMultiMedia"]
+    "affected": [
+      "messages.EditMessage",
+      "messages.SendMedia",
+      "messages.SendMultiMedia",
+      "messages.SetInlineBotResults"
+    ]
   },
   {
     "code": 400,
@@ -3391,6 +3508,7 @@
       "payments.GetGiveawayInfo",
       "payments.GetPaymentForm",
       "payments.GetPaymentReceipt",
+      "payments.ResolveStarGiftOffer",
       "payments.SaveStarGift",
       "payments.SendPaymentForm",
       "payments.TransferStarGift",
@@ -3419,6 +3537,7 @@
     "desc": "Poll closed.",
     "affected": ["messages.SendVote"]
   },
+  { "code": 400, "msg": "MESSAGE_REQUIRED", "desc": "", "affected": ["messages.Report"] },
   {
     "code": 400,
     "msg": "MESSAGE_TOO_LONG",
@@ -3428,7 +3547,9 @@
       "messages.SendMessage",
       "messages.SetBotCallbackAnswer",
       "messages.SetInlineBotResults",
-      "messages.UpdateDialogFilter"
+      "messages.SetTyping",
+      "messages.UpdateDialogFilter",
+      "payments.GetPaymentForm"
     ]
   },
   {
@@ -3493,17 +3614,20 @@
       "messages.EditMessage",
       "messages.ExportChatInvite",
       "messages.ForwardMessages",
+      "messages.GetBotCallbackAnswer",
       "messages.GetCommonChats",
       "messages.GetDiscussionMessage",
       "messages.GetHistory",
       "messages.GetInlineBotResults",
       "messages.GetMessageReactionsList",
       "messages.GetMessageReadParticipants",
+      "messages.GetMessagesReactions",
       "messages.GetMessagesViews",
       "messages.GetPeerDialogs",
       "messages.GetPeerSettings",
       "messages.GetPollVotes",
       "messages.GetReplies",
+      "messages.GetSponsoredMessages",
       "messages.GetUnreadMentions",
       "messages.HideChatJoinRequest",
       "messages.ImportChatInvite",
@@ -3528,8 +3652,11 @@
       "messages.TranslateText",
       "messages.UpdateDialogFilter",
       "messages.UploadMedia",
+      "payments.GetPaymentForm",
+      "payments.GetSavedStarGifts",
       "photos.GetUserPhotos",
       "stories.GetPeerStories",
+      "stories.GetStoriesByID",
       "updates.GetChannelDifference",
       "updates.GetDifference",
       "upload.GetFile",
@@ -3567,6 +3694,12 @@
     "msg": "MULTI_MEDIA_TOO_LONG",
     "desc": "Too many media files for album.",
     "affected": ["messages.SendMultiMedia"]
+  },
+  {
+    "code": 400,
+    "msg": "NEED_ACTION_MISSING",
+    "desc": "",
+    "affected": ["photos.UploadContactProfilePhoto"]
   },
   {
     "code": 400,
@@ -3827,6 +3960,7 @@
       "channels.CheckUsername",
       "channels.EditAdmin",
       "channels.EditBanned",
+      "channels.EditPhoto",
       "channels.GetSendAs",
       "channels.JoinChannel",
       "contacts.Block",
@@ -3835,6 +3969,7 @@
       "messages.AddChatUser",
       "messages.AppendTodoList",
       "messages.CheckHistoryImportPeer",
+      "messages.CreateForumTopic",
       "messages.DeleteChat",
       "messages.DeleteChatUser",
       "messages.DeleteExportedChatInvite",
@@ -3923,6 +4058,8 @@
       "messages.SetHistoryTTL",
       "messages.SetTyping",
       "messages.StartBot",
+      "messages.StartHistoryImport",
+      "messages.SummarizeText",
       "messages.ToggleDialogPin",
       "messages.ToggleNoForwards",
       "messages.TogglePaidReactionPrivacy",
@@ -3954,6 +4091,7 @@
       "payments.LaunchPrepaidGiveaway",
       "payments.ReorderStarGiftCollections",
       "payments.SendPaymentForm",
+      "payments.SendStarGiftOffer",
       "payments.SendStarsForm",
       "payments.ToggleChatStarGiftNotifications",
       "payments.ToggleStarGiftsPinnedToTop",
@@ -4000,6 +4138,7 @@
       "stories.Report",
       "stories.SendReaction",
       "stories.SendStory",
+      "stories.StartLive",
       "stories.TogglePeerStoriesHidden",
       "stories.TogglePinned",
       "stories.TogglePinnedToTop",
@@ -4039,6 +4178,7 @@
     "affected": [
       "account.ChangePhone",
       "account.ConfirmPhone",
+      "account.SendVerifyEmailCode",
       "account.VerifyPhone",
       "auth.RequestFirebaseSms",
       "auth.ResendCode",
@@ -4052,6 +4192,7 @@
     "desc": "The phone code you provided has expired.",
     "affected": [
       "account.ChangePhone",
+      "account.VerifyEmail",
       "account.VerifyPhone",
       "auth.CancelCode",
       "auth.ResendCode",
@@ -4069,7 +4210,7 @@
     "code": 400,
     "msg": "PHONE_CODE_INVALID",
     "desc": "The provided phone code is invalid.",
-    "affected": ["auth.SignIn", "auth.SignUp"]
+    "affected": ["account.ChangePhone", "auth.SignIn", "auth.SignUp"]
   },
   {
     "code": 400,
@@ -4113,6 +4254,7 @@
       "account.VerifyEmail",
       "account.VerifyPhone",
       "auth.CancelCode",
+      "auth.CheckPaidAuth",
       "auth.CheckPhone",
       "auth.ReportMissingCode",
       "auth.RequestFirebaseSms",
@@ -4177,6 +4319,7 @@
     "affected": [
       "channels.EditPhoto",
       "messages.EditChatPhoto",
+      "messages.EditMessage",
       "messages.SendMedia",
       "messages.UploadMedia",
       "photos.UpdateProfilePhoto",
@@ -4210,7 +4353,12 @@
     "code": 400,
     "msg": "PHOTO_INVALID_DIMENSIONS",
     "desc": "The photo dimensions are invalid.",
-    "affected": ["messages.EditMessage", "messages.SendMedia", "messages.UploadMedia"]
+    "affected": [
+      "messages.EditMessage",
+      "messages.SendMedia",
+      "messages.UploadMedia",
+      "stories.SendStory"
+    ]
   },
   {
     "code": 400,
@@ -4245,6 +4393,12 @@
     "code": 400,
     "msg": "PINNED_TOO_MUCH",
     "desc": "There are too many pinned topics, unpin some first.",
+    "affected": ["channels.UpdatePinnedForumTopic"]
+  },
+  {
+    "code": 400,
+    "msg": "PINNED_TOPIC_NOT_MODIFIED",
+    "desc": "",
     "affected": ["channels.UpdatePinnedForumTopic"]
   },
   {
@@ -4307,6 +4461,12 @@
       "stories.CanSendStory",
       "stories.SendStory"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "PREMIUM_PURPOSE_INVALID",
+    "desc": "",
+    "affected": ["payments.GetPaymentForm"]
   },
   {
     "code": 400,
@@ -4490,7 +4650,8 @@
       "messages.SetChatAvailableReactions",
       "messages.SetDefaultReaction",
       "messages.UpdateSavedReactionTag",
-      "stories.SendReaction"
+      "stories.SendReaction",
+      "stories.SendStory"
     ]
   },
   {
@@ -4566,7 +4727,7 @@
     "code": 400,
     "msg": "REPLY_TO_MONOFORUM_PEER_INVALID",
     "desc": "The specified inputReplyToMonoForum.monoforum_peer_id is invalid.",
-    "affected": ["messages.ForwardMessages", "messages.SendMessage"]
+    "affected": ["messages.ForwardMessages", "messages.SendMedia", "messages.SendMessage"]
   },
   {
     "code": 400,
@@ -4579,6 +4740,18 @@
     "msg": "REQUEST_TOKEN_INVALID",
     "desc": "The master DC did not accept the `request_token` from the CDN DC. Continue downloading the file from the master DC using upload.getFile.",
     "affected": ["upload.ReuploadCdnFile"]
+  },
+  {
+    "code": 400,
+    "msg": "RESELL_STARS_TOO_FEW",
+    "desc": "",
+    "affected": ["payments.SendStarGiftOffer"]
+  },
+  {
+    "code": 400,
+    "msg": "RESELL_STARS_TOO_MUCH",
+    "desc": "",
+    "affected": ["payments.SendStarGiftOffer"]
   },
   {
     "code": 400,
@@ -4656,6 +4829,7 @@
     "desc": "The passed inputSavedStarGiftChat.saved_id is empty.",
     "affected": [
       "payments.ConvertStarGift",
+      "payments.CraftStarGift",
       "payments.GetSavedStarGift",
       "payments.SaveStarGift",
       "payments.TransferStarGift",
@@ -4663,6 +4837,7 @@
       "payments.UpgradeStarGift"
     ]
   },
+  { "code": 400, "msg": "SAVED_PEER_INVALID", "desc": "", "affected": ["messages.ReadMentions"] },
   {
     "code": 400,
     "msg": "SCHEDULE_BOT_NOT_ALLOWED",
@@ -4900,14 +5075,30 @@
   },
   {
     "code": 400,
+    "msg": "STARGIFT_ATTRIBUTE_INVALID",
+    "desc": "",
+    "affected": ["payments.GetResaleStarGifts"]
+  },
+  {
+    "code": 400,
     "msg": "STARGIFT_INVALID",
     "desc": "The passed gift is invalid.",
     "affected": [
       "payments.CheckCanSendGift",
+      "payments.GetCraftStarGifts",
       "payments.GetPaymentForm",
       "payments.GetResaleStarGifts",
+      "payments.GetStarGiftAuctionAcquiredGifts",
+      "payments.GetStarGiftAuctionState",
+      "payments.GetStarGiftUpgradeAttributes",
       "payments.GetStarGiftUpgradePreview"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "STARGIFT_MESSAGE_INVALID",
+    "desc": "",
+    "affected": ["payments.GetPaymentForm"]
   },
   {
     "code": 400,
@@ -4922,10 +5113,35 @@
   },
   {
     "code": 400,
+    "msg": "STARGIFT_NOT_OWNER",
+    "desc": "",
+    "affected": ["payments.GetPaymentForm", "payments.TransferStarGift"]
+  },
+  {
+    "code": 400,
+    "msg": "STARGIFT_NOT_UNIQUE",
+    "desc": "",
+    "affected": ["payments.TransferStarGift"]
+  },
+  {
+    "code": 400,
+    "msg": "STARGIFT_OFFER_INVALID",
+    "desc": "",
+    "affected": ["payments.SendStarGiftOffer"]
+  },
+  {
+    "code": 400,
+    "msg": "STARGIFT_OFFER_NOT_ALLOWED",
+    "desc": "",
+    "affected": ["payments.SendStarGiftOffer"]
+  },
+  {
+    "code": 400,
     "msg": "STARGIFT_OWNER_INVALID",
     "desc": "You cannot transfer or sell a gift owned by another user.",
     "affected": [
       "payments.GetPaymentForm",
+      "payments.GetSavedStarGift",
       "payments.SaveStarGift",
       "payments.SendStarsForm",
       "payments.TransferStarGift"
@@ -4945,6 +5161,12 @@
   },
   {
     "code": 400,
+    "msg": "STARGIFT_RESELL_TOO_EARLY_X",
+    "desc": "",
+    "affected": ["payments.GetPaymentForm"]
+  },
+  {
+    "code": 400,
     "msg": "STARGIFT_SLUG_INVALID",
     "desc": "The specified gift slug is invalid.",
     "affected": [
@@ -4952,6 +5174,7 @@
       "payments.GetSavedStarGift",
       "payments.GetUniqueStarGift",
       "payments.GetUniqueStarGiftValueInfo",
+      "payments.SendStarGiftOffer",
       "payments.SendStarsForm"
     ]
   },
@@ -4959,13 +5182,17 @@
     "code": 400,
     "msg": "STARGIFT_TRANSFER_TOO_EARLY_X",
     "desc": "You cannot transfer this gift yet, wait {value} seconds.",
-    "affected": ["payments.GetPaymentForm"]
+    "affected": ["payments.GetPaymentForm", "payments.TransferStarGift"]
   },
   {
     "code": 400,
     "msg": "STARGIFT_UPGRADE_UNAVAILABLE",
     "desc": "A received gift can only be upgraded to a collectible gift if the [messageActionStarGift](https://core.telegram.org/constructor/messageActionStarGift)/[savedStarGift](https://core.telegram.org/constructor/savedStarGift).`can_upgrade` flag is set.",
-    "affected": ["payments.GetPaymentForm", "payments.UpgradeStarGift"]
+    "affected": [
+      "payments.GetPaymentForm",
+      "payments.GetStarGiftUpgradePreview",
+      "payments.UpgradeStarGift"
+    ]
   },
   {
     "code": 400,
@@ -5192,7 +5419,8 @@
       "messages.SendMessage",
       "stats.GetStoryStats",
       "stories.GetStoriesByID",
-      "stories.ReadStories"
+      "stories.ReadStories",
+      "stories.SendReaction"
     ]
   },
   {
@@ -5679,6 +5907,7 @@
     "desc": "The maximum number of users has been exceeded (to create a chat, for example).",
     "affected": [
       "channels.EditAdmin",
+      "channels.EditCreator",
       "channels.InviteToChannel",
       "channels.JoinChannel",
       "messages.AddChatUser",
@@ -5848,7 +6077,8 @@
       "users.GetFullUser",
       "users.GetSavedMusic",
       "users.GetSavedMusicByID",
-      "users.SetSecureValueErrors"
+      "users.SetSecureValueErrors",
+      "users.SuggestBirthday"
     ]
   },
   {
@@ -5886,7 +6116,7 @@
     "code": 400,
     "msg": "USER_KICKED",
     "desc": "This user was kicked from this supergroup/channel.",
-    "affected": ["channels.InviteToChannel"]
+    "affected": ["channels.EditAdmin", "channels.InviteToChannel"]
   },
   {
     "code": 400,
@@ -5894,9 +6124,11 @@
     "desc": "The provided user is not a mutual contact.",
     "affected": [
       "channels.EditAdmin",
+      "channels.EditCreator",
       "channels.InviteToChannel",
       "messages.AddChatUser",
-      "messages.CheckHistoryImportPeer"
+      "messages.CheckHistoryImportPeer",
+      "messages.InitHistoryImport"
     ]
   },
   {
@@ -6130,6 +6362,7 @@
       "account.DeclinePasswordReset",
       "account.DeleteAutoSaveExceptions",
       "account.DeleteBusinessChatLink",
+      "account.DeletePasskey",
       "account.DeleteSecureValue",
       "account.DisablePeerConnectedBot",
       "account.EditBusinessChatLink",
@@ -6158,6 +6391,7 @@
       "account.GetNotifyExceptions",
       "account.GetNotifySettings",
       "account.GetPaidMessagesRevenue",
+      "account.GetPasskeys",
       "account.GetPassword",
       "account.GetPasswordSettings",
       "account.GetPrivacy",
@@ -6173,11 +6407,13 @@
       "account.GetWallPaper",
       "account.GetWallPapers",
       "account.GetWebAuthorizations",
+      "account.InitPasskeyRegistration",
       "account.InitTakeoutSession",
       "account.InstallTheme",
       "account.InstallWallPaper",
       "account.InvalidateSignInCodes",
       "account.RegisterDevice",
+      "account.RegisterPasskey",
       "account.ReorderUsernames",
       "account.ReportPeer",
       "account.ReportProfilePhoto",
@@ -6274,17 +6510,14 @@
       "channels.CheckUsername",
       "channels.ConvertToGigagroup",
       "channels.CreateChannel",
-      "channels.CreateForumTopic",
       "channels.DeactivateAllUsernames",
       "channels.DeleteChannel",
       "channels.DeleteHistory",
       "channels.DeleteMessages",
       "channels.DeleteParticipantHistory",
-      "channels.DeleteTopicHistory",
       "channels.EditAdmin",
       "channels.EditBanned",
       "channels.EditCreator",
-      "channels.EditForumTopic",
       "channels.EditLocation",
       "channels.EditPhoto",
       "channels.EditTitle",
@@ -6293,9 +6526,8 @@
       "channels.GetAdminLog",
       "channels.GetChannelRecommendations",
       "channels.GetChannels",
-      "channels.GetForumTopics",
-      "channels.GetForumTopicsByID",
       "channels.GetFullChannel",
+      "channels.GetFutureCreatorAfterLeave",
       "channels.GetGroupsForDiscussion",
       "channels.GetInactiveChannels",
       "channels.GetLeftChannels",
@@ -6309,7 +6541,6 @@
       "channels.LeaveChannel",
       "channels.ReadHistory",
       "channels.ReadMessageContents",
-      "channels.ReorderPinnedForumTopics",
       "channels.ReorderUsernames",
       "channels.ReportAntiSpamFalsePositive",
       "channels.ReportSpam",
@@ -6334,7 +6565,6 @@
       "channels.UpdateColor",
       "channels.UpdateEmojiStatus",
       "channels.UpdatePaidMessagesPrice",
-      "channels.UpdatePinnedForumTopic",
       "channels.UpdateUsername",
       "chatlists.CheckChatlistInvite",
       "chatlists.DeleteExportedInvite",
@@ -6374,6 +6604,7 @@
       "contacts.SetBlocked",
       "contacts.ToggleTopPeers",
       "contacts.Unblock",
+      "contacts.UpdateContactNote",
       "folders.EditPeerFolders",
       "fragment.GetCollectibleInfo",
       "help.AcceptTermsOfService",
@@ -6408,6 +6639,7 @@
       "messages.ClearRecentStickers",
       "messages.ClickSponsoredMessage",
       "messages.CreateChat",
+      "messages.CreateForumTopic",
       "messages.DeleteChat",
       "messages.DeleteChatUser",
       "messages.DeleteExportedChatInvite",
@@ -6420,6 +6652,7 @@
       "messages.DeleteRevokedExportedChatInvites",
       "messages.DeleteSavedHistory",
       "messages.DeleteScheduledMessages",
+      "messages.DeleteTopicHistory",
       "messages.DiscardEncryption",
       "messages.EditChatAbout",
       "messages.EditChatAdmin",
@@ -6428,6 +6661,7 @@
       "messages.EditChatTitle",
       "messages.EditExportedChatInvite",
       "messages.EditFactCheck",
+      "messages.EditForumTopic",
       "messages.EditInlineBotMessage",
       "messages.EditMessage",
       "messages.EditQuickReplyShortcut",
@@ -6457,6 +6691,7 @@
       "messages.GetDialogUnreadMarks",
       "messages.GetDiscussionMessage",
       "messages.GetDocumentByHash",
+      "messages.GetEmojiGameInfo",
       "messages.GetEmojiGroups",
       "messages.GetEmojiKeywords",
       "messages.GetEmojiKeywordsDifference",
@@ -6473,6 +6708,8 @@
       "messages.GetFavedStickers",
       "messages.GetFeaturedEmojiStickers",
       "messages.GetFeaturedStickers",
+      "messages.GetForumTopics",
+      "messages.GetForumTopicsByID",
       "messages.GetFullChat",
       "messages.GetGameHighScores",
       "messages.GetHistory",
@@ -6544,6 +6781,7 @@
       "messages.ReceivedMessages",
       "messages.ReceivedQueue",
       "messages.ReorderPinnedDialogs",
+      "messages.ReorderPinnedForumTopics",
       "messages.ReorderPinnedSavedDialogs",
       "messages.ReorderQuickReplies",
       "messages.ReorderStickerSets",
@@ -6603,6 +6841,7 @@
       "messages.SetTyping",
       "messages.StartBot",
       "messages.StartHistoryImport",
+      "messages.SummarizeText",
       "messages.ToggleBotInAttachMenu",
       "messages.ToggleDialogFilterTags",
       "messages.ToggleDialogPin",
@@ -6619,6 +6858,7 @@
       "messages.UnpinAllMessages",
       "messages.UpdateDialogFilter",
       "messages.UpdateDialogFiltersOrder",
+      "messages.UpdatePinnedForumTopic",
       "messages.UpdatePinnedMessage",
       "messages.UpdateSavedReactionTag",
       "messages.UploadEncryptedFile",
@@ -6633,6 +6873,7 @@
       "payments.ClearSavedInfo",
       "payments.ConnectStarRefBot",
       "payments.ConvertStarGift",
+      "payments.CraftStarGift",
       "payments.CreateStarGiftCollection",
       "payments.DeleteStarGiftCollection",
       "payments.EditConnectedStarRefBot",
@@ -6641,6 +6882,7 @@
       "payments.GetBankCardData",
       "payments.GetConnectedStarRefBot",
       "payments.GetConnectedStarRefBots",
+      "payments.GetCraftStarGifts",
       "payments.GetGiveawayInfo",
       "payments.GetPaymentReceipt",
       "payments.GetPremiumGiftCodeOptions",
@@ -6648,8 +6890,12 @@
       "payments.GetSavedInfo",
       "payments.GetSavedStarGift",
       "payments.GetSavedStarGifts",
+      "payments.GetStarGiftActiveAuctions",
+      "payments.GetStarGiftAuctionAcquiredGifts",
+      "payments.GetStarGiftAuctionState",
       "payments.GetStarGiftCollections",
       "payments.GetStarGifts",
+      "payments.GetStarGiftUpgradeAttributes",
       "payments.GetStarGiftUpgradePreview",
       "payments.GetStarGiftWithdrawalUrl",
       "payments.GetStarsGiftOptions",
@@ -6668,7 +6914,9 @@
       "payments.LaunchPrepaidGiveaway",
       "payments.RefundStarsCharge",
       "payments.ReorderStarGiftCollections",
+      "payments.ResolveStarGiftOffer",
       "payments.SaveStarGift",
+      "payments.SendStarGiftOffer",
       "payments.SendStarsForm",
       "payments.ToggleChatStarGiftNotifications",
       "payments.ToggleStarGiftsPinnedToTop",
@@ -6684,6 +6932,8 @@
       "phone.CreateGroupCall",
       "phone.DeclineConferenceCallInvite",
       "phone.DeleteConferenceCallParticipants",
+      "phone.DeleteGroupCallMessages",
+      "phone.DeleteGroupCallParticipantMessages",
       "phone.DiscardCall",
       "phone.DiscardGroupCall",
       "phone.EditGroupCallParticipant",
@@ -6693,6 +6943,7 @@
       "phone.GetGroupCall",
       "phone.GetGroupCallChainBlocks",
       "phone.GetGroupCallJoinAs",
+      "phone.GetGroupCallStars",
       "phone.GetGroupCallStreamChannels",
       "phone.GetGroupCallStreamRtmpUrl",
       "phone.GetGroupParticipants",
@@ -6707,7 +6958,10 @@
       "phone.SaveCallDebug",
       "phone.SaveCallLog",
       "phone.SaveDefaultGroupCallJoinAs",
+      "phone.SaveDefaultSendAs",
       "phone.SendConferenceCallBroadcast",
+      "phone.SendGroupCallEncryptedMessage",
+      "phone.SendGroupCallMessage",
       "phone.SendSignalingData",
       "phone.SetCallRating",
       "phone.StartScheduledGroupCall",
@@ -6776,6 +7030,7 @@
       "stories.SearchPosts",
       "stories.SendReaction",
       "stories.SendStory",
+      "stories.StartLive",
       "stories.ToggleAllStoriesHidden",
       "stories.TogglePeerStoriesHidden",
       "stories.TogglePinned",
@@ -6797,7 +7052,8 @@
       "users.GetSavedMusic",
       "users.GetSavedMusicByID",
       "users.GetUsers",
-      "users.SetSecureValueErrors"
+      "users.SetSecureValueErrors",
+      "users.SuggestBirthday"
     ]
   },
   { "code": 401, "msg": "SESSION_EXPIRED", "desc": "The session has expired.", "affected": [] },
@@ -6824,6 +7080,12 @@
     "msg": "USER_DEACTIVATED_BAN",
     "desc": "The current account was deleted and banned by Telegram's antispam system.",
     "affected": []
+  },
+  {
+    "code": 403,
+    "msg": "ACCESS_DENIED",
+    "desc": "",
+    "affected": ["account.InitPasskeyRegistration"]
   },
   {
     "code": 403,
@@ -7060,6 +7322,7 @@
       "channels.GetAdminLog",
       "channels.InviteToChannel",
       "channels.SetDiscussionGroup",
+      "channels.UpdatePinnedForumTopic",
       "channels.UpdateUsername",
       "InvokeWithLayer",
       "messages.AddChatUser",
@@ -7089,6 +7352,7 @@
       "messages.UpdatePinnedMessage",
       "messages.UploadMedia",
       "payments.GetStarsRevenueAdsAccountUrl",
+      "phone.JoinGroupCall",
       "updates.GetChannelDifference",
       "updates.GetDifference"
     ]
@@ -7177,6 +7441,7 @@
       "account.UpdateColor",
       "account.UpdateConnectedBot",
       "channels.CreateForumTopic",
+      "channels.SearchPosts",
       "messages.CheckQuickReplyShortcut",
       "messages.EditQuickReplyShortcut",
       "messages.ForwardMessages",
@@ -7236,7 +7501,12 @@
     "code": 403,
     "msg": "USER_CHANNELS_TOO_MUCH",
     "desc": "One of the users you tried to add is already in too many channels/supergroups.",
-    "affected": ["channels.EditAdmin", "channels.InviteToChannel", "messages.HideChatJoinRequest"]
+    "affected": [
+      "channels.EditAdmin",
+      "channels.EditCreator",
+      "channels.InviteToChannel",
+      "messages.HideChatJoinRequest"
+    ]
   },
   {
     "code": 403,
@@ -7461,6 +7731,7 @@
       "messages.ForwardMessages",
       "messages.SendMedia",
       "messages.SendMessage",
+      "messages.SendMultiMedia",
       "messages.SetTyping"
     ]
   },
@@ -7662,7 +7933,7 @@
     "code": 500,
     "msg": "AUTH_RESTART",
     "desc": "Restart the authorization process.",
-    "affected": ["auth.SendCode", "auth.SignIn"]
+    "affected": ["auth.FinishPasskeyLogin", "auth.InitPasskeyLogin", "auth.SendCode", "auth.SignIn"]
   },
   {
     "code": 500,
@@ -7715,6 +7986,12 @@
   },
   {
     "code": 500,
+    "msg": "ENCRYPTION_DECLINE_ADMIN_FAILED",
+    "desc": "",
+    "affected": ["messages.DiscardEncryption"]
+  },
+  {
+    "code": 500,
     "msg": "ENCRYPTION_OCCUPY_ADMIN_FAILED",
     "desc": "Failed occupying memory for admin info due to Telegram having internal problems. Please try again later",
     "affected": []
@@ -7735,7 +8012,7 @@
     "code": 500,
     "msg": "GROUPCALL_ADD_PARTICIPANTS_FAILED",
     "desc": "Failure while adding voice chat member due to Telegram having internal problems. Please try again later",
-    "affected": []
+    "affected": ["phone.JoinGroupCall"]
   },
   {
     "code": 500,
@@ -7831,6 +8108,12 @@
   },
   {
     "code": 500,
+    "msg": "NEED_DOC_INVALID",
+    "desc": "",
+    "affected": ["messages.ForwardMessages", "messages.GetHistory", "updates.GetChannelDifference"]
+  },
+  {
+    "code": 500,
     "msg": "NEED_MEMBER_INVALID",
     "desc": "The provided member is invalid or does not exist",
     "affected": []
@@ -7845,7 +8128,13 @@
     "code": 500,
     "msg": "PARTICIPANT_CALL_FAILED",
     "desc": "Failure while making call due to Telegram having internal problems. Please try again later",
-    "affected": []
+    "affected": ["phone.RequestCall"]
+  },
+  {
+    "code": 500,
+    "msg": "PASSKEY_AUTH_RESTART",
+    "desc": "",
+    "affected": ["auth.FinishPasskeyLogin", "auth.InitPasskeyLogin"]
   },
   {
     "code": 500,
@@ -7878,6 +8167,7 @@
       "messages.SendMultiMedia",
       "messages.SendScheduledMessages",
       "messages.StartBot",
+      "phone.RequestCall",
       "updates.GetDifference"
     ]
   },
@@ -7959,6 +8249,7 @@
     "desc": "Telegram is having internal problems. Please try again later",
     "affected": []
   },
+  { "code": 500, "msg": "VOLUME_MOVE_INVALID", "desc": "", "affected": ["messages.GetHistory"] },
   {
     "code": 500,
     "msg": "WORKER_BUSY_TOO_LONG_RETRY",

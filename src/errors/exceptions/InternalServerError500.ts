@@ -70,6 +70,10 @@ export class ChpCallFail extends InternalServerError {
   override id: string = 'CHP_CALL_FAIL';
   override message: string = 'Telegram is having internal problems. Please try again later';
 }
+export class EncryptionDeclineAdminFailed extends InternalServerError {
+  override id: string = 'ENCRYPTION_DECLINE_ADMIN_FAILED';
+  override message: string = '';
+}
 export class EncryptionOccupyAdminFailed extends InternalServerError {
   override id: string = 'ENCRYPTION_OCCUPY_ADMIN_FAILED';
   override message: string =
@@ -160,6 +164,10 @@ export class NeedChatInvalid extends InternalServerError {
   override id: string = 'NEED_CHAT_INVALID';
   override message: string = 'The provided chat is invalid';
 }
+export class NeedDocInvalid extends InternalServerError {
+  override id: string = 'NEED_DOC_INVALID';
+  override message: string = '';
+}
 export class NeedMemberInvalid extends InternalServerError {
   override id: string = 'NEED_MEMBER_INVALID';
   override message: string = 'The provided member is invalid or does not exist';
@@ -172,6 +180,10 @@ export class ParticipantCallFailed extends InternalServerError {
   override id: string = 'PARTICIPANT_CALL_FAILED';
   override message: string =
     'Failure while making call due to Telegram having internal problems. Please try again later';
+}
+export class PasskeyAuthRestart extends InternalServerError {
+  override id: string = 'PASSKEY_AUTH_RESTART';
+  override message: string = '';
 }
 export class PersistentTimestampOutdated extends InternalServerError {
   override id: string = 'PERSISTENT_TIMESTAMP_OUTDATED';
@@ -248,6 +260,10 @@ export class UploadNoVolume extends InternalServerError {
 export class VolumeLocNotFound extends InternalServerError {
   override id: string = 'VOLUME_LOC_NOT_FOUND';
   override message: string = 'Telegram is having internal problems. Please try again later';
+}
+export class VolumeMoveInvalid extends InternalServerError {
+  override id: string = 'VOLUME_MOVE_INVALID';
+  override message: string = '';
 }
 export class WorkerBusyTooLongRetry extends InternalServerError {
   override id: string = 'WORKER_BUSY_TOO_LONG_RETRY';
