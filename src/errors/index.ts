@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,24 +8,35 @@
  * it under the terms of the MIT License as published.
  */
 
-export * as Exceptions from '@/errors/exceptions/index.js';
-export * as ClientError from '@/errors/Client.js';
-export * as WSError from '@/errors/WebSocket.js';
-export * as SecretChatError from '@/errors/SecretChat.js';
-export * as FileErrors from '@/errors/File.js';
-export { RPCError, UnknownError } from '@/errors/RpcError.js';
+export * as Exceptions from './exceptions/index.js';
+export * as ClientError from './Client.js';
+export * as WSError from './WebSocket.js';
+export * as SecretChatError from './SecretChat.js';
+export * as FileErrors from './File.js';
+export { RPCError, UnknownError } from './RpcError.js';
 
-import { BaseError } from '@/errors/Base.js';
+import { BaseError } from './Base.js';
 
 /**
- * Error thrown when a function execution exceeds the specified timeout duration.
+ * Error thrown when a promise or task execution exceeds a specified timeout threshold.
  *
  * @extends BaseError
  * @example
+ * ```typescript
  * throw new TimeoutError(5000);
+ * ```
  */
 export class TimeoutError extends BaseError {
+  /**
+   * The duration in milliseconds that was allowed before the timeout triggered.
+   */
   timeout!: number;
+
+  /**
+   * Constructs a new TimeoutError instance.
+   *
+   * @param timeout - The timeout limit in milliseconds.
+   */
   constructor(timeout: number) {
     super();
     this.message = `Running timeout after ${timeout} ms`;
@@ -33,45 +44,52 @@ export class TimeoutError extends BaseError {
     this.description = `The function is running too long, until it reaches the time limit that has been given.`;
   }
 }
+
 /**
- * Error thrown when a provided class is not a function constructor.
+ * Error thrown when the client encounters a class constructor where it was expecting an executable function.
  *
  * @extends BaseError
- *
  * @example
+ * ```typescript
  * throw new NotAFunctionClass('MyClass');
- *
- * @param className - The name of the class that is not a function constructor.
- * @property message - The error message indicating the class is not a function.
- * @property description - A detailed description of the error.
+ * ```
  */
 export class NotAFunctionClass extends BaseError {
   override message: string = '{value} is not a function.';
   override description: string =
     "The provided class {value} is not a function constructor, can't sending request with that class.";
+
+  /**
+   * Constructs a new NotAFunctionClass instance.
+   *
+   * @param className - The name of the invalid class.
+   */
   constructor(className: string) {
     super();
     this.message = this.message.replace('{value}', className);
     this.description = this.description.replace('{value}', className);
   }
 }
+
 /**
- * Represents an error related to bad message notifications, typically encountered
- * when there is an issue with message IDs, sequence numbers, server salt, or container validity.
+ * Error raised when the server responds with a bad message notification.
  *
- * The error message is determined by the provided error code, with a description
- * for each known code. If the code is not recognized, 'Unknown Error' is used.
+ * @remarks
+ * Bad message notifications indicate structural, sequence, or time-sync errors in client messages.
+ * Common errors include out-of-sync system time, invalid sequence numbers (`seq_no`), or salt expiration.
  *
  * @extends BaseError
- *
  * @example
  * ```typescript
  * throw new BadMsgNotification(16);
  * ```
- *
- * @param code - The error code indicating the specific bad message notification reason.
  */
 export class BadMsgNotification extends BaseError {
+  /**
+   * Constructs a new BadMsgNotification instance.
+   *
+   * @param code - The bad message error code returned by the Telegram MTProto server.
+   */
   constructor(code: number) {
     const description: { [key: number]: string } = {
       16: 'The msg_id is too low, the client time has to be synchronized.',
@@ -89,53 +107,82 @@ export class BadMsgNotification extends BaseError {
     super(`[${code}] ${description[code] ?? 'Unknown Error'}`);
   }
 }
+
 /**
- * Represents an error related to security violations within the application.
- * Extends the {@link BaseError} class to provide additional context for security-related issues.
+ * Custom error thrown when a security check, hash mismatch, or signature verification fails.
  *
+ * @extends BaseError
  * @example
+ * ```typescript
  * SecurityError.check(user.isAuthenticated, "User must be authenticated");
- *
- * @param description - Optional description providing details about the security error.
+ * ```
  */
 export class SecurityError extends BaseError {
+  /**
+   * Constructs a new SecurityError instance.
+   *
+   * @param description - Detailed context of the security violation.
+   */
   constructor(description?: string) {
     super();
     this.description = description;
   }
+
+  /**
+   * Asserts that a condition is true, throwing a SecurityError if it is not.
+   *
+   * @param cond - The boolean condition to evaluate.
+   * @param description - Detailed error message if assertion fails.
+   * @throws {SecurityError} If the condition is false.
+   */
   static check(cond: boolean, description?: string) {
     if (!cond) throw new SecurityError(description);
   }
 }
+
 /**
- * Error thrown when a security check fails due to a mismatch.
+ * Error raised when an assertion check for key, signature, or padding lengths fails.
  *
  * @extends SecurityError
- *
  * @example
- * SecurityCheckMismatch.check(userHasPermission, 'User does not have permission');
- *
- * @property {string} message - The error message describing the mismatch.
+ * ```typescript
+ * SecurityCheckMismatch.check(serverNonce === expectedNonce, 'Nonce mismatch');
+ * ```
  */
 export class SecurityCheckMismatch extends SecurityError {
   override message: string = 'A security check mismatch has occurred.';
+
+  /**
+   * Asserts that a condition is true, throwing a SecurityCheckMismatch if it is not.
+   *
+   * @param cond - The boolean condition to evaluate.
+   * @param description - Detailed error message if assertion fails.
+   * @throws {SecurityCheckMismatch} If the condition is false.
+   */
   static override check(cond: boolean, description?: string) {
     if (!cond) throw new SecurityCheckMismatch(description);
   }
 }
+
 /**
- * Error thrown when a CDN file hash mismatch is detected.
- *
- * This error indicates that the hash of a file retrieved from the CDN does not match the expected value,
- * which may be a sign of tampering or corruption.
+ * Error raised when the checksum or hash verification of a file downloaded from a Telegram CDN fails.
  *
  * @extends SecurityError
- *
  * @example
- * CDNFileHashMismatch.check(actualHash === expectedHash, 'File hash does not match expected value.');
+ * ```typescript
+ * CDNFileHashMismatch.check(downloadedHash === correctHash, 'CDN file hash is corrupted');
+ * ```
  */
 export class CDNFileHashMismatch extends SecurityError {
   override message: string = 'A CDN file hash mismatch has occurred.';
+
+  /**
+   * Asserts that a condition is true, throwing a CDNFileHashMismatch if it is not.
+   *
+   * @param cond - The boolean condition to evaluate.
+   * @param description - Detailed error message if assertion fails.
+   * @throws {CDNFileHashMismatch} If the condition is false.
+   */
   static override check(cond: boolean, description?: string) {
     if (!cond) throw new CDNFileHashMismatch(description);
   }

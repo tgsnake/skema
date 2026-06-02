@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,25 +8,32 @@
  * it under the terms of the MIT License as published.
  */
 
-import { TLObject } from '@/raw/core/TLObject.js';
-import { BytesIO, Buffer } from '@/deps.js';
-import { Int, Long } from '@/raw/core/primitive/index.js';
+import { TLObject } from '../TLObject.js';
+import { BytesIO, Buffer } from '../../../deps.js';
+import { Int, Long } from './index.js';
+
 /**
- * Vector is a class representing a vector (array) of Telegram MTProto objects.
- * It provides methods to read and write these vectors in a specified format.
+ * Serializer and deserializer for generic, strongly-typed vectors (arrays) of MTProto objects.
+ *
+ * @remarks
+ * In MTProto, vectors can be either "boxed" (serialized with the explicit `Vector.ID` class tag prefix)
+ * or "bare" (serialized directly as an array of items without the leading class ID). This class supports both
+ * boxed serialization/deserialization and bare item parsers.
+ *
+ * @extends TLObject
  */
 export class Vector extends TLObject {
-  static ID: number = 0x1cb5c415;
   /**
-   * Serializes an array of values into a Buffer using the Vector schema.
+   * The unique class ID identifier representing `Vector` (0x1cb5c415).
+   */
+  static ID: number = 0x1cb5c415;
+
+  /**
+   * Serializes an array of values into an MTProto-boxed vector Buffer.
    *
-   * @param value - The array of values to serialize.
-   * @param tl - (Optional) A type layer object that provides a custom `write` method for serializing each element.
-   * @returns A Buffer containing the serialized representation of the vector.
-   *
-   * @remarks
-   * - The method writes the Vector ID, the length of the array, and then serializes each element.
-   * - If a type layer (`tl`) is provided, its `write` method is used for each element; otherwise, each element's own `write` method is called.
+   * @param value - The array of elements to serialize.
+   * @param tl - An optional custom type layer descriptor supplying a dedicated elements `write` method.
+   * @returns A Buffer containing the boxed vector bytes.
    */
   static override write(value: Array<any>, tl?: any): Buffer {
     const bytes = new BytesIO();
@@ -41,16 +48,13 @@ export class Vector extends TLObject {
     }
     return Buffer.from(bytes.buffer as unknown as Uint8Array);
   }
+
   /**
-   * Reads a value from the provided BytesIO stream based on the specified size.
+   * Helper deserializer reading a single "bare" item from a stream based on a calculated element byte size.
    *
-   * - If `size` is 4, reads and returns an integer using `Int.read`.
-   * - If `size` is 8, reads and returns a long integer using `Long.read`.
-   * - For other sizes, reads and returns a TLObject using `TLObject.read`.
-   *
-   * @param data - The BytesIO stream to read from.
-   * @param size - The size of the value to read (in bytes).
-   * @returns A Promise resolving to the value read from the stream.
+   * @param data - The `BytesIO` stream to read from.
+   * @param size - The precalculated byte size of a single element.
+   * @returns A promise resolving to the parsed element.
    */
   static async readBare(data: BytesIO, size: number): Promise<any> {
     if (size === 4) {
@@ -61,17 +65,18 @@ export class Vector extends TLObject {
     }
     return await TLObject.read(data);
   }
+
   /**
-   * Reads a vector of elements from the provided `BytesIO` stream.
-   *
-   * @param data - The `BytesIO` stream to read from.
-   * @param tl - (Optional) A type layer object with a `read` method for reading each element.
-   * @returns A promise that resolves to an array containing the read elements.
+   * Reads, unpacks, and deserializes a strongly-typed boxed vector from a binary stream.
    *
    * @remarks
-   * - If `tl` is provided, its `read` method is used to read each element.
-   * - If `tl` is not provided, `Vector.readBare` is used with a calculated size for each element.
-   * - The method first reads the count of elements, then calculates the size of each element based on the remaining buffer length.
+   * This method first extracts the element count. If a specialized element parser (`tl`) is provided,
+   * it uses it. Otherwise, it calculates the average element byte size dynamically using the remaining
+   * buffer capacity and delegates bare item parsing to {@link readBare}.
+   *
+   * @param data - The `BytesIO` stream containing the serialized vector.
+   * @param tl - An optional custom type layer descriptor supplying a dedicated elements `read` method.
+   * @returns A promise resolving to an array of parsed elements.
    */
   static override async read(data: BytesIO, tl?: any): Promise<Array<any>> {
     const results: Array<any> = [];

@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,19 +8,24 @@
  * it under the terms of the MIT License as published.
  */
 
-import { TLObject } from '@/raw/core/TLObject.js';
-import { BytesIO, Buffer } from '@/deps.js';
+import { TLObject } from '../TLObject.js';
+import { BytesIO, Buffer } from '../../../deps.js';
+
 /**
- * Float is a class representing a single-precision floating-point number in the Telegram MTProto protocol.
- * It provides methods to read and write these numbers in a specified format.
+ * Serializer and deserializer for single-precision 32-bit floating-point numbers (IEEE 754).
+ *
+ * @remarks
+ * In MTProto, single-precision floats are represented as 4 bytes, typically in little-endian order.
+ *
+ * @extends TLObject
  */
 export class Float extends TLObject {
   /**
-   * Serializes a 32-bit floating point number into a Buffer.
+   * Serializes a JS `number` into a 4-byte buffer.
    *
-   * @param value - The number to serialize.
-   * @param little - If `true`, writes the number in little-endian format; otherwise, in big-endian format. Defaults to `true`.
-   * @returns A Buffer containing the serialized float.
+   * @param value - The floating-point number to serialize.
+   * @param little - Set to `true` to use little-endian byte ordering; set to `false` for big-endian. Defaults to `true`.
+   * @returns A Buffer containing the 4-byte representation of the float.
    */
   static override write(value: number, little: boolean = true): Buffer {
     const buffer = Buffer.alloc(4);
@@ -31,12 +36,13 @@ export class Float extends TLObject {
     }
     return buffer;
   }
+
   /**
-   * Reads a 32-bit floating point number from the provided BytesIO stream.
+   * Reads and decodes a single-precision floating-point number from a binary stream.
    *
-   * @param data - The BytesIO instance to read from.
-   * @param little - If true, reads the float in little-endian order; otherwise, reads in big-endian order. Defaults to true.
-   * @returns A promise that resolves to the read floating point number.
+   * @param data - The `BytesIO` stream to read the float from.
+   * @param little - Set to `true` to read in little-endian byte ordering; set to `false` for big-endian. Defaults to `true`.
+   * @returns A promise resolving to the decoded number value.
    */
   static override async read(data: BytesIO, little: boolean = true): Promise<number> {
     if (little) {

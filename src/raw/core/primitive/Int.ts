@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,22 +8,28 @@
  * it under the terms of the MIT License as published.
  */
 
-import { TLObject } from '@/raw/core/TLObject.js';
-import { BytesIO, Buffer } from '@/deps.js';
-import { bufferToBigint as toBigint } from '@/helpers.js';
+import { TLObject } from '../TLObject.js';
+import { BytesIO, Buffer } from '../../../deps.js';
+import { bufferToBigint as toBigint } from '../../../helpers.js';
+
 /**
- * Int, Long, Int128, and Int256 are classes representing various integer types.
- * They provide methods to read and write these integers in a specified format.
+ * Serializer and deserializer for standard 32-bit (4-byte) signed or unsigned integers.
+ *
+ * @extends TLObject
  */
 export class Int extends TLObject {
-  static SIZE: number = 4;
   /**
-   * Serializes a 32-bit integer value into a Buffer.
+   * The byte size of a standard 32-bit integer (4 bytes).
+   */
+  static SIZE: number = 4;
+
+  /**
+   * Serializes a 32-bit integer into a Buffer.
    *
-   * @param value - The integer value to write. Can be a `number` or `bigint`.
-   * @param signed - Whether the integer should be written as signed (`true`) or unsigned (`false`). Defaults to `true`.
-   * @param little - Whether to use little-endian (`true`) or big-endian (`false`) byte order. Defaults to `true`.
-   * @returns A Buffer containing the serialized 32-bit integer.
+   * @param value - The integer value to write (accepts `number` or `bigint`).
+   * @param signed - Set to `true` if the integer is signed; set to `false` if unsigned. Defaults to `true`.
+   * @param little - Set to `true` to write in little-endian format; set to `false` for big-endian. Defaults to `true`.
+   * @returns A Buffer containing the 4-byte representation of the integer.
    */
   static override write(
     value: number | bigint,
@@ -46,14 +52,15 @@ export class Int extends TLObject {
     }
     return buffer;
   }
+
   /**
-   * Reads an integer value from the given `BytesIO` stream according to the specified options.
+   * Reads and decodes a 32-bit integer from a binary stream.
    *
-   * @param data - The `BytesIO` instance to read from.
-   * @param signed - Whether to read the value as a signed integer. Defaults to `true`.
-   * @param little - Whether to use little-endian byte order. Defaults to `true`.
-   * @param size - The number of bytes to read. Defaults to `Int.SIZE`.
-   * @returns A promise that resolves to the read integer value.
+   * @param data - The `BytesIO` stream to read the integer from.
+   * @param signed - Set to `true` to parse as a signed integer; set to `false` for unsigned. Defaults to `true`.
+   * @param little - Set to `true` to read in little-endian format; set to `false` for big-endian. Defaults to `true`.
+   * @param size - The exact number of bytes to read from the stream. Defaults to `Int.SIZE`.
+   * @returns A promise resolving to the decoded number.
    */
   static override async read(
     data: BytesIO,
@@ -77,16 +84,30 @@ export class Int extends TLObject {
   }
 }
 
+/**
+ * Serializer and deserializer for 64-bit (8-byte) signed or unsigned integers.
+ *
+ * @remarks
+ * In MTProto, 64-bit integers are heavily used for message IDs, session IDs, chat IDs,
+ * and salt values. Because standard JS numbers only support safe integers up to 53 bits,
+ * this class operates on native JavaScript `bigint` values.
+ *
+ * @extends TLObject
+ */
 export class Long extends TLObject {
-  static SIZE: number = 8;
   /**
-   * Reads a 64-bit integer value from the provided `BytesIO` stream.
+   * The byte size of a 64-bit long integer (8 bytes).
+   */
+  static SIZE: number = 8;
+
+  /**
+   * Reads and decodes a 64-bit integer from a binary stream.
    *
-   * @param data - The `BytesIO` instance to read from.
-   * @param signed - Whether to read the value as a signed integer. Defaults to `true`.
-   * @param little - Whether to use little-endian byte order. Defaults to `true`.
-   * @param size - The number of bytes to read. Defaults to `Long.SIZE`.
-   * @returns A promise that resolves to the read value as a `bigint`.
+   * @param data - The `BytesIO` stream to read the long integer from.
+   * @param signed - Set to `true` to parse as a signed integer; set to `false` for unsigned. Defaults to `true`.
+   * @param little - Set to `true` to read in little-endian format; set to `false` for big-endian. Defaults to `true`.
+   * @param size - The exact number of bytes to read from the stream. Defaults to `Long.SIZE`.
+   * @returns A promise resolving to the decoded native `bigint`.
    */
   static override async read(
     data: BytesIO,
@@ -108,13 +129,14 @@ export class Long extends TLObject {
       }
     }
   }
+
   /**
    * Serializes a 64-bit integer value into a Buffer.
    *
-   * @param value - The bigint value to write into the buffer.
-   * @param signed - Whether the value should be written as a signed integer. Defaults to `true`.
-   * @param little - Whether to use little-endian byte order. Defaults to `true`.
-   * @returns A Buffer containing the serialized 64-bit integer.
+   * @param value - The native `bigint` value to serialize.
+   * @param signed - Set to `true` if the integer is signed; set to `false` if unsigned. Defaults to `true`.
+   * @param little - Set to `true` to write in little-endian format; set to `false` for big-endian. Defaults to `true`.
+   * @returns A Buffer containing the 8-byte representation of the 64-bit integer.
    */
   static override write(value: bigint, signed: boolean = true, little: boolean = true): Buffer {
     const buffer = Buffer.alloc(Long.SIZE);
@@ -134,16 +156,30 @@ export class Long extends TLObject {
     return buffer;
   }
 }
+
+/**
+ * Serializer and deserializer for 128-bit (16-byte) integers.
+ *
+ * @remarks
+ * Used in MTProto cryptographic handshakes, secure nonces, and session key generation.
+ * Operates on native JavaScript `bigint` values.
+ *
+ * @extends Long
+ */
 export class Int128 extends Long {
-  static override SIZE: number = 16;
   /**
-   * Reads a signed or unsigned integer of specified size and endianness from a BytesIO stream.
+   * The byte size of a 128-bit integer (16 bytes).
+   */
+  static override SIZE: number = 16;
+
+  /**
+   * Reads and decodes a 128-bit integer from a binary stream.
    *
-   * @param data - The BytesIO stream to read from.
-   * @param signed - Whether the integer should be interpreted as signed. Defaults to `true`.
-   * @param little - Whether to use little-endian byte order. Defaults to `true`.
-   * @param size - The number of bytes to read. Defaults to `Int128.SIZE`.
-   * @returns A Promise that resolves to the read integer as a `bigint`.
+   * @param data - The `BytesIO` stream to read the integer from.
+   * @param signed - Set to `true` to parse as signed; set to `false` for unsigned. Defaults to `true`.
+   * @param little - Set to `true` to read in little-endian format; set to `false` for big-endian. Defaults to `true`.
+   * @param size - The exact number of bytes to read from the stream. Defaults to `Int128.SIZE`.
+   * @returns A promise resolving to the decoded native `bigint`.
    */
   static override async read(
     data: BytesIO,
@@ -153,13 +189,14 @@ export class Int128 extends Long {
   ): Promise<bigint> {
     return toBigint(data.read(size), little, signed);
   }
+
   /**
-   * Serializes a 128-bit integer (`bigint`) value into a Buffer.
+   * Serializes a 128-bit integer into a Buffer.
    *
-   * @param value - The 128-bit integer value to serialize.
-   * @param _signed - Indicates whether the integer is signed. Defaults to `true`.
-   * @param _little - Indicates whether to use little-endian byte order. Defaults to `true`.
-   * @returns A Buffer containing the serialized bytes of the integer.
+   * @param value - The native `bigint` to serialize.
+   * @param _signed - Unused parameter.
+   * @param _little - Unused parameter.
+   * @returns A Buffer containing the 16-byte representation of the 128-bit integer.
    */
   static override write(value: bigint, _signed: boolean = true, _little: boolean = true): Buffer {
     const bytesArray: Array<number> = [];
@@ -171,16 +208,30 @@ export class Int128 extends Long {
     return Buffer.from(bytesArray);
   }
 }
+
+/**
+ * Serializer and deserializer for 256-bit (32-byte) integers.
+ *
+ * @remarks
+ * Extensively used in cryptographic tasks, DH (Diffie-Hellman) parameters, and authorization key hashing.
+ * Operates on native JavaScript `bigint` values.
+ *
+ * @extends Long
+ */
 export class Int256 extends Long {
-  static override SIZE: number = 32;
   /**
-   * Reads an integer value from the provided `BytesIO` stream.
+   * The byte size of a 256-bit integer (32 bytes).
+   */
+  static override SIZE: number = 32;
+
+  /**
+   * Reads and decodes a 256-bit integer from a binary stream.
    *
-   * @param data - The byte stream to read from.
-   * @param signed - Whether the integer should be interpreted as signed. Defaults to `true`.
-   * @param little - Whether the byte order is little-endian. Defaults to `true`.
-   * @param size - The number of bytes to read. Defaults to `Int256.SIZE`.
-   * @returns A promise that resolves to the read integer as a `bigint`.
+   * @param data - The `BytesIO` stream to read the integer from.
+   * @param signed - Set to `true` to parse as signed; set to `false` for unsigned. Defaults to `true`.
+   * @param little - Set to `true` to read in little-endian format; set to `false` for big-endian. Defaults to `true`.
+   * @param size - The exact number of bytes to read from the stream. Defaults to `Int256.SIZE`.
+   * @returns A promise resolving to the decoded native `bigint`.
    */
   static override async read(
     data: BytesIO,
@@ -190,13 +241,14 @@ export class Int256 extends Long {
   ): Promise<bigint> {
     return Int128.read(data, signed, little, size);
   }
+
   /**
-   * Serializes a bigint value into a Buffer, representing a 256-bit integer.
+   * Serializes a 256-bit integer into a Buffer.
    *
-   * @param value - The bigint value to serialize.
-   * @param _signed - Indicates whether the integer is signed. Defaults to true.
-   * @param _little - Indicates whether to use little-endian byte order. Defaults to true.
-   * @returns A Buffer containing the serialized bytes of the bigint value.
+   * @param value - The native `bigint` to serialize.
+   * @param _signed - Unused parameter.
+   * @param _little - Unused parameter.
+   * @returns A Buffer containing the 32-byte representation of the 256-bit integer.
    */
   static override write(value: bigint, _signed: boolean = true, _little: boolean = true): Buffer {
     const bytesArray: Array<number> = [];

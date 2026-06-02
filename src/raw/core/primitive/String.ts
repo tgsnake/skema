@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,30 +8,36 @@
  * it under the terms of the MIT License as published.
  */
 
-import { TLObject } from '@/raw/core/TLObject.js';
-import { BytesIO, Buffer } from '@/deps.js';
-import { Bytes } from '@/raw/core/primitive/Bytes.js';
+import { TLObject } from '../TLObject.js';
+import { BytesIO, Buffer } from '../../../deps.js';
+import { Bytes } from './Bytes.js';
+
 /**
- * String is a class representing a string in the Telegram MTProto protocol.
- * It provides methods to read and write these strings in a specified format.
+ * Serializer and deserializer for UTF-8 encoded strings.
+ *
+ * @remarks
+ * In MTProto, strings are treated as standard UTF-8 text and are packed/aligned using
+ * the same length-prefix and padding logic as the {@link Bytes} primitive class.
+ *
+ * @extends TLObject
  */
 export class String extends TLObject {
   /**
-   * Serializes a string value into a Buffer using UTF-8 encoding.
+   * Serializes a JavaScript string into a UTF-8 length-prefixed and padded Buffer.
    *
-   * @param value - The string to be serialized.
-   * @returns A Buffer containing the UTF-8 encoded bytes of the input string.
+   * @param value - The input string to serialize.
+   * @returns A Buffer containing the encoded string.
    */
   static override write(value: string): Buffer {
     return Bytes.write(Buffer.from(value, 'utf8')) as unknown as Buffer;
   }
+
   /**
-   * Asynchronously reads a sequence of bytes from the provided `BytesIO` instance
-   * and decodes it into a UTF-8 string.
+   * Reads, aligns, and decodes a UTF-8 string from a binary stream.
    *
-   * @param data - The `BytesIO` instance to read bytes from.
-   * @param _args - Additional arguments (unused).
-   * @returns A promise that resolves to the decoded UTF-8 string.
+   * @param data - The `BytesIO` stream containing the serialized string.
+   * @param _args - Unused additional parameters.
+   * @returns A promise resolving to the decoded native JavaScript string.
    */
   static override async read(data: BytesIO, ..._args: Array<any>): Promise<string> {
     return (await Bytes.read(data)).toString('utf8');

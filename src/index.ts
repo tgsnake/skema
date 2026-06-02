@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -19,8 +19,8 @@ export {
   SecretChatMessageService,
   UpdateSecretChatMessage,
   TypeTGenerate,
-} from '@/raw/index.js';
-export { bufferToBigint, bigIntMod, bigIntPow, bigintToBuffer, mod } from '@/helpers.js';
+} from './raw/index.js';
+export { bufferToBigint, bigIntMod, bigIntPow, bigintToBuffer, mod } from './helpers.js';
 export {
   BadMsgNotification,
   CDNFileHashMismatch,
@@ -35,4 +35,4 @@ export {
   TimeoutError,
   UnknownError,
   WSError,
-} from '@/errors/index.js';
+} from './errors/index.js';

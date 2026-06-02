@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,26 +8,33 @@
  * it under the terms of the MIT License as published.
  */
 
-import { TLObject } from '@/raw/core/TLObject.js';
-import { BytesIO, Buffer } from '@/deps.js';
-import { bufferToBigint, bigintToBuffer, mod } from '@/helpers.js';
+import { TLObject } from '../TLObject.js';
+import { BytesIO, Buffer } from '../../../deps.js';
+import { bufferToBigint, bigintToBuffer, mod } from '../../../helpers.js';
+
 /**
- * Bytes is a class representing a sequence of bytes in the Telegram MTProto protocol.
- * It provides methods to read and write these bytes in a specified format.
+ * Serializer and deserializer for raw, variable-length byte arrays.
+ *
+ * @remarks
+ * In MTProto, raw byte arrays are serialized with a custom length-prefix scheme:
+ * - If the array is 253 bytes or shorter:
+ *   - The first byte contains the exact length.
+ *   - Followed by the raw payload bytes.
+ *   - Followed by `0-3` padding bytes to align the entire block to a 4-byte boundary.
+ * - If the array is longer than 253 bytes:
+ *   - The first byte is written as exactly `254` (0xfe).
+ *   - The next 3 bytes contain the little-endian length.
+ *   - Followed by the raw payload bytes.
+ *   - Followed by `0-3` padding bytes to align the entire block to a 4-byte boundary.
+ *
+ * @extends TLObject
  */
 export class Bytes extends TLObject {
   /**
-   * Serializes a Buffer value into a custom binary format with length-prefix encoding and padding.
+   * Serializes a Node.js Buffer value into a length-prefixed and padded MTProto binary structure.
    *
-   * - If the buffer length is 253 bytes or less, the output format is:
-   *   [1 byte length][buffer data][padding to 4-byte alignment]
-   * - If the buffer length is greater than 253 bytes, the output format is:
-   *   [1 byte (254)][3 bytes length][buffer data][padding to 4-byte alignment]
-   *
-   * The padding ensures the total length (including prefix and data) is a multiple of 4 bytes.
-   *
-   * @param value - The Buffer to serialize.
-   * @returns A Buffer containing the serialized data with length prefix and padding.
+   * @param value - The input Buffer to serialize.
+   * @returns A Buffer containing the formatted prefix, data, and padding bytes.
    */
   static override write(value: Buffer): Buffer {
     const length = Buffer.byteLength(value);
@@ -46,18 +53,13 @@ export class Bytes extends TLObject {
       ]);
     }
   }
+
   /**
-   * Reads a variable-length buffer from the provided BytesIO stream.
+   * Reads, decodes, and aligns a variable-length byte array from a binary stream.
    *
-   * The method first reads a length prefix from the stream:
-   * - If the first byte (length) is less than or equal to 253, it reads that many bytes as the buffer.
-   * - If the first byte is greater than 253, it reads the next 3 bytes to determine the actual length, then reads that many bytes as the buffer.
-   *
-   * After reading the buffer, it reads additional bytes to align the stream position to a 4-byte boundary.
-   *
-   * @param data - The BytesIO stream to read from.
-   * @param _args - Additional arguments (unused).
-   * @returns A Promise that resolves to the read Buffer.
+   * @param data - The `BytesIO` stream to read the byte array from.
+   * @param _args - Unused additional parameters.
+   * @returns A promise resolving to the decoded Node.js Buffer.
    */
   static override async read(data: BytesIO, ..._args: Array<any>): Promise<Buffer> {
     let length = (data.read(1) as unknown as Uint8Array)[0];

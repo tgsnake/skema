@@ -1,30 +1,34 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software: you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { BaseError } from '@/errors/Base.js';
+import { BaseError } from './Base.js';
 
 /**
- * Represents an error related to file operations.
- * Extends the {@link BaseError} class to provide additional context for file-related errors.
+ * Base error class for all file and stream operations.
  *
  * @remarks
- * This error should be thrown when an operation involving files fails.
+ * Extends {@link BaseError} to provide additional context specifically for handling,
+ * transferring, and validating local or remote files.
  *
+ * @extends BaseError
  * @example
  * ```typescript
  * throw new FileError('File not found', 'The specified file does not exist.');
  * ```
- *
- * @param message - A brief message describing the error.
- * @param description - An optional detailed description of the error.
  */
 export class FileError extends BaseError {
+  /**
+   * Constructs a new FileError instance.
+   *
+   * @param message - A brief message describing the error.
+   * @param description - An optional detailed description or troubleshooting guide.
+   */
   constructor(message: string, description?: string) {
     super();
     this.message = message;
@@ -33,12 +37,12 @@ export class FileError extends BaseError {
 }
 
 /**
- * Error thrown when attempting to upload a file with zero bytes.
+ * Error thrown when an attempt is made to upload or process a zero-byte file.
+ *
+ * @remarks
+ * Telegram MTProto uploads require files to have a non-zero byte size.
  *
  * @extends FileError
- * @remarks
- * This error indicates that the provided file has a size of 0 bytes and cannot be uploaded.
- *
  * @example
  * ```typescript
  * if (file.size === 0) {
@@ -47,21 +51,31 @@ export class FileError extends BaseError {
  * ```
  */
 export class FileUploadZero extends FileError {
+  /**
+   * Constructs a new FileUploadZero instance with predefined error messages.
+   */
   constructor() {
     super("Can't upload file when it zero bytes.", 'Provided file has zero bytes (0 B) file size.');
   }
 }
+
 /**
- * Represents an error that occurs when a file upload exceeds the allowed size limit.
+ * Error thrown when a file exceeds the maximum allowed file upload size.
  *
- * @extends {FileError}
+ * @extends FileError
+ * @example
+ * ```typescript
+ * if (file.size > LIMIT) {
+ *   throw new FileUploadBigger(LIMIT, file.size);
+ * }
+ * ```
  */
 export class FileUploadBigger extends FileError {
   /**
-   * Creates an instance of FileUploadBigger.
+   * Constructs a new FileUploadBigger instance.
    *
-   * @param {number} limit - The maximum allowed file size in bytes.
-   * @param {number} size - The actual size of the uploaded file in bytes.
+   * @param limit - The maximum allowed file size limit in bytes.
+   * @param size - The actual size of the provided file in bytes.
    */
   constructor(limit: number, size: number) {
     super(
@@ -72,13 +86,20 @@ export class FileUploadBigger extends FileError {
 }
 
 /**
- * Error thrown when the provided argument is not a readable stream.
+ * Error thrown when the provided argument is not a valid readable stream or buffer.
  *
  * @extends FileError
  * @example
- * throw new FileIsNotReadable();
+ * ```typescript
+ * if (!isReadableStream(arg)) {
+ *   throw new FileIsNotReadable();
+ * }
+ * ```
  */
 export class FileIsNotReadable extends FileError {
+  /**
+   * Constructs a new FileIsNotReadable instance with predefined error messages.
+   */
   constructor() {
     super('FILE_IS_NOT_READABLE', 'The argument provided is not a Readable stream.');
   }

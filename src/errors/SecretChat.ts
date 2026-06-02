@@ -1,38 +1,50 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software: you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { BaseError } from '@/errors/Base.js';
+import { BaseError } from './Base.js';
+
 /**
- * Represents an error specific to secret chat operations.
- * Extends the {@link BaseError} class to provide additional context for secret chat related errors.
+ * Base custom error class for all secret chat end-to-end encryption and session management issues.
  *
  * @extends BaseError
  * @example
+ * ```typescript
  * throw new SecretChatError('Failed to decrypt message', 'The provided key is invalid.');
+ * ```
  */
 export class SecretChatError extends BaseError {
+  /**
+   * Constructs a new SecretChatError instance.
+   *
+   * @param message - A brief message describing the error.
+   * @param description - An optional detailed description or troubleshooting context.
+   */
   constructor(message: string, description?: string) {
     super();
     this.message = message;
     this.description = description;
   }
 }
+
 /**
- * Error thrown when a fingerprint key mismatch is detected in a secret chat.
+ * Error thrown when a security key fingerprint mismatch is detected during end-to-end secret chat encryption.
  *
- * This error indicates that the fingerprint key provided in a message does not match
- * the expected value, suggesting a potential security issue. When this error occurs,
- * the secret chat should be closed to prevent insecure communication.
+ * @remarks
+ * This suggests that the encryption key exchanged does not match, indicating the session is not secure
+ * or has been tampered with. For security reasons, the secret chat must be closed immediately.
  *
  * @extends SecretChatError
  */
 export class FingerprintMismatch extends SecretChatError {
+  /**
+   * Constructs a new FingerprintMismatch instance with predefined error messages.
+   */
   constructor() {
     super(
       'Fingerprint key mismatch',
@@ -40,11 +52,13 @@ export class FingerprintMismatch extends SecretChatError {
     );
   }
 }
+
 /**
- * Error thrown when a secret chat with the specified chat ID cannot be found in the session.
+ * Error thrown when a secret chat session ID cannot be found in the client's local database or session file.
  *
- * This typically indicates that the provided `chatId` does not correspond to any existing secret chat
- * in the current session. Ensure that the `chatId` is correct and that the chat has been previously saved.
+ * @remarks
+ * Ensure that the `chatId` is valid, correct, and that the secret chat negotiation has already taken place
+ * and was stored successfully.
  *
  * @extends SecretChatError
  * @example
@@ -53,6 +67,11 @@ export class FingerprintMismatch extends SecretChatError {
  * ```
  */
 export class ChatNotFound extends SecretChatError {
+  /**
+   * Constructs a new ChatNotFound instance.
+   *
+   * @param chatId - The target secret chat ID that was not found.
+   */
   constructor(chatId: number) {
     super(
       'Secret chat not found',
@@ -60,15 +79,19 @@ export class ChatNotFound extends SecretChatError {
     );
   }
 }
+
 /**
- * Error thrown when an attempt is made to accept a secret chat that has already been accepted.
+ * Error thrown when an attempt is made to accept an end-to-end secret chat request that has already been accepted.
+ *
+ * @remarks
+ * Secret chats can only transition from pending to accepted once.
  *
  * @extends SecretChatError
- * @remarks
- * This error indicates that the secret chat session is already in an accepted state,
- * and further attempts to accept it are redundant.
  */
 export class AlreadyAccepted extends SecretChatError {
+  /**
+   * Constructs a new AlreadyAccepted instance.
+   */
   constructor() {
     super('Secret chat already accepted');
   }

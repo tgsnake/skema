@@ -121,6 +121,4 @@ test/**
 # src/errors/exceptions
 browser/**
 
-deno.lock
-
 ./docs/**

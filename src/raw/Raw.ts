@@ -13,9 +13,9 @@
  *               This file is auto generate.                *
  *         All change made in this file will be lost!       *
  ***********************************************************/
-import { TLObject, Primitive } from '@/raw/core/index.js';
-import { Buffer, BytesIO } from '@/deps.js';
-import { UpdateSecretChatMessage } from '@/raw/UpdateSecretChat.js';
+import { TLObject, Primitive } from './core/index.js';
+import { Buffer, BytesIO } from '../deps.js';
+import { UpdateSecretChatMessage } from './UpdateSecretChat.js';
 
 /**
  * This is a telegram schema, so you can see the documentation in https://core.telegram.org/schema.

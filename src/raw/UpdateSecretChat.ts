@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,47 +8,61 @@
  * it under the terms of the MIT License as published.
  */
 
-import { Raw } from '@/raw/Raw.js';
-import { TLObject } from '@/raw/core/TLObject.js';
+import { Raw } from './Raw.js';
+import { TLObject } from './core/TLObject.js';
 
 /**
- * Interface representing a generator for decrypting encrypted messages.
+ * Interface representing an E2E decryption generator context.
+ *
+ * @remarks
+ * Any secret chat management instance passed into `UpdateSecretChatMessage.generate` must implement
+ * this interface to decrypt incoming encrypted raw Telegram message updates.
  *
  * @interface TypeTGenerate
  */
 export interface TypeTGenerate {
   /**
-   * Decrypts an encrypted message and returns the decrypted message.
+   * Decrypts a raw encrypted secret chat message.
    *
-   * @param message - The encrypted message to decrypt.
-   * @returns A promise that resolves to the decrypted message.
+   * @param message - The raw encrypted message object received from Telegram.
+   * @returns A promise resolving to the decrypted raw message structure.
    */
   decrypt: (message: Raw.TypeEncryptedMessage) => Promise<Raw.TypeDecryptedMessage>;
 }
+
 /**
- * Represents an update for a secret chat message, wrapping the decrypted message and related metadata.
- *
- * This class is used to handle updates for new encrypted messages in secret chats, providing access to the decrypted message, the QTS (queue timestamp), and the original raw update object.
- * Modified class of UpdateNewEncryptedMessage. The update object should be left as received but should be decrypted already. Therefore this modification was made to facilitate management so there is no need to manually decrypt.
+ * Represents a decrypted secret chat message update wrapper.
  *
  * @remarks
- * - The `message` property can be either a `SecretChatMessage` or a `SecretChatMessageService`.
- * - The static `generate` method handles decryption and instantiation based on the type of the raw message.
+ * This modified update structure wraps raw incoming Telegram encrypted updates (`UpdateNewEncryptedMessage`)
+ * and replaces the encrypted message payload with its fully-decrypted message or service structure.
+ * This simplifies message handling by eliminating manual decrypt stages.
  *
- * @example
- * ```typescript
- * const update = await UpdateSecretChatMessage.generate(rawUpdate, secretChatInstance);
- * console.log(update.message);
- * ```
- *
- * @property message - The decrypted secret chat message or service message.
- * @property qts - The queue timestamp associated with the update.
- * @property original - The original raw update object.
+ * @extends TLObject
  */
 export class UpdateSecretChatMessage extends TLObject {
+  /**
+   * The decrypted message or service message payload.
+   */
   message!: SecretChatMessage | SecretChatMessageService;
+
+  /**
+   * The queue timestamp (QTS) parameter indicating the sequence order of the update.
+   */
   qts!: number;
+
+  /**
+   * The original raw Telegram encrypted update instance.
+   *
+   * @internal
+   */
   _original!: Raw.UpdateNewEncryptedMessage;
+
+  /**
+   * Constructs a new UpdateSecretChatMessage wrapper.
+   *
+   * @param params - Initial parameter values.
+   */
   constructor(params: {
     message: SecretChatMessage | SecretChatMessageService;
     qts: number;
@@ -64,17 +78,20 @@ export class UpdateSecretChatMessage extends TLObject {
     this.qts = params.qts;
     this._original = params.original;
   }
+
   /**
-   * Generates an `UpdateSecretChatMessage` instance by decrypting the provided encrypted message
-   * using the given secret chat context.
+   * Decrypts a raw encrypted update and generates a fully decrypted `UpdateSecretChatMessage` wrapper.
    *
-   * Depending on the type of the encrypted message (`EncryptedMessageService` or not),
-   * this method constructs the appropriate secret chat message object.
+   * @remarks
+   * This static factory determines whether the encrypted message is a standard user message or
+   * a service message (e.g. key exchange requests), calls `secretChat.decrypt()` to decrypt the body,
+   * constructs the appropriate wrapper class (`SecretChatMessage` or `SecretChatMessageService`),
+   * and returns the finalized update object.
    *
-   * @typeParam T - The type of the secret chat context, which must implement a `decrypt` method.
-   * @param update - The raw update containing the new encrypted message.
-   * @param secretChat - The secret chat context used to decrypt the message.
-   * @returns A promise that resolves to an `UpdateSecretChatMessage` containing the decrypted message.
+   * @typeParam T - The secret chat context class implementing {@link TypeTGenerate}.
+   * @param update - The raw `UpdateNewEncryptedMessage` containing the encrypted payload.
+   * @param secretChat - The secret chat session manager used to decrypt the message bytes.
+   * @returns A promise resolving to the decrypted `UpdateSecretChatMessage` instance.
    */
   static async generate<T>(
     update: Raw.UpdateNewEncryptedMessage,
@@ -107,29 +124,25 @@ export class UpdateSecretChatMessage extends TLObject {
       original: update,
     });
   }
+
   /**
-   * Gets the original raw encrypted message associated with this update.
+   * The original raw encrypted message container received from Telegram.
    *
-   * @returns The original `Raw.UpdateNewEncryptedMessage` object.
+   * @returns The raw original encrypted update object.
    */
   get original(): Raw.UpdateNewEncryptedMessage {
     return this._original;
   }
 }
+
 /**
- * Represents a secret chat message with encrypted content.
+ * Represents a decrypted standard text or media message within a secret chat.
  *
  * @remarks
- * This class extends `TLObject` and is used to encapsulate the details of a message
- * in a secret chat, including its unique identifier, chat context, timestamp, message
- * content, and associated encrypted file.
+ * Wraps the decrypted end-to-end encrypted payload together with its local random ID, chat context,
+ * timestamp, and optional media file attachments.
  *
- * @property randomId - A unique identifier for the message, represented as a bigint.
- * @property chatId - The identifier of the chat where the message was sent.
- * @property date - The Unix timestamp indicating when the message was sent.
- * @property message - The decrypted message content, which can be one of several types.
- * @property file - The encrypted file associated with the message.
- *
+ * @extends TLObject
  * @example
  * ```typescript
  * const secretMessage = new SecretChatMessage({
@@ -142,15 +155,40 @@ export class UpdateSecretChatMessage extends TLObject {
  * ```
  */
 export class SecretChatMessage extends TLObject {
+  /**
+   * A unique 64-bit identifier chosen by the client to prevent replay attacks.
+   */
   randomId!: bigint;
+
+  /**
+   * The unique secret chat identifier.
+   */
   chatId!: number;
+
+  /**
+   * The Unix timestamp indicating when the message was sent.
+   */
   date!: number;
+
+  /**
+   * The decrypted inner message payload mapping to a standard version-specific schema.
+   */
   message!:
     | Raw.DecryptedMessage8
     | Raw.DecryptedMessage17
     | Raw.DecryptedMessage45
     | Raw.DecryptedMessage73;
+
+  /**
+   * The encrypted file attachment description associated with this message, if any.
+   */
   file!: Raw.TypeEncryptedFile;
+
+  /**
+   * Constructs a new SecretChatMessage instance.
+   *
+   * @param params - Initial parameter values.
+   */
   constructor(params: {
     randomId: bigint;
     chatId: number;
@@ -175,23 +213,15 @@ export class SecretChatMessage extends TLObject {
     this.file = params.file;
   }
 }
+
 /**
- * Represents a service message in a secret chat.
- *
- * This class extends `TLObject` and encapsulates the properties and behavior
- * of a service message exchanged within a secret chat context.
+ * Represents a decrypted service command message within a secret chat.
  *
  * @remarks
- * - The `message` property can be either a `Raw.DecryptedMessageService8` or `Raw.DecryptedMessageService17`.
- * - The class sets several internal properties such as `classType`, `className`, `constructorId`, and `subclassOfId`
- *   for serialization and type identification purposes.
+ * Used for background negotiation signals such as typing notifications, read receipt confirmations,
+ * self-destruct changes, or encryption key exchanges.
  *
- * @property randomId - Unique identifier for the message, represented as a bigint.
- * @property chatId - Identifier of the secret chat.
- * @property date - Unix timestamp of when the message was sent.
- * @property message - The decrypted service message payload.
- *
- *
+ * @extends TLObject
  * @example
  * ```typescript
  * const serviceMessage = new SecretChatMessageService({
@@ -203,10 +233,31 @@ export class SecretChatMessage extends TLObject {
  * ```
  */
 export class SecretChatMessageService extends TLObject {
+  /**
+   * A unique 64-bit identifier chosen by the client to prevent replay attacks.
+   */
   randomId!: bigint;
+
+  /**
+   * The unique secret chat identifier.
+   */
   chatId!: number;
+
+  /**
+   * The Unix timestamp indicating when the message was sent.
+   */
   date!: number;
+
+  /**
+   * The decrypted inner service message payload.
+   */
   message!: Raw.DecryptedMessageService8 | Raw.DecryptedMessageService17;
+
+  /**
+   * Constructs a new SecretChatMessageService instance.
+   *
+   * @param params - Initial parameter values.
+   */
   constructor(params: {
     randomId: bigint;
     chatId: number;

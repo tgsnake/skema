@@ -1,24 +1,37 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software: you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { bigInt, Buffer } from '@/deps.js';
+import { bigInt, Buffer } from './deps.js';
 // https://github.com/gram-js/gramjs/blob/b99879464cd1114d89b333c5d929610780c4b003/gramjs/Helpers.ts#L13
 
 /**
- * Converts a bigint value to a Buffer with specified padding, endianness, and signedness.
+ * Converts a JS native `bigint` value into a Node.js `Buffer` with custom byte-padding, endianness, and sign representation.
  *
- * @param int - The bigint value to convert.
- * @param padding - The number of bytes to pad the buffer to. Must be at least the minimum required to represent the value.
- * @param litte - If true, the buffer will be in little-endian order; if false, big-endian. Defaults to true.
- * @param signed - If true, the value is treated as signed and two's complement is used for negative numbers. Defaults to false.
- * @returns A Buffer representing the bigint value with the specified options.
- * @throws {Error} If the value cannot fit in the specified padding or if an unsigned conversion is attempted with a negative value.
+ * @remarks
+ * This utility handles both signed and unsigned numeric translations.
+ * For signed negative bigints, it computes the manual two's complement transformation
+ * in either little-endian or big-endian formats to match Telegram MTProto specifications.
+ *
+ * @param int - The bigint value to serialize into the buffer.
+ * @param padding - The absolute target size of the output buffer in bytes.
+ * @param litte - Set to `true` for little-endian encoding; set to `false` for big-endian. Defaults to `true`.
+ * @param signed - Set to `true` to allow signed integers and two's complement representation. Defaults to `false`.
+ * @returns A new `Buffer` representation of the bigint value.
+ *
+ * @throws {Error} If the bigint requires more bytes to represent than the specified padding size.
+ * @throws {Error} If the bigint is negative and `signed` is set to `false`.
+ *
+ * @example
+ * ```typescript
+ * // Unsigned little-endian 4-byte padding
+ * const buf = bigintToBuffer(BigInt(42), 4, true, false);
+ * ```
  */
 export function bigintToBuffer(
   int: bigint,
@@ -69,15 +82,21 @@ export function bigintToBuffer(
 }
 
 /**
- * Computes the exponentiation of two big integers, with optional modular reduction.
+ * Computes base-`x` raised to exponent-`y`, with an optional modular reduction `z`.
  *
- * If the modulus `z` is not provided, returns `x` raised to the power of `y` (`x ** y`).
- * If the modulus `z` is provided, computes `(x ** y) % z` efficiently using modular exponentiation.
+ * @remarks
+ * Uses an efficient binary exponentiation algorithm (square-and-multiply) to handle
+ * extremely large values of `x`, `y`, and `z` securely without precision loss.
  *
- * @param x - The base as a bigint.
- * @param y - The exponent as a bigint.
- * @param z - (Optional) The modulus as a bigint. If provided, the result is computed modulo `z`.
- * @returns The result of `x ** y` if `z` is undefined, otherwise `(x ** y) % z`.
+ * @param x - The base bigint value.
+ * @param y - The exponent bigint value (must be non-negative if modulus is specified).
+ * @param z - Optional modulus bigint value.
+ * @returns If `z` is not defined: `x ** y`. If `z` is defined: `(x ** y) % z`.
+ *
+ * @example
+ * ```typescript
+ * const result = bigIntPow(BigInt(5), BigInt(3), BigInt(7)); // (5 ** 3) % 7 = 6
+ * ```
  */
 export function bigIntPow(x: bigint, y: bigint, z?: bigint) {
   if (z === undefined) {
@@ -96,43 +115,57 @@ export function bigIntPow(x: bigint, y: bigint, z?: bigint) {
 }
 // https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
 /**
- * Computes the true modulo of a number, ensuring a non-negative result.
+ * Computes the true mathematical modulo of two JS standard `number`s, ensuring a non-negative result.
  *
- * This function returns the remainder of the division of `n` by `m`,
- * always yielding a result in the range `[0, m)`, even if `n` is negative.
+ * @remarks
+ * In standard JavaScript, the `%` operator computes the remainder, which can result in a negative
+ * number if the dividend `n` is negative. This helper function corrects that behavior to return
+ * a mathematically sound positive modulo in the range `[0, m)`.
  *
  * @param n - The dividend.
- * @param m - The divisor (must be a non-zero integer).
- * @returns The non-negative remainder after dividing `n` by `m`.
+ * @param m - The divisor (must be a positive, non-zero number).
+ * @returns The positive remainder representing `n mod m`.
  *
  * @example
- * mod(5, 3); // returns 2
- * mod(-1, 3); // returns 2
+ * ```typescript
+ * mod(5, 3);   // returns 2
+ * mod(-1, 3);  // returns 2 (whereas -1 % 3 returns -1)
+ * ```
  */
 export function mod(n: number, m: number): number {
   return ((n % m) + m) % m;
 }
 /**
- * Computes the modulus of two bigint values, ensuring a non-negative result.
+ * Computes the true mathematical modulo of two `bigint` values, ensuring a non-negative result.
  *
- * This function returns the result of `n mod m`, always as a non-negative bigint,
- * even if `n` is negative. This is useful for mathematical operations where
- * a positive modulus is required.
+ * @remarks
+ * Similar to {@link mod}, this function implements correct mathematical modulo for large bigints
+ * so that any negative dividend `n` resolves into a positive remainder modulo `m`.
  *
- * @param n - The dividend as a bigint.
- * @param m - The divisor as a bigint.
- * @returns The non-negative remainder of `n` divided by `m`.
+ * @param n - The bigint dividend.
+ * @param m - The bigint divisor.
+ * @returns The positive bigint remainder representing `n mod m`.
+ *
+ * @example
+ * ```typescript
+ * bigIntMod(BigInt(-5), BigInt(3)); // returns 1n
+ * ```
  */
 export function bigIntMod(n: bigint, m: bigint): bigint {
   return ((n % m) + m) % m;
 }
 /**
- * Converts a Buffer to a BigInt value.
+ * Decodes a Node.js `Buffer` back into a JS native `BigInt` value.
  *
- * @param buffer - The buffer to convert.
- * @param little - If true, interprets the buffer as little-endian. Defaults to true.
- * @param signed - If true, interprets the buffer as a signed integer. Defaults to false.
- * @returns The BigInt representation of the buffer.
+ * @param buffer - The source Buffer containing binary representation of the integer.
+ * @param little - Set to `true` if the buffer is encoded in little-endian format; set to `false` if big-endian. Defaults to `true`.
+ * @param signed - Set to `true` if the buffer contains a signed two's complement integer. Defaults to `false`.
+ * @returns A standard native `bigint` value decoded from the bytes.
+ *
+ * @example
+ * ```typescript
+ * const val = bufferToBigint(Buffer.from([0x2a, 0x00]), true, false); // 42n
+ * ```
  */
 export function bufferToBigint(buffer: Buffer, little: boolean = true, signed: boolean = false) {
   const length = Buffer.byteLength(buffer);

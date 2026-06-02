@@ -1,18 +1,22 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software: you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-import { BaseError } from '@/errors/Base.js';
+import { BaseError } from './Base.js';
 
 /**
- * @class ClientDisconnected
+ * Error thrown when a client request is attempted while the Telegram MTProto client is completely disconnected.
+ *
+ * @remarks
+ * To resolve this error, ensure that `client.connect()` or equivalent initialization routines are run
+ * and completed successfully before initiating requests to the Telegram API.
+ *
  * @extends BaseError
- * @description Error thrown when a request is attempted while the Telegram client is disconnected.
  */
 export class ClientDisconnected extends BaseError {
   override message: string = "Can't send request to telegram when client is unconnected.";
@@ -21,9 +25,12 @@ export class ClientDisconnected extends BaseError {
 }
 
 /**
- * @class ClientFailed
+ * Error thrown when the Telegram client completely fails to establish a connection to the data center servers.
+ *
+ * @remarks
+ * This occurs when the network connection retries exceed the user-defined maximum attempt threshold.
+ *
  * @extends BaseError
- * @description Error thrown when the Telegram client fails to connect to the server.
  */
 export class ClientFailed extends BaseError {
   override message: string = 'Client failed to connect to server.';
@@ -32,9 +39,12 @@ export class ClientFailed extends BaseError {
 }
 
 /**
- * @class ClientReady
+ * Error thrown when an attempt is made to call connect or start on an already connected Telegram client.
+ *
+ * @remarks
+ * Re-initiating a connection while the socket/channel is already fully active is not permitted.
+ *
  * @extends BaseError
- * @description Error thrown when an attempt is made to connect an already connected Telegram client.
  */
 export class ClientReady extends BaseError {
   override message: string = 'Client is already connected to server.';
@@ -43,9 +53,9 @@ export class ClientReady extends BaseError {
 }
 
 /**
- * @class ClientNotReady
+ * Error thrown when an attempt is made to disconnect or stop an already disconnected Telegram client.
+ *
  * @extends BaseError
- * @description Error thrown when an attempt is made to disconnect an already disconnected Telegram client.
  */
 export class ClientNotReady extends BaseError {
   override message: string = 'Client is already disconnected to server.';
@@ -54,9 +64,13 @@ export class ClientNotReady extends BaseError {
 }
 
 /**
- * @class AuthKeyMissing
+ * Error thrown when the MTProto session authentication key is missing or not provided.
+ *
+ * @remarks
+ * This commonly happens if the client is run in an environment expecting an existing session file
+ * or session string, but no authorization parameters or credentials are supplied.
+ *
  * @extends BaseError
- * @description Error thrown when the authentication key is unavailable.
  */
 export class AuthKeyMissing extends BaseError {
   override message: string = 'Auth key unavailable';

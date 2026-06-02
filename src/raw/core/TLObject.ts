@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,10 +8,10 @@
  * it under the terms of the MIT License as published.
  */
 
-import { AllTLObject } from '@/raw/All.js';
-import { BytesIO, Buffer, inspect } from '@/deps.js';
-import { Logger } from '@/Logger.js';
-import { Raw, Message, GzipPacked, Primitive, MsgContainer } from '@/raw/index.js';
+import { AllTLObject } from '../All.js';
+import { BytesIO, Buffer, inspect } from '../../deps.js';
+import { Logger } from '../../Logger.js';
+import { Raw, Message, GzipPacked, Primitive, MsgContainer } from '../index.js';
 
 interface RawIndexSignature {
   [key: string]: any;
@@ -56,52 +56,67 @@ function getModule(
 }
 
 /**
- * Represents a base class for TL (Type Language) objects.
- *
- * This class provides serialization and deserialization logic for TL objects,
- * as well as utility methods for inspection and JSON conversion.
+ * Base abstract class for all Type Language (TL) schema objects within the MTProto protocol.
  *
  * @remarks
- * - The class is designed to be extended by specific TL object implementations.
- * - It mimics some Python class behaviors for compatibility with TL schemas.
- *
- * @property _slots - Internal array of slot names for the object.
- * @property cls - Reference to the constructor of the current class (late static binding).
- * @property constructorId - Unique identifier for the constructor.
- * @property subclassOfId - Identifier for the parent class (if any).
- * @property className - Name of the class.
- * @property classType - Type of the class.
- *
- * @example
- * ```typescript
- * class MyTLObject extends TLObject {
- *   // Custom implementation
- * }
- * ```
+ * In the Telegram MTProto protocol, messages and API payloads are defined in a custom ID-based schema language
+ * called Type Language (TL). `TLObject` is the root class providing fundamental binary serialization (`write`)
+ * and deserialization (`read`) interfaces, alongside custom console print formatters and standard JSON serializers.
  */
 export class TLObject {
+  /**
+   * The internal slot list storing serialization field property names.
+   *
+   * @internal
+   */
   _slots!: Array<string>;
-  // reference python cls -> typescript cls https://stackoverflow.com/questions/38138428/late-static-binding-and-instance-methods-in-typescript
+
+  /**
+   * A dynamic reference to the current subclass constructor.
+   * Enables late static binding for instance methods to access static helper operations.
+   */
   cls: any = <typeof TLObject>this.constructor;
+
+  /**
+   * The unique 32-bit integer identifier (CRC32 checksum) of this TL constructor.
+   */
   constructorId!: number;
+
+  /**
+   * The unique 32-bit integer identifier of the parent/abstract type this TL subclass represents.
+   */
   subclassOfId!: number;
+
+  /**
+   * The canonical string name of this class representation.
+   */
   className!: string;
+
+  /**
+   * The underlying classification type (e.g. `request`, `constructor`, `function`).
+   */
   classType!: string;
+
+  /**
+   * Constructs a new TLObject instance, initializing slots and late-bound constructors.
+   */
   constructor() {
     this._slots = [];
     this.constructorId = this.cls.ID ?? 0;
     this.className = 'TLObject';
   }
+
   /**
-   * Reads a TLObject from the provided BytesIO stream.
+   * Reads and deserializes a generic TLObject from a binary stream.
    *
-   * This static method reads a 32-bit unsigned integer (interpreted as the object ID)
-   * from the stream, logs the reading operation, dynamically resolves the corresponding
-   * TLObject class, and delegates the reading process to that class's `read` method.
+   * @remarks
+   * This method first reads the leading 32-bit little-endian integer from the stream, which is
+   * treated as the unique `constructorId` (or Class ID). It resolves the constructor class dynamically
+   * from the global TL object map (`AllTLObject`) and delegates parsing to the subclass's static `read` method.
    *
-   * @param data - The BytesIO stream to read the TLObject from.
-   * @param args - Additional arguments to pass to the resolved TLObject's `read` method.
-   * @returns A Promise that resolves to the deserialized TLObject instance.
+   * @param data - The `BytesIO` buffer stream containing the serialized TLObject.
+   * @param args - Additional arguments passed down to the resolved subclass's static read implementation.
+   * @returns A promise resolving to the parsed class instance.
    */
   static async read(data: BytesIO, ...args: Array<any>): Promise<any> {
     const id = data.readUInt32LE(4);
@@ -111,38 +126,49 @@ export class TLObject {
     const _class = getModule(AllTLObject[id as unknown as keyof typeof AllTLObject]);
     return await _class.read(data, ...args);
   }
+
   /**
-   * Serializes the provided arguments into a Buffer.
-   *
-   * @param {...any[]} _args - The arguments to be serialized.
-   * @returns {Buffer} A Buffer containing the serialized data.
+   * Serializes constructor arguments into a raw binary buffer.
    *
    * @remarks
-   * This is a static method. The current implementation returns an empty Buffer.
+   * This base implementation acts as an abstract stub returning an empty Buffer. Subclasses override
+   * this static method to handle specific binary serialization layouts.
+   *
+   * @param _args - Arguments to be serialized.
+   * @returns An empty `Buffer` of size 0.
    */
   static write(..._args: Array<any>): Buffer {
     return Buffer.alloc(0);
   }
+
   /**
-   * Reads data from the provided `BytesIO` instance and processes it using the associated class's `read` method.
+   * Deserializes a binary stream into this specific TLObject instance.
    *
-   * @param data - The `BytesIO` instance containing the data to be read.
-   * @param args - Additional arguments to be passed to the class's `read` method.
-   * @returns A promise that resolves with the result of the read operation.
+   * @param data - The `BytesIO` buffer stream containing the serialized TLObject.
+   * @param args - Additional arguments passed down to the read parser.
+   * @returns A promise resolving to the parsed instance.
    */
   read(data: BytesIO, ...args: Array<any>): Promise<any> {
     return this.cls.read(data, ...args);
   }
+
   /**
-   * Serializes the provided arguments using the associated class's `write` method.
+   * Serializes the current class instance into a raw binary buffer.
    *
-   * @param {...any[]} args - The arguments to be serialized.
-   * @returns {Buffer} The resulting Buffer after serialization.
+   * @param args - Arguments passed down to the writer.
+   * @returns A Buffer containing the serialized representation of this object.
    */
   write(...args: Array<any>): Buffer {
     return this.cls.write(...args);
   }
-  /** @ignore */
+
+  /**
+   * Custom inspect handler for Node.js console output (`util.inspect`).
+   * Omits private properties (prefixed with `_`) and structural metadata to keep console outputs clean.
+   *
+   * @ignore
+   * @returns An object containing enumerable public properties to display.
+   */
   [Symbol.for('nodejs.util.inspect.custom')](): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.className,
@@ -159,12 +185,28 @@ export class TLObject {
     }
     return toPrint;
   }
-  /** @ignore */
+
+  /**
+   * Custom inspect handler for Deno runtime terminal output (`Deno.inspect`).
+   * Wraps the Node.js inspect output and enables terminal colors.
+   *
+   * @ignore
+   * @returns The colorized, formatted representation of the TLObject.
+   */
   [Symbol.for('Deno.customInspect')](): string {
     // @ts-ignore: deno compatibility
     return String(inspect(this[Symbol.for('nodejs.util.inspect.custom')](), { colors: true }));
   }
-  /** @ignore */
+
+  /**
+   * Serializes the TLObject instance to a clean JSON-compatible representation.
+   *
+   * @remarks
+   * Correctly stringifies extremely large fields (e.g. bigints) that are normally not
+   * serializable in standard `JSON.stringify` calls.
+   *
+   * @returns A plain object containing class attributes and values.
+   */
   toJSON(): { [key: string]: any } {
     const toPrint: { [key: string]: any } = {
       _: this.className,
@@ -187,7 +229,12 @@ export class TLObject {
     }
     return toPrint;
   }
-  /** @ignore */
+
+  /**
+   * Formats the TLObject into a structured string.
+   *
+   * @returns A string starting with the constructor name followed by a pretty JSON payload.
+   */
   toString() {
     return `[constructor of ${this.className}] ${JSON.stringify(this, null, 2)}`;
   }

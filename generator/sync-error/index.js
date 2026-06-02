@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -10,10 +10,8 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import * as cheerio from 'https://esm.sh/cheerio@1.0.0-rc.12';
-import * as denoPath from 'https://deno.land/std@0.209.0/path/mod.ts';
+import * as cheerio from 'cheerio';
 
-const __dirname = denoPath.dirname(denoPath.fromFileUrl(import.meta.url));
 const reHref = /^\/file\/\d+\/\d+\/[^/]+?(?<extension>\.json+)\/(?<hash>[a-fA-F0-9]+)$/;
 const base = 'https://corefork.telegram.org';
 async function getHref() {
@@ -76,8 +74,8 @@ async function getGroupedJson() {
   });
 }
 
-async function build() {
-  const old = JSON.parse(fs.readFileSync(path.join(__dirname, '../error/source/errors.json')));
+async function build(route) {
+  const old = JSON.parse(fs.readFileSync(path.join(route, 'generator/error/source/errors.json')));
   const newest = await getGroupedJson();
   const listErrors = [...old, ...newest];
   const results = listErrors
@@ -102,10 +100,10 @@ async function build() {
   for (let error of results) {
     csv += `\n${error.code}\t${error.msg}\t${error.desc.replace(/\"/g, '')}`;
   }
-  fs.writeFileSync(path.join(__dirname, '../error/source/errors.json'), JSON.stringify(results));
-  fs.writeFileSync(path.join(__dirname, '../error/source/errors.tsv'), csv);
+  fs.writeFileSync(path.join(route, 'generator/error/source/errors.json'), JSON.stringify(results));
+  fs.writeFileSync(path.join(route, 'generator/error/source/errors.tsv'), csv);
 }
 console.log(
   "--- WARNING!! ---\n\nTHIS ACTION WILL BE CHANGE ALL ERROR SOURCE FILE.\nTHIS ACTION CAN'T BE CANCELLED!\n\n--- build:sync-error ---",
 );
-build();
+build(process.cwd());

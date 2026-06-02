@@ -1,14 +1,14 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
  * tgsnake is a free software: you can redistribute it and/or modify
  * it under the terms of the MIT License as published.
  */
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 const name = {
   303: 'SEE_OTHER',
@@ -43,15 +43,26 @@ const snakeCaseToCamelCase = (input) =>
           : `${res}${word.charAt(0).toUpperCase()}${word.substr(1).toLowerCase()}`,
       '',
     );
-async function read() {
+async function read(route) {
   const templateParent = fs.readFileSync(
-    path.join(__dirname, './template/constructor.txt'),
+    path.join(route, './generator/error/template/constructor.txt'),
     'utf8',
   );
-  const templateExtends = fs.readFileSync(path.join(__dirname, './template/extends.txt'), 'utf8');
-  const templateAll = fs.readFileSync(path.join(__dirname, './template/all.txt'), 'utf8');
-  const templateIndex = fs.readFileSync(path.join(__dirname, './template/index.txt'), 'utf8');
-  const source = JSON.parse(fs.readFileSync(path.join(__dirname, './source/errors.json')));
+  const templateExtends = fs.readFileSync(
+    path.join(route, './generator/error/template/extends.txt'),
+    'utf8',
+  );
+  const templateAll = fs.readFileSync(
+    path.join(route, './generator/error/template/all.txt'),
+    'utf8',
+  );
+  const templateIndex = fs.readFileSync(
+    path.join(route, './generator/error/template/index.txt'),
+    'utf8',
+  );
+  const source = JSON.parse(
+    fs.readFileSync(path.join(route, './generator/error/source/errors.json')),
+  );
   const imported = [];
   const exported = [];
   const exceptions = new Map();
@@ -110,15 +121,12 @@ async function read() {
       exId.set(msg, crte);
       already.add(crte);
     }
-    if (!fs.existsSync(path.join(__dirname, '../../src/errors/exceptions'))) {
-      fs.mkdirSync(path.join(__dirname, '../../src/errors/exceptions'));
+    if (!fs.existsSync(path.join(route, 'src/errors/exceptions'))) {
+      fs.mkdirSync(path.join(route, 'src/errors/exceptions'));
     }
-    fs.writeFileSync(
-      path.join(__dirname, '../../src/errors/exceptions', `${filename}.ts`),
-      parents,
-    );
-    imported.push(`import * as ${prnt} from "./${filename}.ts"`);
-    exported.push(`export * as ${prnt} from "@/errors/exceptions/${filename}.js"`);
+    fs.writeFileSync(path.join(route, 'src/errors/exceptions', `${filename}.ts`), parents);
+    imported.push(`import * as ${prnt} from "./${filename}.js"`);
+    exported.push(`export * as ${prnt} from "./${filename}.js"`);
     let excp = `"_" : "${prnt}.${prnt}",\n`;
     for (let ex of exId) {
       excp += `"${ex[0]}" : "${prnt}.${ex[1]}",\n`;
@@ -130,7 +138,7 @@ async function read() {
     exts += `${ext[0]} : ${ext[1]},\n`;
   }
   fs.writeFileSync(
-    path.join(__dirname, '../../src/errors/exceptions', `All.ts`),
+    path.join(route, 'src/errors/exceptions', `All.ts`),
     replacer(templateAll, {
       'Copyright-Date': new Date().getFullYear(),
       COUNT: count,
@@ -139,7 +147,7 @@ async function read() {
     }),
   );
   fs.writeFileSync(
-    path.join(__dirname, '../../src/errors/exceptions', `index.ts`),
+    path.join(route, 'src/errors/exceptions', `index.ts`),
     replacer(templateIndex, {
       'Copyright-Date': new Date().getFullYear(),
       EXPORTED: exported.join('\n'),
@@ -149,4 +157,4 @@ async function read() {
 console.log(
   "--- WARNING!! ---\n\nTHIS ACTION WILL BE CHANGE ALL ERROR FILE.\nTHIS ACTION CAN'T BE CANCELLED!\n\n--- build:error ---",
 );
-read();
+read(process.cwd());

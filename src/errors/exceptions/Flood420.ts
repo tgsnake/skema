@@ -13,7 +13,7 @@
  *               This file is auto generate.                *
  *         All change made in this file will be lost!       *
  ***********************************************************/
-import { RPCError } from '@/errors/RpcError.js';
+import { RPCError } from '../RpcError.js';
 
 export class Flood extends RPCError {
   override code: number = 420;

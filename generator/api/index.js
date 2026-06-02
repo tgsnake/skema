@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,8 +8,8 @@
  * it under the terms of the MIT License as published.
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 const CORE_TYPES = new Set([
   0xbc799737, // boolFalse#bc799737 = Bool;
   0x997275b5, // boolTrue#997275b5 = Bool;
@@ -449,19 +449,28 @@ function start(source, template) {
   };
 }
 
-function generate() {
-  const schema = fs.readFileSync(path.join(__dirname, './source/api.tl'), 'utf8');
-  const mtproto = fs.readFileSync(path.join(__dirname, './source/mtproto.tl'), 'utf8');
-  const secretchat = fs.readFileSync(path.join(__dirname, './source/secretchat.tl'), 'utf8');
-  const combinator = fs.readFileSync(path.join(__dirname, './template/combinator.txt'), 'utf8');
-  const namespace = fs.readFileSync(path.join(__dirname, './template/namespace.txt'), 'utf8');
-  const tl = fs.readFileSync(path.join(__dirname, './template/allTlObject.txt'), 'utf8');
+function generate(route) {
+  const schema = fs.readFileSync(path.join(route, 'generator/api/source/api.tl'), 'utf8');
+  const mtproto = fs.readFileSync(path.join(route, 'generator/api/source/mtproto.tl'), 'utf8');
+  const secretchat = fs.readFileSync(
+    path.join(route, 'generator/api/source/secretchat.tl'),
+    'utf8',
+  );
+  const combinator = fs.readFileSync(
+    path.join(route, 'generator/api/template/combinator.txt'),
+    'utf8',
+  );
+  const namespace = fs.readFileSync(
+    path.join(route, 'generator/api/template/namespace.txt'),
+    'utf8',
+  );
+  const tl = fs.readFileSync(path.join(route, 'generator/api/template/allTlObject.txt'), 'utf8');
   let results = start(
     mtproto + '\n---types---\n' + schema + '\n---types---\n' + secretchat,
     combinator,
   );
   fs.writeFileSync(
-    path.join(__dirname, '../../src/raw/Raw.ts'),
+    path.join(route, 'src/raw/Raw.ts'),
     replacer(namespace, {
       'TL-Layer': results.layer,
       Classes: results.results,
@@ -470,7 +479,7 @@ function generate() {
     }),
   );
   fs.writeFileSync(
-    path.join(__dirname, '../../src/raw/All.ts'),
+    path.join(route, 'src/raw/All.ts'),
     replacer(tl, {
       'Copyright-Date': new Date().getFullYear(),
       'ALL-OBJECT': results.allTLObject,
@@ -480,4 +489,4 @@ function generate() {
 console.log(
   "--- WARNING!! ---\n\nTHIS ACTION WILL BE CHANGE THE Raw.ts AND All.ts FILE\nTHIS ACTION CAN'T BE CANCELLED!\n\n--- build:api ---",
 );
-generate();
+generate(process.cwd());

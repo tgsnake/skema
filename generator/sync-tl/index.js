@@ -1,6 +1,6 @@
 /**
  * tgsnake - Telegram MTProto library for javascript or typescript.
- * Copyright (C) 2025 tgsnake <https://github.com/tgsnake>
+ * Copyright (C) 2026 tgsnake <https://github.com/tgsnake>
  *
  * THIS FILE IS PART OF TGSNAKE
  *
@@ -8,12 +8,12 @@
  * it under the terms of the MIT License as published.
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-async function getTl() {
-  const readme = fs.readFileSync(path.join(__dirname, '../../README.md'), 'utf8');
-  const prev = fs.readFileSync(path.join(__dirname, '../api/source/api.tl'), 'utf8');
+async function getTl(route) {
+  const readme = fs.readFileSync(path.join(route, 'README.md'), 'utf8');
+  const prev = fs.readFileSync(path.join(route, 'generator/api/source/api.tl'), 'utf8');
   /*const layer = await (
     await fetch(
       'https://raw.githubusercontent.com/telegramdesktop/tdesktop/dev/Telegram/SourceFiles/mtproto/scheme/layer.tl',
@@ -41,19 +41,16 @@ async function getTl() {
   const [fullMd, intMd] = readme.match(reMd);
   if (+intTL !== +intPr) {
     fs.writeFileSync(
-      path.join(__dirname, '../api/source/api.tl'),
+      path.join(route, 'generator/api/source/api.tl'),
       `// https://raw.githubusercontent.com/telegramdesktop/tdesktop/dev/Telegram/SourceFiles/mtproto/scheme/api.tl\n${tl}`,
     );
   }
   if (+intTL !== +intMd) {
-    fs.writeFileSync(
-      path.join(__dirname, '../../README.md'),
-      readme.replace(reMd, `<b>Layer ${intTL}</b>`),
-    );
+    fs.writeFileSync(path.join(route, 'README.md'), readme.replace(reMd, `<b>Layer ${intTL}</b>`));
   }
   return;
 }
 console.log(
   "--- WARNING!! ---\n\nTHIS ACTION WILL BE CHANGE THE api.tl and README.md\nTHIS ACTION CAN'T BE CANCELLED!\n\n--- build:sync ---",
 );
-getTl();
+getTl(process.cwd());

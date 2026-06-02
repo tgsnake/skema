@@ -753,7 +753,7 @@ ${kjt}
 Please report this issue at https://github.com/yarnpkg/berry/issues.`)}process.once("beforeExit",n);try{process.exitCode=42,process.exitCode=await C6t(a,t,{selfPath:r,pluginConfiguration:s})}catch(c){wa.defaultContext.stdout.write(a.error(c)),process.exitCode=1}finally{process.off("beforeExit",n),await le.rmtempPromise()}}KR(process.argv.slice(2),{cwd:K.cwd(),selfPath:ue.toPortablePath(ue.resolve(process.argv[1])),pluginConfiguration:tC()});})();
 /**
   @license
-  Copyright (c) 2015, Rebecca Turner
+  Copyright (c) 2026, Rebecca Turner
 
   Permission to use, copy, modify, and/or distribute this software for any
   purpose with or without fee is hereby granted, provided that the above

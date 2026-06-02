@@ -9,9 +9,9 @@
  */
 export { BytesIO } from '@tgsnake/bytesio';
 export { Logger } from '@tgsnake/log';
-export { gzipSync, gunzipSync } from 'node:zlib';
-export { Buffer } from 'node:buffer';
-import { inspect as nodeInspect } from 'node:util';
+export { gzipSync, gunzipSync } from 'zlib';
+export { Buffer } from 'buffer';
+import { inspect as nodeInspect } from 'util';
 import bigInt from 'big-integer';
 
 // Other platform compatibility
@@ -32,5 +32,5 @@ export const platform = isDeno ? 'Deno' : isBun ? 'Bun' : isBrowser ? 'Browser' 
  *
  * @type {typeof nodeInspect}
  */
-export const inspect = (isDeno ? globalThis.Deno.inspect : nodeInspect) as any;
+export const inspect = nodeInspect;
 export { bigInt };
