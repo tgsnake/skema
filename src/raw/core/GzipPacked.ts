@@ -59,7 +59,7 @@ export class GzipPacked extends TLObject {
    * @param _args - Unused additional parameters.
    * @returns A promise resolving to the decompressed `GzipPacked` instance wrapping the deserialized object.
    */
-  static override async read(data: BytesIO, ..._args: Array<any>) {
+  static override async read(data: BytesIO, ..._args: Array<any>): Promise<GzipPacked> {
     return (await TLObject.read(
       new BytesIO(gunzipSync(await Primitive.Bytes.read(data))),
     )) as unknown as GzipPacked;

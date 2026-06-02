@@ -21,7 +21,7 @@
   "license": "MIT",
   "engineStrict": true,
   "engines": {
-    "node": ">=20.0.0",
+    "node": ">=22.0.0",
     "npm": ">=6.0.0",
     "yarn": ">=1.0.0",
     "deno": ">=1.0.0",
@@ -32,6 +32,7 @@
     "build:api": "node ./generator/api",
     "build:sync": "node ./generator/sync-tl",
     "build:error": "node ./generator/error",
+    "build:jsr": "node ./generator/jsr_version/index.js",
     "build:docs": "typedoc --tsconfig tsconfig.json --out docs src/index.ts",
     "prepare": "yarn build",
     "prettier": "NODE_OPTIONS=--max_old_space_size=4096 prettier -w ."

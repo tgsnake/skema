@@ -38,7 +38,7 @@ export function bigintToBuffer(
   padding: number,
   litte: boolean = true,
   signed: boolean = false,
-) {
+): Buffer {
   const bigintLength = int.toString(2).length;
   const bytes = Math.ceil(bigintLength / 8);
   if (padding < bytes) {
@@ -98,7 +98,7 @@ export function bigintToBuffer(
  * const result = bigIntPow(BigInt(5), BigInt(3), BigInt(7)); // (5 ** 3) % 7 = 6
  * ```
  */
-export function bigIntPow(x: bigint, y: bigint, z?: bigint) {
+export function bigIntPow(x: bigint, y: bigint, z?: bigint): bigint {
   if (z === undefined) {
     return x ** y;
   } else {
@@ -167,7 +167,11 @@ export function bigIntMod(n: bigint, m: bigint): bigint {
  * const val = bufferToBigint(Buffer.from([0x2a, 0x00]), true, false); // 42n
  * ```
  */
-export function bufferToBigint(buffer: Buffer, little: boolean = true, signed: boolean = false) {
+export function bufferToBigint(
+  buffer: Buffer,
+  little: boolean = true,
+  signed: boolean = false,
+): bigint {
   const length = Buffer.byteLength(buffer);
   const value = little ? buffer.reverse().toString('hex') : buffer.toString('hex');
   const _bigint = bigInt(value, 16);

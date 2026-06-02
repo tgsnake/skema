@@ -1,4 +1,4 @@
-name: Publish Package to NPM
+name: Publishing Github Release
 on:
   repository_dispatch:
     types: [update_version]
@@ -8,12 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: '20.x'
+          node-version: '22.x'
           registry-url: 'https://registry.npmjs.org/'
 
       - name: Install dependencies
@@ -23,41 +23,25 @@ jobs:
       - name: Update version
         run: |
           npm version minor --no-git-tag-version
+          yarn build:jsr
       - name: Build package
         run: |
           yarn build
           yarn prettier
           npm pack
-      - name: Publish to NPM
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Push changes
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
           git config user.email github-actions[bot]@users.noreply.github.com
           git config user.name github-actions[bot]
-          git add package.json
+          git add package.json jsr.json
           git commit -m "chore: Bump version to $PACKAGE_VERSION" || echo "No changes to commit"
           git push origin master || echo "No changes to push"
-
       - name: Get version from package.json
         id: get_version
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
           echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
-
-      - name: Notify success
-        run: |
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          echo "Package published successfully to NPM with version $PACKAGE_VERSION"
-        if: success()
-
-      - name: Notify failure
-        run: echo "Failed to publish package to NPM"
-        if: failure()
-
       - name: Create GitHub Release
         if: success()
         uses: softprops/action-gh-release@v1

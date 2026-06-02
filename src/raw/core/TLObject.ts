@@ -235,7 +235,7 @@ export class TLObject {
    *
    * @returns A string starting with the constructor name followed by a pretty JSON payload.
    */
-  toString() {
+  toString(): string {
     return `[constructor of ${this.className}] ${JSON.stringify(this, null, 2)}`;
   }
 }

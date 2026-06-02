@@ -9,7 +9,7 @@
  */
 export { BytesIO } from '@tgsnake/bytesio';
 export { Logger } from '@tgsnake/log';
-export { gzipSync, gunzipSync } from 'zlib';
+export { gzipSync, gunzipSync } from 'browserify-zlib';
 export { Buffer } from 'buffer';
 import { inspect as nodeInspect } from 'util';
 import bigInt from 'big-integer';
