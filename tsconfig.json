@@ -69,6 +69,6 @@
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
   "include": ["src", "./mod.ts"],
-  "exclude": ["node_modules", "test", "dist", "example", "deps.browser.ts", "deps.node.ts"],
+  "exclude": ["node_modules", "test", "dist", "example", "**/*.browser.ts", "**/*.node.ts"],
   "ignoreCompilerErrors": true
 }

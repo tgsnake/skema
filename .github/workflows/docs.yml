@@ -19,7 +19,7 @@ jobs:
           node-version: '22.x'
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Build documentation
         run: yarn build:docs
