@@ -27,9 +27,6 @@ function buildForBrowser() {
   console.log('Changing package.json for browser...');
   const file = fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8');
   const json = JSON.parse(file);
-  json.main = './browser/mod.js';
-  json.types = './browser/mod.d.ts';
-  json.files = ['browser/**/**'];
   json.type = 'module';
   json.version = `${json.version}-browser.0`;
   json.dependencies['@tgsnake/bytesio'] = 'browser';
