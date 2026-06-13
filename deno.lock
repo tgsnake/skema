@@ -1,12 +1,12 @@
 {
   "version": "5",
   "specifiers": {
-    "npm:@tgsnake/bytesio@2": "2.0.0",
-    "npm:@tgsnake/log@2": "2.0.0",
+    "npm:@tgsnake/bytesio@^2.0.1": "2.0.1",
+    "npm:@tgsnake/log@^2.0.1": "2.0.1",
     "npm:@types/bun@^1.3.14": "1.3.14",
-    "npm:@types/node@^25.9.1": "25.9.1",
+    "npm:@types/node@^25.9.3": "25.9.3",
     "npm:big-integer@^1.6.52": "1.6.52",
-    "npm:prettier@^3.8.3": "3.8.3",
+    "npm:prettier@^3.8.4": "3.8.4",
     "npm:typedoc@~0.28.19": "0.28.19_typescript@6.0.3",
     "npm:typescript@^6.0.3": "6.0.3"
   },
@@ -50,11 +50,11 @@
     "@shikijs/vscode-textmate@10.0.2": {
       "integrity": "sha512-83yeghZ2xxin3Nj8z1NMd/NCuca+gsYXswywDy5bHvwlWL8tpTQmzGeUuHd9FC3E/SBEMvzJRwWEOz5gGes9Qg=="
     },
-    "@tgsnake/bytesio@2.0.0": {
-      "integrity": "sha512-zDsRmrPnH7nv+qyr1xzVzx81060nJd/nnHKzKisnmUCvGFbP/zl1g2W7pHqNkx8peMfv7tyqe87OyxAf+q+7LQ=="
+    "@tgsnake/bytesio@2.0.1": {
+      "integrity": "sha512-0ZlGXNlOVcm7uqU3vipknsF7sW8yARwHvlNrAYOlBA1pnh+w+poXcOs8Lt4ZdUK2eQY8HrbD0179fx/WCUhsAg=="
     },
-    "@tgsnake/log@2.0.0": {
-      "integrity": "sha512-F//8hUKHupwEnUd4JfTGZInrdjjPscf3dl8QdeonVcdYU3+K7FII3iOSEH8Xjq8Ny2loAa1BDtIJB3Otadr6Pw==",
+    "@tgsnake/log@2.0.1": {
+      "integrity": "sha512-ngJgHRU5c/FjkHmaTHEaaEJw8Nr4MYfpdr3wx++Mxh9xuC7UMlCrSggmDSxO81VEor4LnWtSHy/ahHldJBGYAQ==",
       "dependencies": [
         "chalk",
         "color-convert"
@@ -72,8 +72,8 @@
         "@types/unist"
       ]
     },
-    "@types/node@25.9.1": {
-      "integrity": "sha512-xfrlY7UD5rMJk3ZVJP8BNzS28J36YJg+xp+LPXV1TdWxr8uMH5A860QNxYDGQe/ylDSgjxE52Q9VnO7p75tJxg==",
+    "@types/node@25.9.3": {
+      "integrity": "sha512-603BddQMv3pUcr4U2dhujk83N2tTDVr/34wII2B6bJy6g+8WD6yUb11jszNs0gdi4PesVWl7ABt8nYMVpnLUcg==",
       "dependencies": [
         "undici-types"
       ]
@@ -147,8 +147,8 @@
         "brace-expansion"
       ]
     },
-    "prettier@3.8.3": {
-      "integrity": "sha512-7igPTM53cGHMW8xWuVTydi2KO233VFiTNyF5hLJqpilHfmn8C8gPf+PS7dUT64YcXFbiMGZxS9pCSxL/Dxm/Jw==",
+    "prettier@3.8.4": {
+      "integrity": "sha512-N2MylSdi48+5N/6S5j+maeHbUSIzzZ5uOcX5Hm4QpV8Dkb1HFjfAKTKX6yNPJQD9AhcT3ifHNB66tWTTJDi11Q==",
       "bin": true
     },
     "punycode.js@2.3.1": {
@@ -184,12 +184,12 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:@tgsnake/bytesio@2",
-        "npm:@tgsnake/log@2",
+        "npm:@tgsnake/bytesio@^2.0.1",
+        "npm:@tgsnake/log@^2.0.1",
         "npm:@types/bun@^1.3.14",
-        "npm:@types/node@^25.9.1",
+        "npm:@types/node@^25.9.3",
         "npm:big-integer@^1.6.52",
-        "npm:prettier@^3.8.3",
+        "npm:prettier@^3.8.4",
         "npm:typedoc@~0.28.19",
         "npm:typescript@^6.0.3"
       ]
