@@ -45,4 +45,4 @@ jobs:
         with:
           deno-version: '2.x'
       - run: deno install
-      - run: npx jsr publish --dry-run
+      - run: npx jsr publish --dry-run --allow-dirty
