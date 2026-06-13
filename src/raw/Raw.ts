@@ -1097,6 +1097,7 @@ export namespace Raw {
     | Raw.EmailVerificationApple;
   export type TypeCodeSettings = Raw.CodeSettings;
   export type TypeInputClientProxy = Raw.InputClientProxy;
+  export type TypeInputRichFile = Raw.InputRichFilePhoto | Raw.InputRichFileDocument;
   export type TypeWebViewResult = Raw.WebViewResultUrl;
   export type TypeAiComposeTone = Raw.AiComposeTone | Raw.AiComposeToneDefault;
   export type TypeAiComposeToneExample = Raw.AiComposeToneExample;
@@ -77037,51 +77038,32 @@ export namespace Raw {
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
   }
-  export class RichMessage extends TLObject {
-    rtl?: boolean;
-    part?: boolean;
-    blocks!: Vector<Raw.TypePageBlock>;
-    photos!: Vector<Raw.TypePhoto>;
-    documents!: Vector<Raw.TypeDocument>;
+  export class InputRichFilePhoto extends TLObject {
+    id!: string;
+    photo!: Raw.TypeInputPhoto;
 
-    constructor(params: {
-      rtl?: boolean;
-      part?: boolean;
-      blocks: Vector<Raw.TypePageBlock>;
-      photos: Vector<Raw.TypePhoto>;
-      documents: Vector<Raw.TypeDocument>;
-    }) {
+    constructor(params: { id: string; photo: Raw.TypeInputPhoto }) {
       super();
       this.classType = 'types';
-      this.className = 'RichMessage';
-      this.constructorId = 0xbaf39d8b;
-      this.subclassOfId = 0xe42b2a41;
-      this._slots = ['rtl', 'part', 'blocks', 'photos', 'documents'];
-      this.rtl = params.rtl;
-      this.part = params.part;
-      this.blocks = params.blocks;
-      this.photos = params.photos;
-      this.documents = params.documents;
+      this.className = 'InputRichFilePhoto';
+      this.constructorId = 0x9b00622b;
+      this.subclassOfId = 0x94e416e6;
+      this._slots = ['id', 'photo'];
+      this.id = params.id;
+      this.photo = params.photo;
     }
     /**
      * Generate the TLObject from buffer.
      * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
      */
-    static override async read(_data: BytesIO, ..._args: Array<any>): Promise<Raw.RichMessage> {
-      // @ts-ignore
-      let flags = await Primitive.Int.read(_data);
-      let rtl = flags & (1 << 0) ? true : false;
-      let part = flags & (1 << 1) ? true : false;
-      let blocks = await TLObject.read(_data);
-      let photos = await TLObject.read(_data);
-      let documents = await TLObject.read(_data);
-      return new Raw.RichMessage({
-        rtl: rtl,
-        part: part,
-        blocks: blocks,
-        photos: photos,
-        documents: documents,
-      });
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.InputRichFilePhoto> {
+      // no flags
+      let id = await Primitive.String.read(_data);
+      let photo = await TLObject.read(_data);
+      return new Raw.InputRichFilePhoto({ id: id, photo: photo });
     }
     /**
      * Generate buffer from TLObject.
@@ -77089,21 +77071,55 @@ export namespace Raw {
     override write(): Buffer {
       const b: BytesIO = new BytesIO();
       b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-
-      // @ts-ignore
-      let flags = 0;
-      flags |= this.rtl ? 1 << 0 : 0;
-      flags |= this.part ? 1 << 1 : 0;
-      b.write(Primitive.Int.write(flags) as unknown as Buffer);
-
-      if (this.blocks) {
-        b.write(Primitive.Vector.write(this.blocks) as unknown as Buffer);
+      // no flags
+      if (this.id !== undefined) {
+        b.write(Primitive.String.write(this.id) as unknown as Buffer);
       }
-      if (this.photos) {
-        b.write(Primitive.Vector.write(this.photos) as unknown as Buffer);
+      if (this.photo !== undefined) {
+        b.write(this.photo.write() as unknown as Buffer);
       }
-      if (this.documents) {
-        b.write(Primitive.Vector.write(this.documents) as unknown as Buffer);
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class InputRichFileDocument extends TLObject {
+    id!: string;
+    document!: Raw.TypeInputDocument;
+
+    constructor(params: { id: string; document: Raw.TypeInputDocument }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputRichFileDocument';
+      this.constructorId = 0x83281dbd;
+      this.subclassOfId = 0x94e416e6;
+      this._slots = ['id', 'document'];
+      this.id = params.id;
+      this.document = params.document;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.InputRichFileDocument> {
+      // no flags
+      let id = await Primitive.String.read(_data);
+      let document = await TLObject.read(_data);
+      return new Raw.InputRichFileDocument({ id: id, document: document });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.id !== undefined) {
+        b.write(Primitive.String.write(this.id) as unknown as Buffer);
+      }
+      if (this.document !== undefined) {
+        b.write(this.document.write() as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -77197,30 +77213,24 @@ export namespace Raw {
     rtl?: boolean;
     noautolink?: boolean;
     html!: string;
-    photos?: Vector<Raw.TypeInputPhoto>;
-    documents?: Vector<Raw.TypeInputDocument>;
-    users?: Vector<Raw.TypeInputUser>;
+    files?: Vector<Raw.TypeInputRichFile>;
 
     constructor(params: {
       rtl?: boolean;
       noautolink?: boolean;
       html: string;
-      photos?: Vector<Raw.TypeInputPhoto>;
-      documents?: Vector<Raw.TypeInputDocument>;
-      users?: Vector<Raw.TypeInputUser>;
+      files?: Vector<Raw.TypeInputRichFile>;
     }) {
       super();
       this.classType = 'types';
       this.className = 'InputRichMessageHTML';
-      this.constructorId = 0xd4eab551;
+      this.constructorId = 0xdacb836a;
       this.subclassOfId = 0x55a7b313;
-      this._slots = ['rtl', 'noautolink', 'html', 'photos', 'documents', 'users'];
+      this._slots = ['rtl', 'noautolink', 'html', 'files'];
       this.rtl = params.rtl;
       this.noautolink = params.noautolink;
       this.html = params.html;
-      this.photos = params.photos;
-      this.documents = params.documents;
-      this.users = params.users;
+      this.files = params.files;
     }
     /**
      * Generate the TLObject from buffer.
@@ -77235,16 +77245,12 @@ export namespace Raw {
       let rtl = flags & (1 << 0) ? true : false;
       let noautolink = flags & (1 << 1) ? true : false;
       let html = await Primitive.String.read(_data);
-      let photos = flags & (1 << 2) ? await TLObject.read(_data) : [];
-      let documents = flags & (1 << 3) ? await TLObject.read(_data) : [];
-      let users = flags & (1 << 4) ? await TLObject.read(_data) : [];
+      let files = flags & (1 << 2) ? await TLObject.read(_data) : [];
       return new Raw.InputRichMessageHTML({
         rtl: rtl,
         noautolink: noautolink,
         html: html,
-        photos: photos,
-        documents: documents,
-        users: users,
+        files: files,
       });
     }
     /**
@@ -77258,22 +77264,14 @@ export namespace Raw {
       let flags = 0;
       flags |= this.rtl ? 1 << 0 : 0;
       flags |= this.noautolink ? 1 << 1 : 0;
-      flags |= this.photos ? 1 << 2 : 0;
-      flags |= this.documents ? 1 << 3 : 0;
-      flags |= this.users ? 1 << 4 : 0;
+      flags |= this.files ? 1 << 2 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.html !== undefined) {
         b.write(Primitive.String.write(this.html) as unknown as Buffer);
       }
-      if (this.photos) {
-        b.write(Primitive.Vector.write(this.photos) as unknown as Buffer);
-      }
-      if (this.documents) {
-        b.write(Primitive.Vector.write(this.documents) as unknown as Buffer);
-      }
-      if (this.users) {
-        b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
+      if (this.files) {
+        b.write(Primitive.Vector.write(this.files) as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -77282,30 +77280,24 @@ export namespace Raw {
     rtl?: boolean;
     noautolink?: boolean;
     markdown!: string;
-    photos?: Vector<Raw.TypeInputPhoto>;
-    documents?: Vector<Raw.TypeInputDocument>;
-    users?: Vector<Raw.TypeInputUser>;
+    files?: Vector<Raw.TypeInputRichFile>;
 
     constructor(params: {
       rtl?: boolean;
       noautolink?: boolean;
       markdown: string;
-      photos?: Vector<Raw.TypeInputPhoto>;
-      documents?: Vector<Raw.TypeInputDocument>;
-      users?: Vector<Raw.TypeInputUser>;
+      files?: Vector<Raw.TypeInputRichFile>;
     }) {
       super();
       this.classType = 'types';
       this.className = 'InputRichMessageMarkdown';
-      this.constructorId = 0x9ac8186;
+      this.constructorId = 0x4b572c;
       this.subclassOfId = 0x55a7b313;
-      this._slots = ['rtl', 'noautolink', 'markdown', 'photos', 'documents', 'users'];
+      this._slots = ['rtl', 'noautolink', 'markdown', 'files'];
       this.rtl = params.rtl;
       this.noautolink = params.noautolink;
       this.markdown = params.markdown;
-      this.photos = params.photos;
-      this.documents = params.documents;
-      this.users = params.users;
+      this.files = params.files;
     }
     /**
      * Generate the TLObject from buffer.
@@ -77320,16 +77312,12 @@ export namespace Raw {
       let rtl = flags & (1 << 0) ? true : false;
       let noautolink = flags & (1 << 1) ? true : false;
       let markdown = await Primitive.String.read(_data);
-      let photos = flags & (1 << 2) ? await TLObject.read(_data) : [];
-      let documents = flags & (1 << 3) ? await TLObject.read(_data) : [];
-      let users = flags & (1 << 4) ? await TLObject.read(_data) : [];
+      let files = flags & (1 << 2) ? await TLObject.read(_data) : [];
       return new Raw.InputRichMessageMarkdown({
         rtl: rtl,
         noautolink: noautolink,
         markdown: markdown,
-        photos: photos,
-        documents: documents,
-        users: users,
+        files: files,
       });
     }
     /**
@@ -77343,22 +77331,85 @@ export namespace Raw {
       let flags = 0;
       flags |= this.rtl ? 1 << 0 : 0;
       flags |= this.noautolink ? 1 << 1 : 0;
-      flags |= this.photos ? 1 << 2 : 0;
-      flags |= this.documents ? 1 << 3 : 0;
-      flags |= this.users ? 1 << 4 : 0;
+      flags |= this.files ? 1 << 2 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.markdown !== undefined) {
         b.write(Primitive.String.write(this.markdown) as unknown as Buffer);
+      }
+      if (this.files) {
+        b.write(Primitive.Vector.write(this.files) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class RichMessage extends TLObject {
+    rtl?: boolean;
+    part?: boolean;
+    blocks!: Vector<Raw.TypePageBlock>;
+    photos!: Vector<Raw.TypePhoto>;
+    documents!: Vector<Raw.TypeDocument>;
+
+    constructor(params: {
+      rtl?: boolean;
+      part?: boolean;
+      blocks: Vector<Raw.TypePageBlock>;
+      photos: Vector<Raw.TypePhoto>;
+      documents: Vector<Raw.TypeDocument>;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'RichMessage';
+      this.constructorId = 0xbaf39d8b;
+      this.subclassOfId = 0xe42b2a41;
+      this._slots = ['rtl', 'part', 'blocks', 'photos', 'documents'];
+      this.rtl = params.rtl;
+      this.part = params.part;
+      this.blocks = params.blocks;
+      this.photos = params.photos;
+      this.documents = params.documents;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(_data: BytesIO, ..._args: Array<any>): Promise<Raw.RichMessage> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let rtl = flags & (1 << 0) ? true : false;
+      let part = flags & (1 << 1) ? true : false;
+      let blocks = await TLObject.read(_data);
+      let photos = await TLObject.read(_data);
+      let documents = await TLObject.read(_data);
+      return new Raw.RichMessage({
+        rtl: rtl,
+        part: part,
+        blocks: blocks,
+        photos: photos,
+        documents: documents,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.rtl ? 1 << 0 : 0;
+      flags |= this.part ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.blocks) {
+        b.write(Primitive.Vector.write(this.blocks) as unknown as Buffer);
       }
       if (this.photos) {
         b.write(Primitive.Vector.write(this.photos) as unknown as Buffer);
       }
       if (this.documents) {
         b.write(Primitive.Vector.write(this.documents) as unknown as Buffer);
-      }
-      if (this.users) {
-        b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }

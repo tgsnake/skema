@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           yarn config set enableImmutableInstalls false
-          yarn install --frozen-lockfile
+          yarn install
       - name: Update version
         run: |
           npm version minor --no-git-tag-version
