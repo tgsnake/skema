@@ -14,6 +14,9 @@ code	id	message
 400	ADMIN_RANK_INVALID	The specified admin rank is invalid.
 400	ADMIN_RIGHTS_EMPTY	The chatAdminRights constructor passed in keyboardButtonRequestPeer.peer_type.user_admin_rights has no rights set (i.e. flags is 0).
 400	AD_EXPIRED	The ad has expired (too old or not found).
+400	AICOMPOSE_TONE_INVALID	The specified tone is invalid.
+400	AICOMPOSE_TONE_TITLE_INVALID	The specified tone title is invalid.
+400	AI_COMPOSE_TASK_MISSING	
 400	ALBUM_PHOTOS_TOO_MANY	You have uploaded too many profile photos, delete some before retrying.
 400	API_ID_INVALID	API ID invalid.
 400	API_ID_PUBLISHED_FLOOD	This API id was published somewhere, you can't use it now.
@@ -31,6 +34,7 @@ code	id	message
 400	BANK_CARD_NUMBER_INVALID	The specified card number is invalid.
 400	BANNED_RIGHTS_INVALID	You provided some invalid flags in the banned rights.
 400	BASE_PORT_LOC_INVALID	The base port location is invalid
+400	BIRTHDAY_ALREADY	The target user already has a birthday set.
 400	BIRTHDAY_INVALID	An invalid age was specified, must be between 0 and 150 years.
 400	BOOSTS_EMPTY	No boost slots were specified.
 400	BOOSTS_REQUIRED	The specified channel must first be [boosted by its users](https://core.telegram.org/api/boost) in order to perform this action.
@@ -45,10 +49,12 @@ code	id	message
 400	BOT_CHANNELS_NA	Bots can't edit admin privileges.
 400	BOT_COMMAND_DESCRIPTION_INVALID	The specified command description is invalid.
 400	BOT_COMMAND_INVALID	The specified command is invalid.
+400	BOT_CREATE_LIMIT_EXCEEDED	The current user already owns the maximum allowed number of owned bots, as specified by [`bots_create_limit_default` &raquo;](https://core.telegram.org/api/config#bots-create-limit-default) and [`bots_create_limit_premium` &raquo;](https://core.telegram.org/api/config#bots-create-limit-premium); if the current user doesn't have Telegram Premium, upgrading to Premium will allow them to create more bots.  .
 400	BOT_DOMAIN_INVALID	Bot domain invalid.
 400	BOT_FALLBACK_UNSUPPORTED	The fallback flag can't be set for bots.
 400	BOT_GAMES_DISABLED	Games can't be sent to channels.
 400	BOT_GROUPS_BLOCKED	This bot can't be added to groups.
+400	BOT_ID_INVALID	The specified bot ID is invalid.
 400	BOT_INLINE_DISABLED	This bot can't be used in inline mode.
 400	BOT_INVALID	This is not a valid bot.
 400	BOT_INVOICE_INVALID	The specified invoice is invalid.
@@ -83,6 +89,7 @@ code	id	message
 400	BUTTON_USER_PRIVACY_RESTRICTED	The privacy setting of the user specified in a [inputKeyboardButtonUserProfile](https://core.telegram.org/constructor/inputKeyboardButtonUserProfile) button do not allow creating such a button.
 400	CALL_ALREADY_ACCEPTED	The call was already accepted.
 400	CALL_ALREADY_DECLINED	The call was already declined.
+400	CALL_NOT_ACTIVE	The specified call is not active.
 400	CALL_OCCUPY_FAILED	The call failed because the user is already making another call.
 400	CALL_PEER_INVALID	The provided call peer object is invalid.
 400	CALL_PROTOCOL_FLAGS_INVALID	Call protocol flags invalid.
@@ -127,12 +134,13 @@ code	id	message
 400	CHAT_SEND_INLINE_FORBIDDEN	You can't send inline messages in this group.
 400	CHAT_TITLE_EMPTY	No chat title provided.
 400	CHAT_TOO_BIG	This method is not available for groups with more than `chat_read_mark_size_threshold` members, [see client configuration &raquo;](https://core.telegram.org/api/config#client-configuration).
+400	CHAT_WRITE_FORBIDDEN	You can't write in this chat.
 400	CODE_EMPTY	The provided code is empty.
 400	CODE_HASH_INVALID	Code hash invalid.
 400	CODE_INVALID	Code invalid.
 400	COLLECTIBLE_INVALID	The specified collectible is invalid.
 400	COLLECTIBLE_NOT_FOUND	The specified collectible could not be found.
-400	COLLECTION_ID_INVALID	
+400	COLLECTION_ID_INVALID	The specified collection ID is invalid.
 400	COLOR_INVALID	The specified color palette ID was invalid.
 400	CONNECTION_API_ID_INVALID	The provided API id is invalid.
 400	CONNECTION_APP_VERSION_EMPTY	App version is empty.
@@ -149,7 +157,7 @@ code	id	message
 400	CONTACT_NAME_EMPTY	Contact name empty.
 400	CONTACT_REQ_MISSING	Missing contact request.
 400	CREATE_CALL_FAILED	An error occurred while creating the call.
-400	CREDENTIAL_INVALID	
+400	CREDENTIAL_INVALID	The specified credential is invalid.
 400	CURRENCY_TOTAL_AMOUNT_INVALID	The total amount of all prices is invalid.
 400	CUSTOM_REACTIONS_TOO_MANY	Too many custom reactions were specified.
 400	DATA_HASH_SIZE_INVALID	The size of the specified secureValueErrorData.data_hash is invalid.
@@ -163,7 +171,7 @@ code	id	message
 400	EFFECT_CHAT_INVALID	
 400	EFFECT_ID_INVALID	The specified effect ID is invalid.
 400	EMAIL_HASH_EXPIRED	Email hash expired.
-400	EMAIL_INSTALL_MISSING	
+400	EMAIL_INSTALL_MISSING	Attempting to send a code to the recovery email, but no email is configured.
 400	EMAIL_INVALID	The specified email is invalid.
 400	EMAIL_NOT_ALLOWED	The specified email cannot be used to complete the operation.
 400	EMAIL_NOT_SETUP	In order to change the login email with emailVerifyPurposeLoginChange, an existing login email must already be set using emailVerifyPurposeLoginSetup.
@@ -183,14 +191,18 @@ code	id	message
 400	ENCRYPTION_ID_INVALID	The provided secret chat ID is invalid.
 400	ENTITIES_TOO_LONG	You provided too many styled message entities.
 400	ENTITY_BOUNDS_INVALID	A specified [entity offset or length](https://core.telegram.org/api/entities#entity-length) is invalid, see [here &raquo;](https://core.telegram.org/api/entities#entity-length) for info on how to properly compute the entity offset/length.
+400	ENTITY_DATE_FORMAT_INVALID	One of the passed messageEntityFormattedDate objects has an invalid format (i.e. an invalid combination of the format flags).
+400	ENTITY_DATE_INVALID	One of the passed messageEntityFormattedDate objects has an invalid date: the allowed value ranges from `0` to the current date plus 1098 days (`time()+1098*86400`).
+400	ENTITY_DATE_TOO_LONG	
 400	ENTITY_MENTION_USER_INVALID	You mentioned an invalid user.
 400	ERROR_TEXT_EMPTY	The provided error message is empty.
 400	EXPIRES_AT_INVALID	The specified `expires_at` timestamp is invalid.
 400	EXPIRE_DATE_INVALID	The specified expiration date is invalid.
 400	EXPORT_CARD_INVALID	Provided card is invalid.
 400	EXTENDED_MEDIA_AMOUNT_INVALID	The specified `stars_amount` of the passed [inputMediaPaidMedia](https://core.telegram.org/constructor/inputMediaPaidMedia) is invalid.
-400	EXTENDED_MEDIA_EMPTY	
+400	EXTENDED_MEDIA_EMPTY	The specified extended media is empty.
 400	EXTENDED_MEDIA_INVALID	The specified paid media is invalid.
+400	EXTENDED_MEDIA_PEER_INVALID	
 400	EXTERNAL_URL_INVALID	External URL invalid.
 400	FIELD_NAME_EMPTY	The field with the name FIELD_NAME is missing
 400	FIELD_NAME_INVALID	The field with the name FIELD_NAME is invalid
@@ -211,7 +223,7 @@ code	id	message
 400	FILE_REFERENCE_EMPTY	An empty [file reference](https://core.telegram.org/api/file-references) was specified.
 400	FILE_REFERENCE_EXPIRED	File reference expired, it must be refetched as described in [the documentation](https://core.telegram.org/api/file-references).
 400	FILE_REFERENCE_INVALID	The specified [file reference](https://core.telegram.org/api/file-references) is invalid.
-400	FILE_REFERENCE_X_EMPTY	
+400	FILE_REFERENCE_X_EMPTY	The file reference of the media file at offset {value} in the multi_media array is invalid.
 400	FILE_REFERENCE_X_EXPIRED	The file reference of the media file at index {value} in the passed media array expired, it [must be refreshed as specified in the documentation](https://core.telegram.org/api/file-references). .
 400	FILE_REFERENCE_X_INVALID	The [file reference](https://core.telegram.org/api/file-references) of the media file at index {value} in the passed media array is invalid.
 400	FILE_TITLE_EMPTY	An empty file title was specified.
@@ -277,8 +289,8 @@ code	id	message
 400	INPUT_PEERS_EMPTY	The specified peer array is empty.
 400	INPUT_PURPOSE_INVALID	The specified payment purpose is invalid.
 400	INPUT_REQUEST_TOO_LONG	The request payload is too long.
-400	INPUT_STARS_AMOUNT_INVALID	
-400	INPUT_STARS_NANOS_INVALID	
+400	INPUT_STARS_AMOUNT_INVALID	The specified offer amount in stars is invalid, see [here &raquo;](https://core.telegram.org/api/gifts#collectible-gift-purchase-offers) for the allowed range.
+400	INPUT_STARS_NANOS_INVALID	The specified offer amount in nanotons is invalid, see [here &raquo;](https://core.telegram.org/api/gifts#collectible-gift-purchase-offers) for the allowed range.
 400	INPUT_TEXT_EMPTY	The specified text is empty.
 400	INPUT_TEXT_TOO_LONG	The specified text is too long.
 400	INPUT_USER_DEACTIVATED	The specified user was deleted.
@@ -301,8 +313,11 @@ code	id	message
 400	LANG_PACK_INVALID	The provided language pack is invalid.
 400	LASTNAME_INVALID	The last name is invalid.
 400	LIMIT_INVALID	The provided limit is invalid.
+400	LIMIT_PER_POST_INVALID	The specified reactions_limit value is invalid.
 400	LINK_NOT_MODIFIED	Discussion link not modified.
 400	LOCATION_INVALID	The provided location is invalid.
+400	MANAGER_INVALID	The specified manager bot is invalid.
+400	MANAGER_PERMISSION_MISSING	The specified manager bot does not have the [user](https://core.telegram.org/constructor/user).`bot_can_manage_bots` flag set.
 400	MAX_DATE_INVALID	The specified maximum date is invalid.
 400	MAX_ID_INVALID	The provided max ID is invalid.
 400	MAX_QTS_INVALID	The specified max_qts is invalid.
@@ -329,7 +344,7 @@ code	id	message
 400	MESSAGE_NOT_MODIFIED	The provided message data is identical to the previous message data, the message wasn't modified.
 400	MESSAGE_NOT_READ_YET	The specified message wasn't read yet.
 400	MESSAGE_POLL_CLOSED	Poll closed.
-400	MESSAGE_REQUIRED	
+400	MESSAGE_REQUIRED	A non-empty list of IDs must be passed to `id`.
 400	MESSAGE_TOO_LONG	The provided message is too long.
 400	MESSAGE_TOO_OLD	The message is too old, the requested information is not available.
 400	METHOD_INVALID	The specified method is invalid.
@@ -338,8 +353,10 @@ code	id	message
 400	MSG_ID_INVALID	Invalid message ID provided.
 400	MSG_TOO_OLD	[`chat_read_mark_expire_period` seconds](https://core.telegram.org/api/config#chat-read-mark-expire-period) have passed since the message was sent, read receipts were deleted.
 400	MSG_VOICE_MISSING	The specified message is not a voice message.
+400	MSG_VOICE_TOO_LONG	The specified voice message is too long to be transcribed.
 400	MSG_WAIT_FAILED	A waiting call returned an error.
 400	MULTI_MEDIA_TOO_LONG	Too many media files for album.
+400	NAME_INVALID	The specified bot name is invalid.
 400	NEED_ACTION_MISSING	
 400	NEW_SALT_INVALID	The new salt is invalid.
 400	NEW_SETTINGS_EMPTY	No password is set on the current account, and no new password was specified in `new_settings`.
@@ -363,6 +380,7 @@ code	id	message
 400	PARTICIPANT_ID_INVALID	The specified participant ID is invalid.
 400	PARTICIPANT_JOIN_MISSING	Trying to enable a presentation, when the user hasn't joined the Video Chat with [phone.joinGroupCall](https://core.telegram.org/method/phone.joinGroupCall).
 400	PARTICIPANT_VERSION_OUTDATED	The other participant does not use an up to date telegram client with support for calls.
+400	PASSKEY_ORIGIN_MISMATCH	Third-party clients currently don't support passkeys even when changing the origin.
 400	PASSWORD_EMPTY	The provided password is empty.
 400	PASSWORD_HASH_INVALID	The provided password hash is invalid.
 400	PASSWORD_MISSING	You must [enable 2FA](https://core.telegram.org/api/srp) before executing this operation.
@@ -408,7 +426,7 @@ code	id	message
 400	PHOTO_THUMB_URL_INVALID	The photo thumb URL is invalid
 400	PINNED_DIALOGS_TOO_MUCH	Too many pinned dialogs.
 400	PINNED_TOO_MUCH	There are too many pinned topics, unpin some first.
-400	PINNED_TOPIC_NOT_MODIFIED	
+400	PINNED_TOPIC_NOT_MODIFIED	The specified topic is already pinned.
 400	PIN_RESTRICTED	You can't pin messages.
 400	POLL_ANSWERS_INVALID	Invalid poll answers were provided.
 400	POLL_ANSWER_INVALID	One of the poll answers is not acceptable.
@@ -418,11 +436,13 @@ code	id	message
 400	POLL_UNSUPPORTED	This layer does not support polls in the invoked method
 400	POLL_VOTE_REQUIRED	Cast a vote in the poll before calling this method
 400	PREMIUM_ACCOUNT_REQUIRED	A premium account is required to execute this action.
-400	PREMIUM_PURPOSE_INVALID	
+400	PREMIUM_PURPOSE_INVALID	The specified InputStorePaymentPurpose is invalid.
 400	PRICING_CHAT_INVALID	The pricing for the [subscription](https://core.telegram.org/api/subscriptions) is invalid, the maximum price is specified in the [`stars_subscription_amount_max` config key &raquo;](https://core.telegram.org/api/config#stars-subscription-amount-max).
 400	PRIVACY_KEY_INVALID	The privacy key is invalid.
 400	PRIVACY_TOO_LONG	Too many privacy rules were specified, the current limit is 1000.
 400	PRIVACY_VALUE_INVALID	The specified privacy rule combination is invalid.
+400	PUBLIC_BROADCAST_EXPECTED	`channel` only accepts a channel, but a supergroup was passed.
+400	PUBLIC_KEY_INVALID	The specified e2e public key is invalid.
 400	PUBLIC_KEY_REQUIRED	A public key is required.
 400	PURPOSE_INVALID	The specified payment purpose is invalid.
 400	QUERY_ID_EMPTY	The query ID is empty.
@@ -457,9 +477,10 @@ code	id	message
 400	REPLY_TO_INVALID	The specified `reply_to` field is invalid.
 400	REPLY_TO_MONOFORUM_PEER_INVALID	The specified inputReplyToMonoForum.monoforum_peer_id is invalid.
 400	REPLY_TO_USER_INVALID	The replied-to user is invalid.
+400	REQUEST_MSG_EXPIRED	The request specified in request_msg_id has already expired.
 400	REQUEST_TOKEN_INVALID	The master DC did not accept the `request_token` from the CDN DC. Continue downloading the file from the master DC using upload.getFile.
-400	RESELL_STARS_TOO_FEW	
-400	RESELL_STARS_TOO_MUCH	
+400	RESELL_STARS_TOO_FEW	The offered price is too low.
+400	RESELL_STARS_TOO_MUCH	The offered price is too high.
 400	RESET_REQUEST_MISSING	No password reset is in progress.
 400	RESULTS_TOO_MUCH	Too many results were provided.
 400	RESULT_ID_DUPLICATE	You provided a duplicate result ID.
@@ -506,18 +527,19 @@ code	id	message
 400	STARGIFT_ALREADY_CONVERTED	The specified star gift was already converted to Stars.
 400	STARGIFT_ALREADY_REFUNDED	The specified star gift was already refunded.
 400	STARGIFT_ALREADY_UPGRADED	The specified gift was already upgraded to a collectible gift.
-400	STARGIFT_ATTRIBUTE_INVALID	
+400	STARGIFT_ATTRIBUTE_INVALID	One of the specified star gift attributes is invalid.
 400	STARGIFT_INVALID	The passed gift is invalid.
-400	STARGIFT_MESSAGE_INVALID	
+400	STARGIFT_MESSAGE_INVALID	The specified inputInvoiceStarGift.message is invalid.
 400	STARGIFT_NOT_FOUND	The specified gift was not found.
-400	STARGIFT_NOT_OWNER	
-400	STARGIFT_NOT_UNIQUE	
-400	STARGIFT_OFFER_INVALID	
-400	STARGIFT_OFFER_NOT_ALLOWED	
+400	STARGIFT_NOT_OWNER	You're not the owner of the gift you trying to transfer.
+400	STARGIFT_NOT_UNIQUE	You can't transfer a non-collectible gift.
+400	STARGIFT_OBJECT_INVALID	The specified star gift object is invalid.
+400	STARGIFT_OFFER_INVALID	The specified offer amount is invalid.
+400	STARGIFT_OFFER_NOT_ALLOWED	You can't send a purchase offer for this gift.
 400	STARGIFT_OWNER_INVALID	You cannot transfer or sell a gift owned by another user.
 400	STARGIFT_PEER_INVALID	The specified inputSavedStarGiftChat.peer is invalid.
 400	STARGIFT_RESELL_CURRENCY_NOT_ALLOWED	You can't buy the gift using the specified currency (i.e. trying to pay in Stars for TON gifts).
-400	STARGIFT_RESELL_TOO_EARLY_X	
+400	STARGIFT_RESELL_TOO_EARLY_X	You will be able to resell this gift in {value} seconds.
 400	STARGIFT_SLUG_INVALID	The specified gift slug is invalid.
 400	STARGIFT_TRANSFER_TOO_EARLY_X	You cannot transfer this gift yet, wait {value} seconds.
 400	STARGIFT_UPGRADE_UNAVAILABLE	A received gift can only be upgraded to a collectible gift if the [messageActionStarGift](https://core.telegram.org/constructor/messageActionStarGift)/[savedStarGift](https://core.telegram.org/constructor/savedStarGift).`can_upgrade` flag is set.
@@ -559,6 +581,7 @@ code	id	message
 400	STORIES_TOO_MUCH	You have hit the maximum active stories limit as specified by the [`story_expiring_limit_*` client configuration parameters](https://core.telegram.org/api/config#story-expiring-limit-default): you should buy a [Premium](https://core.telegram.org/api/premium) subscription, delete an active story, or wait for the oldest story to expire.
 400	STORY_ID_EMPTY	You specified no story IDs.
 400	STORY_ID_INVALID	The specified story ID is invalid.
+400	STORY_LIVE_ALREADY_X	This peer already has an active live story, and its ID is equal to {value}.
 400	STORY_NOT_MODIFIED	The new story information you passed is equal to the previous story information, thus it wasn't modified.
 400	STORY_PERIOD_INVALID	The specified story period is invalid for this account.
 400	STORY_SEND_FLOOD_MONTHLY_X	You've hit the monthly story limit as specified by the [`stories_sent_monthly_limit_*` client configuration parameters](https://core.telegram.org/api/config#stories-sent-monthly-limit-default): wait {value} seconds before posting a new story.
@@ -576,6 +599,7 @@ code	id	message
 400	TEMP_AUTH_KEY_ALREADY_BOUND	The passed temporary key is already bound to another **perm_auth_key_id**.
 400	TEMP_AUTH_KEY_EMPTY	No temporary auth key provided.
 400	TERMS_URL_INVALID	The specified [invoice](https://core.telegram.org/constructor/invoice).`terms_url` is invalid.
+400	TEXTDRAFT_PEER_INVALID	
 400	THEME_FILE_INVALID	Invalid theme file provided.
 400	THEME_FORMAT_INVALID	Invalid theme format provided.
 400	THEME_INVALID	Invalid theme provided.
@@ -588,6 +612,7 @@ code	id	message
 400	TMP_PASSWORD_DISABLED	The temporary password is disabled.
 400	TMP_PASSWORD_INVALID	The passed tmp_password is invalid.
 400	TODO_ITEMS_EMPTY	A checklist was specified, but no [checklist items](https://core.telegram.org/api/todo) were passed.
+400	TODO_ITEMS_TOO_MUCH	You specified too many todo list items.
 400	TODO_ITEM_DUPLICATE	Duplicate [checklist items](https://core.telegram.org/api/todo) detected.
 400	TODO_NOT_MODIFIED	No todo items were specified, so no changes were made to the todo list.
 400	TOKEN_EMPTY	The specified token is empty.
@@ -613,6 +638,7 @@ code	id	message
 400	TYPE_CONSTRUCTOR_INVALID	The type constructor is invalid
 400	UNSUPPORTED	`require_payment` cannot be *set* by users, only by monoforums: users must instead use the [inputPrivacyKeyNoPaidMessages](https://core.telegram.org/constructor/inputPrivacyKeyNoPaidMessages) privacy setting to remove a previously added exemption.
 400	UNTIL_DATE_INVALID	Invalid until date provided.
+400	URL_EXPIRED	The specified OAuth request has expired.
 400	URL_INVALID	Invalid URL provided.
 400	USAGE_LIMIT_INVALID	The specified usage limit is invalid.
 400	USERNAMES_ACTIVE_TOO_MUCH	The maximum number of active usernames was reached.
@@ -621,6 +647,7 @@ code	id	message
 400	USERNAME_NOT_OCCUPIED	The provided username is not occupied.
 400	USERNAME_OCCUPIED	The provided username is already occupied.
 400	USERNAME_PURCHASE_AVAILABLE	The specified username can be purchased on https://fragment.com.
+400	USERNAME_SUFFIX_MISSING	The required `bot` suffix is missing from the passed username.
 400	USERPIC_UPLOAD_REQUIRED	You must have a profile picture to publish your geolocation.
 400	USERS_TOO_FEW	Not enough users (to create a chat, for example).
 400	USERS_TOO_MUCH	The maximum number of users has been exceeded (to create a chat, for example).
@@ -632,6 +659,7 @@ code	id	message
 400	USER_BOT	Bots can only be admins in channels.
 400	USER_BOT_INVALID	User accounts must provide the `bot` method parameter when calling this method. If there is no such method parameter, this method can only be invoked by bot accounts.
 400	USER_BOT_REQUIRED	This method can only be called by a bot.
+400	USER_BOT_TO_BOT_DISABLED	
 400	USER_CHANNELS_TOO_MUCH	One of the users you tried to add is already in too many channels/supergroups.
 400	USER_CREATOR	For channels.editAdmin: you've tried to edit the admin rights of the owner, but you're not the owner; for channels.leaveChannel: you can't leave this channel, because you're its creator.
 400	USER_GIFT_UNAVAILABLE	Gifts are not available in the current region ([stars_gifts_enabled](https://core.telegram.org/api/config#stars-gifts-enabled) is equal to false).
@@ -646,6 +674,7 @@ code	id	message
 400	USER_VOLUME_INVALID	The specified user volume is invalid.
 400	VENUE_ID_INVALID	The specified venue ID is invalid.
 400	VIDEO_CONTENT_TYPE_INVALID	The video's content type is invalid.
+400	VIDEO_DURATION_INVALID	The duration of the specified video is invalid.
 400	VIDEO_FILE_INVALID	The specified video file is invalid.
 400	VIDEO_PAUSE_FORBIDDEN	You cannot pause the video stream.
 400	VIDEO_STOP_FORBIDDEN	You cannot stop the video stream.
@@ -657,6 +686,8 @@ code	id	message
 400	WALLPAPER_MIME_INVALID	The specified wallpaper MIME type is invalid.
 400	WALLPAPER_NOT_FOUND	The specified wallpaper could not be found.
 400	WC_CONVERT_URL_INVALID	WC convert URL invalid.
+400	WEBAPP_REQ_ID_INVALID	The specified webapp_req_id is invalid.
+400	WEBAUTH_TOKEN_EXPIRED	The specified auth token has expired.
 400	WEBDOCUMENT_INVALID	Invalid webdocument URL provided.
 400	WEBDOCUMENT_MIME_INVALID	Invalid webdocument mime type provided.
 400	WEBDOCUMENT_SIZE_TOO_BIG	Webdocument is too big!
@@ -683,8 +714,11 @@ code	id	message
 403	ALLOW_PAYMENT_REQUIRED_X	This peer charges {value} [Telegram Stars](https://core.telegram.org/api/stars) per message, but the `allow_paid_stars` was not set or its value is smaller than {value}.
 403	ANONYMOUS_REACTIONS_DISABLED	Sorry, anonymous administrators cannot leave reactions or participate in polls.
 403	BOT_ACCESS_FORBIDDEN	The specified method *can* be used over a [business connection](https://core.telegram.org/api/bots/connected-business-bots) for some operations, but the specified query attempted an operation that is not allowed over a business connection.
+403	BOT_FORUM_CREATE_FORBIDDEN	Since the bot's user.bot_forum_can_manage_topics flag is **not** set, the user cannot create or modify bot forum topics.
+403	BOT_GUARD_NOT_SUPPORTED	
 403	BOT_VERIFIER_FORBIDDEN	This bot cannot assign [verification icons](https://core.telegram.org/api/bots/verification).
 403	BROADCAST_FORBIDDEN	Channel poll voters and reactions cannot be fetched to prevent deanonymization.
+403	CHANNEL_PRIVATE	You haven't joined this channel/supergroup.
 403	CHANNEL_PUBLIC_GROUP_NA	channel/supergroup not available.
 403	CHAT_ACTION_FORBIDDEN	You cannot execute this action.
 403	CHAT_ADMIN_INVITE_REQUIRED	You do not have the rights to do this.
@@ -709,6 +743,7 @@ code	id	message
 403	CHAT_WRITE_FORBIDDEN	You can't write in this chat.
 403	EDIT_BOT_INVITE_FORBIDDEN	Normal users can't edit invites that were created by bots.
 403	GROUPCALL_ALREADY_STARTED	The groupcall has already started, you can join directly using [phone.joinGroupCall](https://core.telegram.org/method/phone.joinGroupCall).
+403	GROUPCALL_CHANGE_FORBIDDEN	You cannot change this group call setting.
 403	GROUPCALL_FORBIDDEN	The group call has already ended.
 403	INLINE_BOT_REQUIRED	Only the inline bot can edit message.
 403	MESSAGE_AUTHOR_REQUIRED	Message author required.
@@ -723,9 +758,11 @@ code	id	message
 403	RIGHT_FORBIDDEN	Your admin rights do not allow you to do this.
 403	SENSITIVE_CHANGE_FORBIDDEN	You can't change your sensitive content settings.
 403	TAKEOUT_REQUIRED	A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](https://core.telegram.org/api/takeout).
+403	USER_BANNED_IN_CHANNEL	You're banned from sending messages in supergroups/channels.
 403	USER_BOT_INVALID	User accounts must provide the `bot` method parameter when calling this method. If there is no such method parameter, this method can only be invoked by bot accounts.
 403	USER_CHANNELS_TOO_MUCH	One of the users you tried to add is already in too many channels/supergroups.
 403	USER_DELETED	You can't send this secret message because the other participant deleted their account.
+403	USER_DISALLOWED_STARGIFTS	
 403	USER_INVALID	Invalid user provided.
 403	USER_IS_BLOCKED	You were blocked by this user.
 403	USER_NOT_MUTUAL_CONTACT	The provided user is not a mutual contact.
@@ -756,6 +793,7 @@ code	id	message
 406	PEER_ID_INVALID	The provided peer id is invalid.
 406	PHONE_NUMBER_INVALID	The phone number is invalid.
 406	PHONE_PASSWORD_FLOOD	You have tried logging in too many times.
+406	POLL_MEMBER_RESTRICTED	Only channel subscribers can vote in this poll.
 406	PRECHECKOUT_FAILED	Precheckout failed, a detailed and localized description for the error will be emitted via an [updateServiceNotification as specified here &raquo;](https://core.telegram.org/api/errors#406-not-acceptable).
 406	PREMIUM_CURRENTLY_UNAVAILABLE	You cannot currently purchase a Premium subscription.
 406	PREVIOUS_CHAT_IMPORT_ACTIVE_WAIT_XMIN	Import for this chat is already in progress, wait {value} minutes before starting a new one.
@@ -781,6 +819,7 @@ code	id	message
 420	PREMIUM_SUB_ACTIVE_UNTIL_X	You already have a premium subscription active until unixtime {value} .
 420	SLOWMODE_WAIT_X	Slowmode is enabled in this chat: wait {value} seconds before sending another message to this chat.
 420	TAKEOUT_INIT_DELAY_X	Sorry, for security reasons, you will be able to begin downloading your data in {value} seconds. We have notified all your devices about the export request to make sure it's authorized and to give you time to react if it's not.
+500	AICOMPOSE_TIMEOUT	A timeout occurred while composing the message.
 500	API_CALL_ERROR	API call error due to Telegram having internal problems. Please try again later
 500	AUTH_KEY_UNSYNCHRONIZED	Internal error, please repeat the method call.
 500	AUTH_RESTART	Restart the authorization process.
@@ -817,6 +856,7 @@ code	id	message
 500	NEED_DOC_INVALID	
 500	NEED_MEMBER_INVALID	The provided member is invalid or does not exist
 500	No_workers_running	The Telegram server is restarting its workers. Try again later.
+500	OAUTH_REQUEST_INVALID	The specified OAuth request is invalid.
 500	PARTICIPANT_CALL_FAILED	Failure while making call due to Telegram having internal problems. Please try again later
 500	PASSKEY_AUTH_RESTART	
 500	PERSISTENT_TIMESTAMP_OUTDATED	Channel internal replication issues, try again later (treat this like an RPC_CALL_FAIL).

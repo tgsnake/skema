@@ -19,6 +19,10 @@ export class InternalServerError extends RPCError {
   override code: number = 500;
   override name: string = 'INTERNAL_SERVER_ERROR';
 }
+export class AicomposeTimeout extends InternalServerError {
+  override id: string = 'AICOMPOSE_TIMEOUT';
+  override message: string = 'A timeout occurred while composing the message.';
+}
 export class ApiCallError extends InternalServerError {
   override id: string = 'API_CALL_ERROR';
   override message: string =
@@ -175,6 +179,10 @@ export class NeedMemberInvalid extends InternalServerError {
 export class NoWorkersRunning extends InternalServerError {
   override id: string = 'No_workers_running';
   override message: string = 'The Telegram server is restarting its workers. Try again later.';
+}
+export class OauthRequestInvalid extends InternalServerError {
+  override id: string = 'OAUTH_REQUEST_INVALID';
+  override message: string = 'The specified OAuth request is invalid.';
 }
 export class ParticipantCallFailed extends InternalServerError {
   override id: string = 'PARTICIPANT_CALL_FAILED';

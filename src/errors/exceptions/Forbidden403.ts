@@ -38,6 +38,15 @@ export class BotAccessForbidden extends Forbidden {
   override message: string =
     'The specified method *can* be used over a [business connection](https://core.telegram.org/api/bots/connected-business-bots) for some operations, but the specified query attempted an operation that is not allowed over a business connection.';
 }
+export class BotForumCreateForbidden extends Forbidden {
+  override id: string = 'BOT_FORUM_CREATE_FORBIDDEN';
+  override message: string =
+    "Since the bot's user.bot_forum_can_manage_topics flag is **not** set, the user cannot create or modify bot forum topics.";
+}
+export class BotGuardNotSupported extends Forbidden {
+  override id: string = 'BOT_GUARD_NOT_SUPPORTED';
+  override message: string = '';
+}
 export class BotVerifierForbidden extends Forbidden {
   override id: string = 'BOT_VERIFIER_FORBIDDEN';
   override message: string =
@@ -47,6 +56,10 @@ export class BroadcastForbidden extends Forbidden {
   override id: string = 'BROADCAST_FORBIDDEN';
   override message: string =
     'Channel poll voters and reactions cannot be fetched to prevent deanonymization.';
+}
+export class ChannelPrivate extends Forbidden {
+  override id: string = 'CHANNEL_PRIVATE';
+  override message: string = "You haven't joined this channel/supergroup.";
 }
 export class ChannelPublicGroupNa extends Forbidden {
   override id: string = 'CHANNEL_PUBLIC_GROUP_NA';
@@ -146,6 +159,10 @@ export class GroupcallAlreadyStarted extends Forbidden {
   override message: string =
     'The groupcall has already started, you can join directly using [phone.joinGroupCall](https://core.telegram.org/method/phone.joinGroupCall).';
 }
+export class GroupcallChangeForbidden extends Forbidden {
+  override id: string = 'GROUPCALL_CHANGE_FORBIDDEN';
+  override message: string = 'You cannot change this group call setting.';
+}
 export class GroupcallForbidden extends Forbidden {
   override id: string = 'GROUPCALL_FORBIDDEN';
   override message: string = 'The group call has already ended.';
@@ -208,6 +225,10 @@ export class TakeoutRequired extends Forbidden {
   override message: string =
     'A [takeout](https://core.telegram.org/api/takeout) session needs to be initialized first, [see here &raquo; for more info](https://core.telegram.org/api/takeout).';
 }
+export class UserBannedInChannel extends Forbidden {
+  override id: string = 'USER_BANNED_IN_CHANNEL';
+  override message: string = "You're banned from sending messages in supergroups/channels.";
+}
 export class UserBotInvalid extends Forbidden {
   override id: string = 'USER_BOT_INVALID';
   override message: string =
@@ -222,6 +243,10 @@ export class UserDeleted extends Forbidden {
   override id: string = 'USER_DELETED';
   override message: string =
     "You can't send this secret message because the other participant deleted their account.";
+}
+export class UserDisallowedStargifts extends Forbidden {
+  override id: string = 'USER_DISALLOWED_STARGIFTS';
+  override message: string = '';
 }
 export class UserInvalid extends Forbidden {
   override id: string = 'USER_INVALID';

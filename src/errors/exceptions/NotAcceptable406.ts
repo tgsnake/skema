@@ -105,6 +105,10 @@ export class PhonePasswordFlood extends NotAcceptable {
   override id: string = 'PHONE_PASSWORD_FLOOD';
   override message: string = 'You have tried logging in too many times.';
 }
+export class PollMemberRestricted extends NotAcceptable {
+  override id: string = 'POLL_MEMBER_RESTRICTED';
+  override message: string = 'Only channel subscribers can vote in this poll.';
+}
 export class PrecheckoutFailed extends NotAcceptable {
   override id: string = 'PRECHECKOUT_FAILED';
   override message: string =

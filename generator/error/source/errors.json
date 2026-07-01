@@ -91,6 +91,30 @@
   },
   {
     "code": 400,
+    "msg": "AICOMPOSE_TONE_INVALID",
+    "desc": "The specified tone is invalid.",
+    "affected": [
+      "aicompose.DeleteTone",
+      "aicompose.GetTone",
+      "aicompose.GetToneExample",
+      "aicompose.SaveTone",
+      "aicompose.UpdateTone"
+    ]
+  },
+  {
+    "code": 400,
+    "msg": "AICOMPOSE_TONE_TITLE_INVALID",
+    "desc": "The specified tone title is invalid.",
+    "affected": ["aicompose.CreateTone"]
+  },
+  {
+    "code": 400,
+    "msg": "AI_COMPOSE_TASK_MISSING",
+    "desc": "",
+    "affected": ["messages.ComposeMessageWithAI"]
+  },
+  {
+    "code": 400,
     "msg": "ALBUM_PHOTOS_TOO_MANY",
     "desc": "You have uploaded too many profile photos, delete some before retrying.",
     "affected": ["photos.UpdateProfilePhoto", "photos.UploadProfilePhoto"]
@@ -199,6 +223,12 @@
   },
   {
     "code": 400,
+    "msg": "BIRTHDAY_ALREADY",
+    "desc": "The target user already has a birthday set.",
+    "affected": ["users.SuggestBirthday"]
+  },
+  {
+    "code": 400,
     "msg": "BIRTHDAY_INVALID",
     "desc": "An invalid age was specified, must be between 0 and 150 years.",
     "affected": ["account.UpdateBirthday"]
@@ -283,6 +313,12 @@
   },
   {
     "code": 400,
+    "msg": "BOT_CREATE_LIMIT_EXCEEDED",
+    "desc": "The current user already owns the maximum allowed number of owned bots, as specified by [`bots_create_limit_default` &raquo;](https://core.telegram.org/api/config#bots-create-limit-default) and [`bots_create_limit_premium` &raquo;](https://core.telegram.org/api/config#bots-create-limit-premium); if the current user doesn't have Telegram Premium, upgrading to Premium will allow them to create more bots.  .",
+    "affected": ["bots.CreateBot"]
+  },
+  {
+    "code": 400,
     "msg": "BOT_DOMAIN_INVALID",
     "desc": "Bot domain invalid.",
     "affected": ["messages.EditMessage", "messages.SendMessage"]
@@ -307,6 +343,12 @@
   },
   {
     "code": 400,
+    "msg": "BOT_ID_INVALID",
+    "desc": "The specified bot ID is invalid.",
+    "affected": ["account.ConfirmBotConnection", "bots.GetRequestedWebViewButton"]
+  },
+  {
+    "code": 400,
     "msg": "BOT_INLINE_DISABLED",
     "desc": "This bot can't be used in inline mode.",
     "affected": ["messages.GetInlineBotResults"]
@@ -323,7 +365,10 @@
       "bots.CanSendMessage",
       "bots.CheckDownloadFileParams",
       "bots.DeletePreviewMedia",
+      "bots.EditAccessSettings",
       "bots.EditPreviewMedia",
+      "bots.ExportBotToken",
+      "bots.GetAccessSettings",
       "bots.GetBotInfo",
       "bots.GetBotRecommendations",
       "bots.GetPreviewInfo",
@@ -465,6 +510,7 @@
       "account.ChangePhone",
       "account.CheckUsername",
       "account.ClearRecentEmojiStatuses",
+      "account.ConfirmBotConnection",
       "account.ConfirmPasswordEmail",
       "account.ConfirmPhone",
       "account.CreateBusinessChatLink",
@@ -474,6 +520,7 @@
       "account.DeleteBusinessChatLink",
       "account.DeletePasskey",
       "account.DeleteSecureValue",
+      "account.DeleteWebBrowserSettingsExceptions",
       "account.DisablePeerConnectedBot",
       "account.EditBusinessChatLink",
       "account.FinishTakeoutSession",
@@ -517,6 +564,7 @@
       "account.GetWallPaper",
       "account.GetWallPapers",
       "account.GetWebAuthorizations",
+      "account.GetWebBrowserSettings",
       "account.InitPasskeyRegistration",
       "account.InitTakeoutSession",
       "account.InstallTheme",
@@ -556,6 +604,7 @@
       "account.ToggleNoPaidMessagesException",
       "account.ToggleSponsoredMessages",
       "account.ToggleUsername",
+      "account.ToggleWebBrowserSettingsException",
       "account.UnregisterDevice",
       "account.UpdateBirthday",
       "account.UpdateBusinessAwayMessage",
@@ -573,11 +622,19 @@
       "account.UpdateProfile",
       "account.UpdateStatus",
       "account.UpdateTheme",
+      "account.UpdateWebBrowserSettings",
       "account.UploadRingtone",
       "account.UploadTheme",
       "account.UploadWallPaper",
       "account.VerifyEmail",
       "account.VerifyPhone",
+      "aicompose.CreateTone",
+      "aicompose.DeleteTone",
+      "aicompose.GetTone",
+      "aicompose.GetToneExample",
+      "aicompose.GetTones",
+      "aicompose.SaveTone",
+      "aicompose.UpdateTone",
       "auth.AcceptLoginToken",
       "auth.BindTempAuthKey",
       "auth.CancelCode",
@@ -606,8 +663,13 @@
       "bots.AnswerWebhookJSONQuery",
       "bots.CanSendMessage",
       "bots.CheckDownloadFileParams",
+      "bots.CheckUsername",
+      "bots.CreateBot",
       "bots.DeletePreviewMedia",
+      "bots.EditAccessSettings",
       "bots.EditPreviewMedia",
+      "bots.ExportBotToken",
+      "bots.GetAccessSettings",
       "bots.GetAdminedBots",
       "bots.GetBotCommands",
       "bots.GetBotInfo",
@@ -616,9 +678,11 @@
       "bots.GetPopularAppBots",
       "bots.GetPreviewInfo",
       "bots.GetPreviewMedias",
+      "bots.GetRequestedWebViewButton",
       "bots.InvokeWebViewCustomMethod",
       "bots.ReorderPreviewMedias",
       "bots.ReorderUsernames",
+      "bots.RequestWebViewButton",
       "bots.ResetBotCommands",
       "bots.SendCustomRequest",
       "bots.SetBotBroadcastDefaultAdminRights",
@@ -627,6 +691,7 @@
       "bots.SetBotInfo",
       "bots.SetBotMenuButton",
       "bots.SetCustomVerification",
+      "bots.SetJoinChatResults",
       "bots.ToggleUserEmojiStatusPermission",
       "bots.ToggleUsername",
       "bots.UpdateStarRefProgram",
@@ -772,24 +837,31 @@
       "messages.AcceptEncryption",
       "messages.AcceptUrlAuth",
       "messages.AddChatUser",
+      "messages.AddPollAnswer",
       "messages.AppendTodoList",
       "messages.CheckChatInvite",
       "messages.CheckHistoryImport",
       "messages.CheckHistoryImportPeer",
       "messages.CheckQuickReplyShortcut",
+      "messages.CheckUrlAuthMatchCode",
       "messages.ClearAllDrafts",
       "messages.ClearRecentReactions",
       "messages.ClearRecentStickers",
       "messages.ClickSponsoredMessage",
+      "messages.ComposeMessageWithAI",
       "messages.CreateChat",
       "messages.CreateForumTopic",
+      "messages.DeclineUrlAuth",
       "messages.DeleteChat",
       "messages.DeleteChatUser",
       "messages.DeleteExportedChatInvite",
       "messages.DeleteFactCheck",
       "messages.DeleteHistory",
       "messages.DeleteMessages",
+      "messages.DeleteParticipantReaction",
+      "messages.DeleteParticipantReactions",
       "messages.DeletePhoneCallHistory",
+      "messages.DeletePollAnswer",
       "messages.DeleteQuickReplyMessages",
       "messages.DeleteQuickReplyShortcut",
       "messages.DeleteRevokedExportedChatInvites",
@@ -799,7 +871,9 @@
       "messages.DiscardEncryption",
       "messages.EditChatAbout",
       "messages.EditChatAdmin",
+      "messages.EditChatCreator",
       "messages.EditChatDefaultBannedRights",
+      "messages.EditChatParticipantRank",
       "messages.EditChatPhoto",
       "messages.EditChatTitle",
       "messages.EditExportedChatInvite",
@@ -854,6 +928,7 @@
       "messages.GetForumTopics",
       "messages.GetForumTopicsByID",
       "messages.GetFullChat",
+      "messages.GetFutureChatCreatorAfterLeave",
       "messages.GetGameHighScores",
       "messages.GetHistory",
       "messages.GetInlineBotResults",
@@ -872,6 +947,7 @@
       "messages.GetPaidReactionPrivacy",
       "messages.GetPeerDialogs",
       "messages.GetPeerSettings",
+      "messages.GetPersonalChannelHistory",
       "messages.GetPinnedDialogs",
       "messages.GetPinnedSavedDialogs",
       "messages.GetPollResults",
@@ -883,6 +959,7 @@
       "messages.GetRecentReactions",
       "messages.GetRecentStickers",
       "messages.GetReplies",
+      "messages.GetRichMessage",
       "messages.GetSavedDialogs",
       "messages.GetSavedDialogsByID",
       "messages.GetSavedGifs",
@@ -900,6 +977,7 @@
       "messages.GetSuggestedDialogFilters",
       "messages.GetTopReactions",
       "messages.GetUnreadMentions",
+      "messages.GetUnreadPollVotes",
       "messages.GetUnreadReactions",
       "messages.GetWebPage",
       "messages.GetWebPagePreview",
@@ -919,6 +997,7 @@
       "messages.ReadHistory",
       "messages.ReadMentions",
       "messages.ReadMessageContents",
+      "messages.ReadPollVotes",
       "messages.ReadReactions",
       "messages.ReadSavedHistory",
       "messages.ReceivedMessages",
@@ -931,7 +1010,9 @@
       "messages.Report",
       "messages.ReportEncryptedSpam",
       "messages.ReportMessagesDelivery",
+      "messages.ReportMusicListen",
       "messages.ReportReaction",
+      "messages.ReportReadMetrics",
       "messages.ReportSpam",
       "messages.ReportSponsoredMessage",
       "messages.RequestAppWebView",
@@ -969,6 +1050,7 @@
       "messages.SendWebViewData",
       "messages.SendWebViewResultMessage",
       "messages.SetBotCallbackAnswer",
+      "messages.SetBotGuestChatResult",
       "messages.SetBotPrecheckoutResults",
       "messages.SetBotShippingResults",
       "messages.SetChatAvailableReactions",
@@ -1134,6 +1216,7 @@
       "stats.GetMegagroupStats",
       "stats.GetMessagePublicForwards",
       "stats.GetMessageStats",
+      "stats.GetPollStats",
       "stats.GetStoryPublicForwards",
       "stats.GetStoryStats",
       "stats.LoadAsyncGraph",
@@ -1266,7 +1349,7 @@
     "code": 400,
     "msg": "BUTTON_INVALID",
     "desc": "The specified button is invalid.",
-    "affected": ["bots.SetBotMenuButton"]
+    "affected": ["bots.RequestWebViewButton", "bots.SetBotMenuButton"]
   },
   {
     "code": 400,
@@ -1313,7 +1396,7 @@
     "code": 400,
     "msg": "BUTTON_USER_PRIVACY_RESTRICTED",
     "desc": "The privacy setting of the user specified in a [inputKeyboardButtonUserProfile](https://core.telegram.org/constructor/inputKeyboardButtonUserProfile) button do not allow creating such a button.",
-    "affected": ["messages.SendMedia", "messages.SendMessage"]
+    "affected": ["messages.EditMessage", "messages.SendMedia", "messages.SendMessage"]
   },
   {
     "code": 400,
@@ -1326,6 +1409,12 @@
     "msg": "CALL_ALREADY_DECLINED",
     "desc": "The call was already declined.",
     "affected": ["phone.AcceptCall", "phone.ConfirmCall", "phone.ReceivedCall"]
+  },
+  {
+    "code": 400,
+    "msg": "CALL_NOT_ACTIVE",
+    "desc": "The specified call is not active.",
+    "affected": ["phone.SendSignalingData"]
   },
   {
     "code": 400,
@@ -1386,7 +1475,8 @@
       "channels.CheckUsername",
       "channels.EditCreator",
       "channels.GetAdminedPublicChannels",
-      "channels.UpdateUsername"
+      "channels.UpdateUsername",
+      "messages.EditChatCreator"
     ]
   },
   {
@@ -1423,7 +1513,7 @@
     "code": 400,
     "msg": "CHANNEL_ID_INVALID",
     "desc": "The specified supergroup ID is invalid.",
-    "affected": ["channels.ConvertToGigagroup"]
+    "affected": ["channels.ConvertToGigagroup", "messages.GetFutureChatCreatorAfterLeave"]
   },
   {
     "code": 400,
@@ -1548,6 +1638,7 @@
       "messages.SetTyping",
       "messages.UpdatePinnedForumTopic",
       "messages.UploadMedia",
+      "payments.GetStarsRevenueStats",
       "phone.GetGroupCallJoinAs",
       "premium.GetBoostsStatus",
       "stats.GetBroadcastRevenueStats",
@@ -1556,6 +1647,7 @@
       "stats.GetMegagroupStats",
       "stats.GetMessagePublicForwards",
       "stats.GetMessageStats",
+      "stats.GetStoryStats",
       "stories.CanSendStory",
       "stories.DeleteStories",
       "stories.GetBoostersList",
@@ -1586,6 +1678,8 @@
       "messages.ExportChatInvite",
       "messages.GetPeerSettings",
       "messages.SendMessage",
+      "messages.SetTyping",
+      "stories.StartLive",
       "users.GetUsers"
     ]
   },
@@ -1641,6 +1735,7 @@
       "folders.EditPeerFolders",
       "messages.DeleteHistory",
       "messages.EditChatAbout",
+      "messages.EditChatCreator",
       "messages.EditChatDefaultBannedRights",
       "messages.EditExportedChatInvite",
       "messages.EditMessage",
@@ -1648,6 +1743,7 @@
       "messages.ForwardMessages",
       "messages.GetBotCallbackAnswer",
       "messages.GetChatInviteImporters",
+      "messages.GetCommonChats",
       "messages.GetDiscussionMessage",
       "messages.GetExportedChatInvite",
       "messages.GetExportedChatInvites",
@@ -1673,13 +1769,16 @@
       "messages.SendMedia",
       "messages.SendMessage",
       "messages.SendMultiMedia",
+      "messages.SendPaidReaction",
       "messages.SendReaction",
       "messages.SendVote",
       "messages.SetTyping",
       "messages.ToggleDialogPin",
       "messages.UpdatePinnedMessage",
       "messages.UploadMedia",
+      "payments.GetStarsRevenueStats",
       "phone.CreateGroupCall",
+      "photos.GetUserPhotos",
       "premium.GetBoostsStatus",
       "stats.GetBroadcastStats",
       "stories.GetPeerStories",
@@ -1776,6 +1875,7 @@
       "channels.ConvertToGigagroup",
       "channels.DeleteChannel",
       "channels.DeleteHistory",
+      "channels.DeleteMessages",
       "channels.DeleteParticipantHistory",
       "channels.DeleteUserHistory",
       "channels.EditAbout",
@@ -1811,6 +1911,7 @@
       "messages.DeleteExportedChatInvite",
       "messages.DeleteHistory",
       "messages.EditChatAbout",
+      "messages.EditChatCreator",
       "messages.EditChatDefaultBannedRights",
       "messages.EditChatTitle",
       "messages.EditExportedChatInvite",
@@ -1822,6 +1923,7 @@
       "messages.GetExportedChatInvite",
       "messages.GetExportedChatInvites",
       "messages.GetMessageEditData",
+      "messages.GetSavedHistory",
       "messages.GetScheduledHistory",
       "messages.GetScheduledMessages",
       "messages.HideAllChatJoinRequests",
@@ -1836,6 +1938,7 @@
       "messages.SendMessage",
       "messages.SendMultiMedia",
       "messages.SetChatAvailableReactions",
+      "messages.SetHistoryTTL",
       "messages.SetTyping",
       "messages.StartBot",
       "messages.StartHistoryImport",
@@ -1857,7 +1960,8 @@
       "stories.CanSendStory",
       "stories.GetBoostersList",
       "stories.GetStoriesArchive",
-      "stories.SendStory"
+      "stories.SendStory",
+      "stories.StartLive"
     ]
   },
   {
@@ -1943,6 +2047,7 @@
     "msg": "CHAT_INVALID",
     "desc": "Invalid chat.",
     "affected": [
+      "channels.EditPhoto",
       "channels.EditTitle",
       "channels.InviteToChannel",
       "channels.JoinChannel",
@@ -1973,7 +2078,8 @@
       "channels.EditCreator",
       "channels.InviteToChannel",
       "messages.AddChatUser",
-      "messages.CreateChat"
+      "messages.CreateChat",
+      "messages.EditChatCreator"
     ]
   },
   {
@@ -2070,6 +2176,12 @@
   },
   {
     "code": 400,
+    "msg": "CHAT_WRITE_FORBIDDEN",
+    "desc": "You can't write in this chat.",
+    "affected": ["messages.SendReaction"]
+  },
+  {
+    "code": 400,
     "msg": "CODE_EMPTY",
     "desc": "The provided code is empty.",
     "affected": ["auth.CheckRecoveryPassword", "auth.RecoverPassword"]
@@ -2101,7 +2213,7 @@
   {
     "code": 400,
     "msg": "COLLECTION_ID_INVALID",
-    "desc": "",
+    "desc": "The specified collection ID is invalid.",
     "affected": ["payments.GetSavedStarGifts"]
   },
   {
@@ -2144,7 +2256,7 @@
     "code": 400,
     "msg": "CONNECTION_LAYER_INVALID",
     "desc": "Layer invalid.",
-    "affected": ["contacts.ResolveUsername", "help.GetConfig", "InitConnection"]
+    "affected": ["contacts.ResolveUsername", "help.GetConfig", "InitConnection", "InvokeWithLayer"]
   },
   {
     "code": 400,
@@ -2187,7 +2299,7 @@
     "code": 400,
     "msg": "CONTACT_MISSING",
     "desc": "The specified user is not a contact.",
-    "affected": ["photos.UploadContactProfilePhoto"]
+    "affected": ["contacts.UpdateContactNote", "photos.UploadContactProfilePhoto"]
   },
   {
     "code": 400,
@@ -2210,7 +2322,7 @@
   {
     "code": 400,
     "msg": "CREDENTIAL_INVALID",
-    "desc": "",
+    "desc": "The specified credential is invalid.",
     "affected": ["account.RegisterPasskey", "auth.FinishPasskeyLogin"]
   },
   {
@@ -2260,7 +2372,11 @@
     "code": 400,
     "msg": "DATA_TOO_LONG",
     "desc": "Data too long.",
-    "affected": ["messages.SendEncrypted", "messages.SendEncryptedFile"]
+    "affected": [
+      "messages.SendEncrypted",
+      "messages.SendEncryptedFile",
+      "messages.SendEncryptedService"
+    ]
   },
   {
     "code": 400,
@@ -2325,7 +2441,7 @@
   {
     "code": 400,
     "msg": "EMAIL_INSTALL_MISSING",
-    "desc": "",
+    "desc": "Attempting to send a code to the recovery email, but no email is configured.",
     "affected": ["auth.ResendCode", "auth.ResetLoginEmail"]
   },
   {
@@ -2463,6 +2579,19 @@
   },
   {
     "code": 400,
+    "msg": "ENTITY_DATE_FORMAT_INVALID",
+    "desc": "One of the passed messageEntityFormattedDate objects has an invalid format (i.e. an invalid combination of the format flags).",
+    "affected": ["messages.SendMessage"]
+  },
+  {
+    "code": 400,
+    "msg": "ENTITY_DATE_INVALID",
+    "desc": "One of the passed messageEntityFormattedDate objects has an invalid date: the allowed value ranges from `0` to the current date plus 1098 days (`time()+1098*86400`).",
+    "affected": ["messages.SendMessage"]
+  },
+  { "code": 400, "msg": "ENTITY_DATE_TOO_LONG", "desc": "", "affected": ["messages.SendMessage"] },
+  {
+    "code": 400,
     "msg": "ENTITY_MENTION_USER_INVALID",
     "desc": "You mentioned an invalid user.",
     "affected": ["messages.SendMessage"]
@@ -2497,11 +2626,22 @@
     "desc": "The specified `stars_amount` of the passed [inputMediaPaidMedia](https://core.telegram.org/constructor/inputMediaPaidMedia) is invalid.",
     "affected": ["messages.SendMedia"]
   },
-  { "code": 400, "msg": "EXTENDED_MEDIA_EMPTY", "desc": "", "affected": ["messages.SendMedia"] },
+  {
+    "code": 400,
+    "msg": "EXTENDED_MEDIA_EMPTY",
+    "desc": "The specified extended media is empty.",
+    "affected": ["messages.SendMedia"]
+  },
   {
     "code": 400,
     "msg": "EXTENDED_MEDIA_INVALID",
     "desc": "The specified paid media is invalid.",
+    "affected": ["messages.SendMedia"]
+  },
+  {
+    "code": 400,
+    "msg": "EXTENDED_MEDIA_PEER_INVALID",
+    "desc": "",
     "affected": ["messages.SendMedia"]
   },
   {
@@ -2635,7 +2775,7 @@
   {
     "code": 400,
     "msg": "FILE_REFERENCE_X_EMPTY",
-    "desc": "",
+    "desc": "The file reference of the media file at offset {value} in the multi_media array is invalid.",
     "affected": ["messages.SendMultiMedia"]
   },
   {
@@ -2915,7 +3055,11 @@
     "code": 400,
     "msg": "GROUPCALL_JOIN_MISSING",
     "desc": "You haven't joined this group call.",
-    "affected": ["phone.CheckGroupCall", "phone.GetGroupCallStreamChannels"]
+    "affected": [
+      "phone.CheckGroupCall",
+      "phone.GetGroupCallStreamChannels",
+      "phone.SendGroupCallMessage"
+    ]
   },
   {
     "code": 400,
@@ -3098,13 +3242,13 @@
   {
     "code": 400,
     "msg": "INPUT_STARS_AMOUNT_INVALID",
-    "desc": "",
+    "desc": "The specified offer amount in stars is invalid, see [here &raquo;](https://core.telegram.org/api/gifts#collectible-gift-purchase-offers) for the allowed range.",
     "affected": ["payments.SendStarGiftOffer"]
   },
   {
     "code": 400,
     "msg": "INPUT_STARS_NANOS_INVALID",
-    "desc": "",
+    "desc": "The specified offer amount in nanotons is invalid, see [here &raquo;](https://core.telegram.org/api/gifts#collectible-gift-purchase-offers) for the allowed range.",
     "affected": ["payments.SendStarGiftOffer"]
   },
   {
@@ -3117,7 +3261,7 @@
     "code": 400,
     "msg": "INPUT_TEXT_TOO_LONG",
     "desc": "The specified text is too long.",
-    "affected": ["messages.TranslateText"]
+    "affected": ["messages.SummarizeText", "messages.TranslateText"]
   },
   {
     "code": 400,
@@ -3133,6 +3277,7 @@
       "messages.AddChatUser",
       "messages.CreateChat",
       "messages.DeleteChatUser",
+      "messages.EditChatCreator",
       "messages.EditMessage",
       "messages.ExportChatInvite",
       "messages.ForwardMessages",
@@ -3301,6 +3446,12 @@
   },
   {
     "code": 400,
+    "msg": "LIMIT_PER_POST_INVALID",
+    "desc": "The specified reactions_limit value is invalid.",
+    "affected": ["messages.SetChatAvailableReactions"]
+  },
+  {
+    "code": 400,
     "msg": "LINK_NOT_MODIFIED",
     "desc": "Discussion link not modified.",
     "affected": ["channels.SetDiscussionGroup"]
@@ -3316,6 +3467,18 @@
       "upload.GetWebFile",
       "upload.ReuploadCdnFile"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "MANAGER_INVALID",
+    "desc": "The specified manager bot is invalid.",
+    "affected": ["bots.CreateBot"]
+  },
+  {
+    "code": 400,
+    "msg": "MANAGER_PERMISSION_MISSING",
+    "desc": "The specified manager bot does not have the [user](https://core.telegram.org/constructor/user).`bot_can_manage_bots` flag set.",
+    "affected": ["bots.CreateBot"]
   },
   {
     "code": 400,
@@ -3355,7 +3518,8 @@
       "messages.EditMessage",
       "messages.SendMedia",
       "messages.SendMultiMedia",
-      "messages.SetInlineBotResults"
+      "messages.SetInlineBotResults",
+      "stories.SendStory"
     ]
   },
   {
@@ -3376,7 +3540,7 @@
     "code": 400,
     "msg": "MEDIA_FILE_INVALID",
     "desc": "The specified media file is invalid.",
-    "affected": ["stories.SendStory"]
+    "affected": ["messages.ForwardMessages", "stories.SendStory"]
   },
   {
     "code": 400,
@@ -3463,6 +3627,7 @@
     "desc": "The provided message is empty.",
     "affected": [
       "auth.SendInvites",
+      "messages.ComposeMessageWithAI",
       "messages.EditMessage",
       "messages.GetWebPagePreview",
       "messages.SendMedia",
@@ -3493,9 +3658,12 @@
       "messages.GetGameHighScores",
       "messages.GetInlineGameHighScores",
       "messages.GetMessageEditData",
+      "messages.GetMessages",
       "messages.GetMessagesReadParticipants",
       "messages.GetOutboxReadDate",
       "messages.GetPollResults",
+      "messages.GetRichMessage",
+      "messages.GetSponsoredMessages",
       "messages.SendBotRequestedPeer",
       "messages.SendPaidReaction",
       "messages.SendReaction",
@@ -3516,7 +3684,8 @@
       "payments.ValidateRequestedInfo",
       "phone.DeclineConferenceCallInvite",
       "stats.GetMessagePublicForwards",
-      "stats.GetMessageStats"
+      "stats.GetMessageStats",
+      "Test"
     ]
   },
   {
@@ -3537,13 +3706,19 @@
     "desc": "Poll closed.",
     "affected": ["messages.SendVote"]
   },
-  { "code": 400, "msg": "MESSAGE_REQUIRED", "desc": "", "affected": ["messages.Report"] },
+  {
+    "code": 400,
+    "msg": "MESSAGE_REQUIRED",
+    "desc": "A non-empty list of IDs must be passed to `id`.",
+    "affected": ["messages.Report"]
+  },
   {
     "code": 400,
     "msg": "MESSAGE_TOO_LONG",
     "desc": "The provided message is too long.",
     "affected": [
       "messages.EditMessage",
+      "messages.SendMedia",
       "messages.SendMessage",
       "messages.SetBotCallbackAnswer",
       "messages.SetInlineBotResults",
@@ -3621,6 +3796,7 @@
       "messages.GetInlineBotResults",
       "messages.GetMessageReactionsList",
       "messages.GetMessageReadParticipants",
+      "messages.GetMessages",
       "messages.GetMessagesReactions",
       "messages.GetMessagesViews",
       "messages.GetPeerDialogs",
@@ -3648,6 +3824,7 @@
       "messages.SendVote",
       "messages.SetTyping",
       "messages.StartBot",
+      "messages.SummarizeText",
       "messages.TranscribeAudio",
       "messages.TranslateText",
       "messages.UpdateDialogFilter",
@@ -3679,6 +3856,12 @@
   },
   {
     "code": 400,
+    "msg": "MSG_VOICE_TOO_LONG",
+    "desc": "The specified voice message is too long to be transcribed.",
+    "affected": ["messages.TranscribeAudio"]
+  },
+  {
+    "code": 400,
     "msg": "MSG_WAIT_FAILED",
     "desc": "A waiting call returned an error.",
     "affected": [
@@ -3694,6 +3877,12 @@
     "msg": "MULTI_MEDIA_TOO_LONG",
     "desc": "Too many media files for album.",
     "affected": ["messages.SendMultiMedia"]
+  },
+  {
+    "code": 400,
+    "msg": "NAME_INVALID",
+    "desc": "The specified bot name is invalid.",
+    "affected": ["bots.CreateBot"]
   },
   {
     "code": 400,
@@ -3759,7 +3948,7 @@
     "code": 400,
     "msg": "OFFSET_PEER_ID_INVALID",
     "desc": "The provided offset peer is invalid.",
-    "affected": ["messages.GetDialogs"]
+    "affected": ["channels.SearchPosts", "messages.GetDialogs"]
   },
   {
     "code": 400,
@@ -3810,6 +3999,7 @@
     "affected": [
       "account.GetPaidMessagesRevenue",
       "account.ToggleNoPaidMessagesException",
+      "messages.GetSavedHistory",
       "messages.ReadSavedHistory"
     ]
   },
@@ -3847,6 +4037,12 @@
   },
   {
     "code": 400,
+    "msg": "PASSKEY_ORIGIN_MISMATCH",
+    "desc": "Third-party clients currently don't support passkeys even when changing the origin.",
+    "affected": ["account.RegisterPasskey", "auth.FinishPasskeyLogin"]
+  },
+  {
+    "code": 400,
     "msg": "PASSWORD_EMPTY",
     "desc": "The provided password is empty.",
     "affected": ["account.ResetPassword", "auth.RequestPasswordRecovery"]
@@ -3856,12 +4052,14 @@
     "msg": "PASSWORD_HASH_INVALID",
     "desc": "The provided password hash is invalid.",
     "affected": [
+      "account.CheckPassword",
       "account.DeleteAccount",
       "account.GetPasswordSettings",
       "account.GetTmpPassword",
       "account.UpdatePasswordSettings",
       "auth.CheckPassword",
       "channels.EditCreator",
+      "messages.EditChatCreator",
       "payments.GetStarGiftWithdrawalUrl",
       "payments.GetStarsRevenueWithdrawalUrl",
       "stats.GetBroadcastRevenueWithdrawalUrl"
@@ -3873,6 +4071,7 @@
     "desc": "You must [enable 2FA](https://core.telegram.org/api/srp) before executing this operation.",
     "affected": [
       "channels.EditCreator",
+      "messages.EditChatCreator",
       "messages.GetBotCallbackAnswer",
       "payments.GetStarsRevenueWithdrawalUrl",
       "stats.GetBroadcastRevenueWithdrawalUrl"
@@ -3902,6 +4101,7 @@
     "desc": "The password was modified less than 24 hours ago, try again in {value} seconds.",
     "affected": [
       "channels.EditCreator",
+      "messages.EditChatCreator",
       "payments.GetStarGiftWithdrawalUrl",
       "payments.GetStarsRevenueWithdrawalUrl",
       "stats.GetBroadcastRevenueWithdrawalUrl"
@@ -3966,7 +4166,9 @@
       "contacts.Block",
       "contacts.ResetTopPeerRating",
       "contacts.Unblock",
+      "GetDialogs",
       "messages.AddChatUser",
+      "messages.AddPollAnswer",
       "messages.AppendTodoList",
       "messages.CheckHistoryImportPeer",
       "messages.CreateForumTopic",
@@ -3975,12 +4177,16 @@
       "messages.DeleteExportedChatInvite",
       "messages.DeleteFactCheck",
       "messages.DeleteHistory",
+      "messages.DeleteParticipantReaction",
+      "messages.DeleteParticipantReactions",
+      "messages.DeletePollAnswer",
       "messages.DeleteRevokedExportedChatInvites",
       "messages.DeleteSavedHistory",
       "messages.DeleteScheduledMessages",
       "messages.EditChatAbout",
       "messages.EditChatAdmin",
       "messages.EditChatDefaultBannedRights",
+      "messages.EditChatParticipantRank",
       "messages.EditChatPhoto",
       "messages.EditChatTitle",
       "messages.EditExportedChatInvite",
@@ -4018,6 +4224,7 @@
       "messages.GetSearchResultsPositions",
       "messages.GetStatsURL",
       "messages.GetUnreadMentions",
+      "messages.GetUnreadPollVotes",
       "messages.GetUnreadReactions",
       "messages.HideAllChatJoinRequests",
       "messages.HideChatJoinRequest",
@@ -4030,6 +4237,7 @@
       "messages.ReadDiscussion",
       "messages.ReadHistory",
       "messages.ReadMentions",
+      "messages.ReadPollVotes",
       "messages.ReadReactions",
       "messages.ReorderPinnedDialogs",
       "messages.Report",
@@ -4110,6 +4318,7 @@
       "stats.GetBroadcastRevenueTransactions",
       "stats.GetMessagePublicForwards",
       "stats.GetMessageStats",
+      "stats.GetPollStats",
       "stats.GetStoryPublicForwards",
       "stats.GetStoryStats",
       "stickers.CreateStickerSet",
@@ -4398,7 +4607,7 @@
   {
     "code": 400,
     "msg": "PINNED_TOPIC_NOT_MODIFIED",
-    "desc": "",
+    "desc": "The specified topic is already pinned.",
     "affected": ["channels.UpdatePinnedForumTopic"]
   },
   {
@@ -4465,7 +4674,7 @@
   {
     "code": 400,
     "msg": "PREMIUM_PURPOSE_INVALID",
-    "desc": "",
+    "desc": "The specified InputStorePaymentPurpose is invalid.",
     "affected": ["payments.GetPaymentForm"]
   },
   {
@@ -4491,6 +4700,18 @@
     "msg": "PRIVACY_VALUE_INVALID",
     "desc": "The specified privacy rule combination is invalid.",
     "affected": ["account.SetPrivacy"]
+  },
+  {
+    "code": 400,
+    "msg": "PUBLIC_BROADCAST_EXPECTED",
+    "desc": "`channel` only accepts a channel, but a supergroup was passed.",
+    "affected": ["account.UpdatePersonalChannel"]
+  },
+  {
+    "code": 400,
+    "msg": "PUBLIC_KEY_INVALID",
+    "desc": "The specified e2e public key is invalid.",
+    "affected": ["phone.JoinGroupCall"]
   },
   {
     "code": 400,
@@ -4597,7 +4818,7 @@
     "code": 400,
     "msg": "RANDOM_ID_EMPTY",
     "desc": "Random ID empty.",
-    "affected": ["messages.SendMultiMedia", "messages.SendPaidReaction"]
+    "affected": ["messages.SendMessage", "messages.SendMultiMedia", "messages.SendPaidReaction"]
   },
   {
     "code": 400,
@@ -4737,6 +4958,12 @@
   },
   {
     "code": 400,
+    "msg": "REQUEST_MSG_EXPIRED",
+    "desc": "The request specified in request_msg_id has already expired.",
+    "affected": ["messages.ToggleNoForwards"]
+  },
+  {
+    "code": 400,
     "msg": "REQUEST_TOKEN_INVALID",
     "desc": "The master DC did not accept the `request_token` from the CDN DC. Continue downloading the file from the master DC using upload.getFile.",
     "affected": ["upload.ReuploadCdnFile"]
@@ -4744,13 +4971,13 @@
   {
     "code": 400,
     "msg": "RESELL_STARS_TOO_FEW",
-    "desc": "",
+    "desc": "The offered price is too low.",
     "affected": ["payments.SendStarGiftOffer"]
   },
   {
     "code": 400,
     "msg": "RESELL_STARS_TOO_MUCH",
-    "desc": "",
+    "desc": "The offered price is too high.",
     "affected": ["payments.SendStarGiftOffer"]
   },
   {
@@ -4961,6 +5188,7 @@
     "desc": "This session was created less than 24 hours ago, try again in {value} seconds.",
     "affected": [
       "channels.EditCreator",
+      "messages.EditChatCreator",
       "payments.GetStarGiftWithdrawalUrl",
       "payments.GetStarsRevenueWithdrawalUrl",
       "stats.GetBroadcastRevenueWithdrawalUrl"
@@ -5047,7 +5275,12 @@
     "code": 400,
     "msg": "SRP_ID_INVALID",
     "desc": "Invalid SRP ID provided.",
-    "affected": ["account.UpdatePasswordSettings", "auth.CheckPassword", "channels.EditCreator"]
+    "affected": [
+      "account.UpdatePasswordSettings",
+      "auth.CheckPassword",
+      "channels.EditCreator",
+      "messages.EditChatCreator"
+    ]
   },
   {
     "code": 400,
@@ -5076,7 +5309,7 @@
   {
     "code": 400,
     "msg": "STARGIFT_ATTRIBUTE_INVALID",
-    "desc": "",
+    "desc": "One of the specified star gift attributes is invalid.",
     "affected": ["payments.GetResaleStarGifts"]
   },
   {
@@ -5097,7 +5330,7 @@
   {
     "code": 400,
     "msg": "STARGIFT_MESSAGE_INVALID",
-    "desc": "",
+    "desc": "The specified inputInvoiceStarGift.message is invalid.",
     "affected": ["payments.GetPaymentForm"]
   },
   {
@@ -5114,25 +5347,31 @@
   {
     "code": 400,
     "msg": "STARGIFT_NOT_OWNER",
-    "desc": "",
+    "desc": "You're not the owner of the gift you trying to transfer.",
     "affected": ["payments.GetPaymentForm", "payments.TransferStarGift"]
   },
   {
     "code": 400,
     "msg": "STARGIFT_NOT_UNIQUE",
-    "desc": "",
-    "affected": ["payments.TransferStarGift"]
+    "desc": "You can't transfer a non-collectible gift.",
+    "affected": ["payments.GetPaymentForm", "payments.TransferStarGift"]
+  },
+  {
+    "code": 400,
+    "msg": "STARGIFT_OBJECT_INVALID",
+    "desc": "The specified star gift object is invalid.",
+    "affected": ["payments.SaveStarGift"]
   },
   {
     "code": 400,
     "msg": "STARGIFT_OFFER_INVALID",
-    "desc": "",
+    "desc": "The specified offer amount is invalid.",
     "affected": ["payments.SendStarGiftOffer"]
   },
   {
     "code": 400,
     "msg": "STARGIFT_OFFER_NOT_ALLOWED",
-    "desc": "",
+    "desc": "You can't send a purchase offer for this gift.",
     "affected": ["payments.SendStarGiftOffer"]
   },
   {
@@ -5162,7 +5401,7 @@
   {
     "code": 400,
     "msg": "STARGIFT_RESELL_TOO_EARLY_X",
-    "desc": "",
+    "desc": "You will be able to resell this gift in {value} seconds.",
     "affected": ["payments.GetPaymentForm"]
   },
   {
@@ -5457,6 +5696,12 @@
   },
   {
     "code": 400,
+    "msg": "STORY_LIVE_ALREADY_X",
+    "desc": "This peer already has an active live story, and its ID is equal to {value}.",
+    "affected": ["stories.StartLive"]
+  },
+  {
+    "code": 400,
     "msg": "STORY_NOT_MODIFIED",
     "desc": "The new story information you passed is equal to the previous story information, thus it wasn't modified.",
     "affected": ["stories.EditStory"]
@@ -5563,6 +5808,7 @@
     "desc": "The specified [invoice](https://core.telegram.org/constructor/invoice).`terms_url` is invalid.",
     "affected": ["messages.SendMedia"]
   },
+  { "code": 400, "msg": "TEXTDRAFT_PEER_INVALID", "desc": "", "affected": ["messages.SetTyping"] },
   {
     "code": 400,
     "msg": "THEME_FILE_INVALID",
@@ -5637,6 +5883,12 @@
   },
   {
     "code": 400,
+    "msg": "TODO_ITEMS_TOO_MUCH",
+    "desc": "You specified too many todo list items.",
+    "affected": ["messages.SendMedia"]
+  },
+  {
+    "code": 400,
     "msg": "TODO_ITEM_DUPLICATE",
     "desc": "Duplicate [checklist items](https://core.telegram.org/api/todo) detected.",
     "affected": ["messages.AppendTodoList", "messages.EditMessage", "messages.SendMedia"]
@@ -5669,7 +5921,7 @@
     "code": 400,
     "msg": "TOPICS_EMPTY",
     "desc": "You specified no topic IDs.",
-    "affected": ["channels.GetForumTopicsByID"]
+    "affected": ["channels.GetForumTopicsByID", "messages.GetForumTopicsByID"]
   },
   {
     "code": 400,
@@ -5686,7 +5938,7 @@
     "code": 400,
     "msg": "TOPIC_CLOSE_SEPARATELY",
     "desc": "The `close` flag cannot be provided together with any of the other flags.",
-    "affected": ["channels.EditForumTopic"]
+    "affected": ["channels.EditForumTopic", "messages.EditForumTopic"]
   },
   {
     "code": 400,
@@ -5722,7 +5974,7 @@
     "code": 400,
     "msg": "TOPIC_NOT_MODIFIED",
     "desc": "The updated topic info is equal to the current topic info, nothing was changed.",
-    "affected": ["channels.EditForumTopic"]
+    "affected": ["channels.EditForumTopic", "messages.EditForumTopic"]
   },
   {
     "code": 400,
@@ -5809,10 +6061,20 @@
   },
   {
     "code": 400,
+    "msg": "URL_EXPIRED",
+    "desc": "The specified OAuth request has expired.",
+    "affected": ["messages.RequestUrlAuth"]
+  },
+  {
+    "code": 400,
     "msg": "URL_INVALID",
     "desc": "Invalid URL provided.",
     "affected": [
+      "account.ToggleWebBrowserSettingsException",
+      "messages.CheckUrlAuthMatchCode",
+      "messages.DeclineUrlAuth",
       "messages.RequestSimpleWebView",
+      "messages.RequestUrlAuth",
       "messages.RequestWebView",
       "messages.SetBotCallbackAnswer",
       "messages.SetInlineBotResults"
@@ -5838,6 +6100,8 @@
       "account.CheckUsername",
       "account.ToggleUsername",
       "account.UpdateUsername",
+      "bots.CheckUsername",
+      "bots.CreateBot",
       "channels.CheckUsername",
       "channels.ToggleUsername",
       "channels.UpdateUsername",
@@ -5864,7 +6128,7 @@
     "code": 400,
     "msg": "USERNAME_NOT_OCCUPIED",
     "desc": "The provided username is not occupied.",
-    "affected": ["contacts.ResolveUsername"]
+    "affected": ["contacts.ResolveUsername", "Test"]
   },
   {
     "code": 400,
@@ -5873,6 +6137,8 @@
     "affected": [
       "account.CheckUsername",
       "account.UpdateUsername",
+      "bots.CheckUsername",
+      "bots.CreateBot",
       "channels.CheckUsername",
       "channels.UpdateUsername",
       "users.GetFullUser"
@@ -5888,6 +6154,12 @@
       "channels.CheckUsername",
       "channels.UpdateUsername"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "USERNAME_SUFFIX_MISSING",
+    "desc": "The required `bot` suffix is missing from the passed username.",
+    "affected": ["bots.CheckUsername", "bots.CreateBot"]
   },
   {
     "code": 400,
@@ -5911,6 +6183,7 @@
       "channels.InviteToChannel",
       "channels.JoinChannel",
       "messages.AddChatUser",
+      "messages.EditChatCreator",
       "messages.ImportChatInvite"
     ]
   },
@@ -5945,6 +6218,7 @@
       "channels.GetChannels",
       "channels.GetMessages",
       "channels.InviteToChannel",
+      "channels.JoinChannel",
       "channels.LeaveChannel",
       "messages.EditMessage",
       "messages.ForwardMessages",
@@ -5984,21 +6258,28 @@
     "desc": "This method can only be called by a bot.",
     "affected": [
       "bots.AnswerWebhookJSONQuery",
+      "bots.EditAccessSettings",
+      "bots.ExportBotToken",
+      "bots.GetAccessSettings",
       "bots.GetBotCommands",
       "bots.GetBotMenuButton",
+      "bots.RequestWebViewButton",
       "bots.ResetBotCommands",
       "bots.SendCustomRequest",
       "bots.SetBotBroadcastDefaultAdminRights",
       "bots.SetBotCommands",
       "bots.SetBotGroupDefaultAdminRights",
       "bots.SetBotMenuButton",
+      "bots.SetJoinChatResults",
       "bots.UpdateUserEmojiStatus",
       "help.SetBotUpdatesStatus",
       "messages.GetGameHighScores",
       "messages.GetInlineGameHighScores",
+      "messages.GetPersonalChannelHistory",
       "messages.SavePreparedInlineMessage",
       "messages.SendWebViewResultMessage",
       "messages.SetBotCallbackAnswer",
+      "messages.SetBotGuestChatResult",
       "messages.SetBotPrecheckoutResults",
       "messages.SetBotShippingResults",
       "messages.SetGameScore",
@@ -6008,6 +6289,12 @@
       "payments.RefundStarsCharge",
       "users.SetSecureValueErrors"
     ]
+  },
+  {
+    "code": 400,
+    "msg": "USER_BOT_TO_BOT_DISABLED",
+    "desc": "",
+    "affected": ["messages.ForwardMessages", "messages.SendMedia", "messages.SendMessage"]
   },
   {
     "code": 400,
@@ -6042,6 +6329,7 @@
       "account.GetPaidMessagesRevenue",
       "account.ToggleNoPaidMessagesException",
       "auth.ImportAuthorization",
+      "bots.RequestWebViewButton",
       "bots.SetBotCommands",
       "bots.UpdateUserEmojiStatus",
       "channels.DeleteUserHistory",
@@ -6055,6 +6343,7 @@
       "messages.DeleteChatUser",
       "messages.EditChatAdmin",
       "messages.GetCommonChats",
+      "messages.GetPersonalChannelHistory",
       "messages.HideChatJoinRequest",
       "messages.ReportReaction",
       "messages.RequestEncryption",
@@ -6068,6 +6357,7 @@
       "payments.RefundStarsCharge",
       "payments.SaveStarGift",
       "payments.SendStarsForm",
+      "phone.EditGroupCallParticipant",
       "phone.RequestCall",
       "photos.GetUserPhotos",
       "photos.UploadContactProfilePhoto",
@@ -6097,6 +6387,7 @@
       "messages.SendEncryptedService",
       "messages.SendMedia",
       "messages.SendMessage",
+      "messages.SendMultiMedia",
       "messages.SetTyping",
       "phone.RequestCall"
     ]
@@ -6128,6 +6419,7 @@
       "channels.InviteToChannel",
       "messages.AddChatUser",
       "messages.CheckHistoryImportPeer",
+      "messages.EditChatCreator",
       "messages.InitHistoryImport"
     ]
   },
@@ -6166,6 +6458,12 @@
     "msg": "VIDEO_CONTENT_TYPE_INVALID",
     "desc": "The video's content type is invalid.",
     "affected": ["messages.SendMedia", "messages.SetInlineBotResults"]
+  },
+  {
+    "code": 400,
+    "msg": "VIDEO_DURATION_INVALID",
+    "desc": "The duration of the specified video is invalid.",
+    "affected": ["stories.SendStory"]
   },
   {
     "code": 400,
@@ -6238,6 +6536,18 @@
     "msg": "WC_CONVERT_URL_INVALID",
     "desc": "WC convert URL invalid.",
     "affected": ["messages.GetWebPage", "messages.SendMessage"]
+  },
+  {
+    "code": 400,
+    "msg": "WEBAPP_REQ_ID_INVALID",
+    "desc": "The specified webapp_req_id is invalid.",
+    "affected": ["bots.GetRequestedWebViewButton"]
+  },
+  {
+    "code": 400,
+    "msg": "WEBAUTH_TOKEN_EXPIRED",
+    "desc": "The specified auth token has expired.",
+    "affected": ["auth.ImportWebTokenAuthorization"]
   },
   {
     "code": 400,
@@ -6355,6 +6665,7 @@
       "account.ChangePhone",
       "account.CheckUsername",
       "account.ClearRecentEmojiStatuses",
+      "account.ConfirmBotConnection",
       "account.ConfirmPasswordEmail",
       "account.ConfirmPhone",
       "account.CreateBusinessChatLink",
@@ -6364,6 +6675,7 @@
       "account.DeleteBusinessChatLink",
       "account.DeletePasskey",
       "account.DeleteSecureValue",
+      "account.DeleteWebBrowserSettingsExceptions",
       "account.DisablePeerConnectedBot",
       "account.EditBusinessChatLink",
       "account.FinishTakeoutSession",
@@ -6407,6 +6719,7 @@
       "account.GetWallPaper",
       "account.GetWallPapers",
       "account.GetWebAuthorizations",
+      "account.GetWebBrowserSettings",
       "account.InitPasskeyRegistration",
       "account.InitTakeoutSession",
       "account.InstallTheme",
@@ -6447,6 +6760,7 @@
       "account.ToggleNoPaidMessagesException",
       "account.ToggleSponsoredMessages",
       "account.ToggleUsername",
+      "account.ToggleWebBrowserSettingsException",
       "account.UnregisterDevice",
       "account.UpdateBirthday",
       "account.UpdateBusinessAwayMessage",
@@ -6465,10 +6779,18 @@
       "account.UpdateStatus",
       "account.UpdateTheme",
       "account.UpdateUsername",
+      "account.UpdateWebBrowserSettings",
       "account.UploadRingtone",
       "account.UploadTheme",
       "account.UploadWallPaper",
       "account.VerifyPhone",
+      "aicompose.CreateTone",
+      "aicompose.DeleteTone",
+      "aicompose.GetTone",
+      "aicompose.GetToneExample",
+      "aicompose.GetTones",
+      "aicompose.SaveTone",
+      "aicompose.UpdateTone",
       "auth.AcceptLoginToken",
       "auth.CheckPassword",
       "auth.CheckRecoveryPassword",
@@ -6481,8 +6803,13 @@
       "bots.AnswerWebhookJSONQuery",
       "bots.CanSendMessage",
       "bots.CheckDownloadFileParams",
+      "bots.CheckUsername",
+      "bots.CreateBot",
       "bots.DeletePreviewMedia",
+      "bots.EditAccessSettings",
       "bots.EditPreviewMedia",
+      "bots.ExportBotToken",
+      "bots.GetAccessSettings",
       "bots.GetAdminedBots",
       "bots.GetBotCommands",
       "bots.GetBotInfo",
@@ -6491,9 +6818,11 @@
       "bots.GetPopularAppBots",
       "bots.GetPreviewInfo",
       "bots.GetPreviewMedias",
+      "bots.GetRequestedWebViewButton",
       "bots.InvokeWebViewCustomMethod",
       "bots.ReorderPreviewMedias",
       "bots.ReorderUsernames",
+      "bots.RequestWebViewButton",
       "bots.ResetBotCommands",
       "bots.SendCustomRequest",
       "bots.SetBotBroadcastDefaultAdminRights",
@@ -6502,6 +6831,7 @@
       "bots.SetBotInfo",
       "bots.SetBotMenuButton",
       "bots.SetCustomVerification",
+      "bots.SetJoinChatResults",
       "bots.ToggleUserEmojiStatusPermission",
       "bots.ToggleUsername",
       "bots.UpdateStarRefProgram",
@@ -6517,7 +6847,6 @@
       "channels.DeleteParticipantHistory",
       "channels.EditAdmin",
       "channels.EditBanned",
-      "channels.EditCreator",
       "channels.EditLocation",
       "channels.EditPhoto",
       "channels.EditTitle",
@@ -6527,7 +6856,6 @@
       "channels.GetChannelRecommendations",
       "channels.GetChannels",
       "channels.GetFullChannel",
-      "channels.GetFutureCreatorAfterLeave",
       "channels.GetGroupsForDiscussion",
       "channels.GetInactiveChannels",
       "channels.GetLeftChannels",
@@ -6629,24 +6957,31 @@
       "messages.AcceptEncryption",
       "messages.AcceptUrlAuth",
       "messages.AddChatUser",
+      "messages.AddPollAnswer",
       "messages.AppendTodoList",
       "messages.CheckChatInvite",
       "messages.CheckHistoryImport",
       "messages.CheckHistoryImportPeer",
       "messages.CheckQuickReplyShortcut",
+      "messages.CheckUrlAuthMatchCode",
       "messages.ClearAllDrafts",
       "messages.ClearRecentReactions",
       "messages.ClearRecentStickers",
       "messages.ClickSponsoredMessage",
+      "messages.ComposeMessageWithAI",
       "messages.CreateChat",
       "messages.CreateForumTopic",
+      "messages.DeclineUrlAuth",
       "messages.DeleteChat",
       "messages.DeleteChatUser",
       "messages.DeleteExportedChatInvite",
       "messages.DeleteFactCheck",
       "messages.DeleteHistory",
       "messages.DeleteMessages",
+      "messages.DeleteParticipantReaction",
+      "messages.DeleteParticipantReactions",
       "messages.DeletePhoneCallHistory",
+      "messages.DeletePollAnswer",
       "messages.DeleteQuickReplyMessages",
       "messages.DeleteQuickReplyShortcut",
       "messages.DeleteRevokedExportedChatInvites",
@@ -6656,7 +6991,9 @@
       "messages.DiscardEncryption",
       "messages.EditChatAbout",
       "messages.EditChatAdmin",
+      "messages.EditChatCreator",
       "messages.EditChatDefaultBannedRights",
+      "messages.EditChatParticipantRank",
       "messages.EditChatPhoto",
       "messages.EditChatTitle",
       "messages.EditExportedChatInvite",
@@ -6711,6 +7048,7 @@
       "messages.GetForumTopics",
       "messages.GetForumTopicsByID",
       "messages.GetFullChat",
+      "messages.GetFutureChatCreatorAfterLeave",
       "messages.GetGameHighScores",
       "messages.GetHistory",
       "messages.GetInlineBotResults",
@@ -6729,6 +7067,7 @@
       "messages.GetPaidReactionPrivacy",
       "messages.GetPeerDialogs",
       "messages.GetPeerSettings",
+      "messages.GetPersonalChannelHistory",
       "messages.GetPinnedDialogs",
       "messages.GetPinnedSavedDialogs",
       "messages.GetPollResults",
@@ -6740,6 +7079,7 @@
       "messages.GetRecentReactions",
       "messages.GetRecentStickers",
       "messages.GetReplies",
+      "messages.GetRichMessage",
       "messages.GetSavedDialogs",
       "messages.GetSavedDialogsByID",
       "messages.GetSavedGifs",
@@ -6757,6 +7097,7 @@
       "messages.GetSuggestedDialogFilters",
       "messages.GetTopReactions",
       "messages.GetUnreadMentions",
+      "messages.GetUnreadPollVotes",
       "messages.GetUnreadReactions",
       "messages.GetWebPage",
       "messages.GetWebPagePreview",
@@ -6776,6 +7117,7 @@
       "messages.ReadHistory",
       "messages.ReadMentions",
       "messages.ReadMessageContents",
+      "messages.ReadPollVotes",
       "messages.ReadReactions",
       "messages.ReadSavedHistory",
       "messages.ReceivedMessages",
@@ -6788,7 +7130,9 @@
       "messages.Report",
       "messages.ReportEncryptedSpam",
       "messages.ReportMessagesDelivery",
+      "messages.ReportMusicListen",
       "messages.ReportReaction",
+      "messages.ReportReadMetrics",
       "messages.ReportSpam",
       "messages.ReportSponsoredMessage",
       "messages.RequestAppWebView",
@@ -6826,6 +7170,7 @@
       "messages.SendWebViewData",
       "messages.SendWebViewResultMessage",
       "messages.SetBotCallbackAnswer",
+      "messages.SetBotGuestChatResult",
       "messages.SetBotPrecheckoutResults",
       "messages.SetBotShippingResults",
       "messages.SetChatAvailableReactions",
@@ -6989,6 +7334,7 @@
       "stats.GetMegagroupStats",
       "stats.GetMessagePublicForwards",
       "stats.GetMessageStats",
+      "stats.GetPollStats",
       "stats.GetStoryPublicForwards",
       "stats.GetStoryStats",
       "stats.LoadAsyncGraph",
@@ -7056,7 +7402,12 @@
       "users.SuggestBirthday"
     ]
   },
-  { "code": 401, "msg": "SESSION_EXPIRED", "desc": "The session has expired.", "affected": [] },
+  {
+    "code": 401,
+    "msg": "SESSION_EXPIRED",
+    "desc": "The session has expired.",
+    "affected": ["Test"]
+  },
   {
     "code": 401,
     "msg": "SESSION_PASSWORD_NEEDED",
@@ -7103,7 +7454,7 @@
     "code": 403,
     "msg": "ANONYMOUS_REACTIONS_DISABLED",
     "desc": "Sorry, anonymous administrators cannot leave reactions or participate in polls.",
-    "affected": ["messages.SendReaction"]
+    "affected": []
   },
   {
     "code": 403,
@@ -7121,6 +7472,18 @@
   },
   {
     "code": 403,
+    "msg": "BOT_FORUM_CREATE_FORBIDDEN",
+    "desc": "Since the bot's user.bot_forum_can_manage_topics flag is **not** set, the user cannot create or modify bot forum topics.",
+    "affected": ["messages.CreateForumTopic"]
+  },
+  {
+    "code": 403,
+    "msg": "BOT_GUARD_NOT_SUPPORTED",
+    "desc": "",
+    "affected": ["bots.SetJoinChatResults"]
+  },
+  {
+    "code": 403,
     "msg": "BOT_VERIFIER_FORBIDDEN",
     "desc": "This bot cannot assign [verification icons](https://core.telegram.org/api/bots/verification).",
     "affected": ["bots.SetCustomVerification"]
@@ -7130,6 +7493,12 @@
     "msg": "BROADCAST_FORBIDDEN",
     "desc": "Channel poll voters and reactions cannot be fetched to prevent deanonymization.",
     "affected": ["messages.GetMessageReactionsList", "messages.GetPollVotes"]
+  },
+  {
+    "code": 403,
+    "msg": "CHANNEL_PRIVATE",
+    "desc": "You haven't joined this channel/supergroup.",
+    "affected": ["GetDialogs", "GetHistory"]
   },
   {
     "code": 403,
@@ -7341,6 +7710,7 @@
       "messages.HideAllChatJoinRequests",
       "messages.HideChatJoinRequest",
       "messages.RequestWebView",
+      "messages.SaveDraft",
       "messages.SendInlineBotResult",
       "messages.SendMedia",
       "messages.SendMessage",
@@ -7371,6 +7741,12 @@
   },
   {
     "code": 403,
+    "msg": "GROUPCALL_CHANGE_FORBIDDEN",
+    "desc": "You cannot change this group call setting.",
+    "affected": ["phone.ToggleGroupCallSettings"]
+  },
+  {
+    "code": 403,
     "msg": "GROUPCALL_FORBIDDEN",
     "desc": "The group call has already ended.",
     "affected": [
@@ -7381,7 +7757,9 @@
       "phone.GetGroupCall",
       "phone.InviteToGroupCall",
       "phone.JoinGroupCall",
-      "phone.ToggleGroupCallRecord"
+      "phone.ToggleGroupCallRecord",
+      "phone.ToggleGroupCallSettings",
+      "phone.ToggleGroupCallStartSubscription"
     ]
   },
   {
@@ -7439,7 +7817,7 @@
       "account.EditBusinessChatLink",
       "account.SetGlobalPrivacySettings",
       "account.UpdateColor",
-      "account.UpdateConnectedBot",
+      "account.UpdateEmojiStatus",
       "channels.CreateForumTopic",
       "channels.SearchPosts",
       "messages.CheckQuickReplyShortcut",
@@ -7464,7 +7842,8 @@
       "messages.RequestWebView",
       "messages.SendInlineBotResult",
       "messages.SendMedia",
-      "messages.SendMessage"
+      "messages.SendMessage",
+      "messages.SendMultiMedia"
     ]
   },
   {
@@ -7493,9 +7872,15 @@
   },
   {
     "code": 403,
+    "msg": "USER_BANNED_IN_CHANNEL",
+    "desc": "You're banned from sending messages in supergroups/channels.",
+    "affected": ["messages.SendReaction"]
+  },
+  {
+    "code": 403,
     "msg": "USER_BOT_INVALID",
     "desc": "User accounts must provide the `bot` method parameter when calling this method. If there is no such method parameter, this method can only be invoked by bot accounts.",
-    "affected": []
+    "affected": ["messages.SetBotGuestChatResult", "messages.SetInlineBotResults"]
   },
   {
     "code": 403,
@@ -7505,6 +7890,7 @@
       "channels.EditAdmin",
       "channels.EditCreator",
       "channels.InviteToChannel",
+      "messages.EditChatCreator",
       "messages.HideChatJoinRequest"
     ]
   },
@@ -7513,6 +7899,12 @@
     "msg": "USER_DELETED",
     "desc": "You can't send this secret message because the other participant deleted their account.",
     "affected": ["messages.SendEncryptedService"]
+  },
+  {
+    "code": 403,
+    "msg": "USER_DISALLOWED_STARGIFTS",
+    "desc": "",
+    "affected": ["payments.GetPaymentForm"]
   },
   {
     "code": 403,
@@ -7532,7 +7924,8 @@
       "messages.SendMedia",
       "messages.SendMessage",
       "messages.SetTyping",
-      "phone.RequestCall"
+      "phone.RequestCall",
+      "SendMessage"
     ]
   },
   {
@@ -7563,6 +7956,7 @@
       "channels.InviteToChannel",
       "help.GetConfig",
       "messages.AddChatUser",
+      "messages.EditChatCreator",
       "messages.GetOutboxReadDate",
       "phone.RequestCall"
     ]
@@ -7700,6 +8094,7 @@
     "msg": "FRESH_RESET_AUTHORISATION_FORBIDDEN",
     "desc": "You can't logout other sessions if less than 24 hours have passed since you logged on the current session.",
     "affected": [
+      "account.InitPasskeyRegistration",
       "account.ResetAuthorization",
       "account.SetAuthorizationTTL",
       "auth.ResetAuthorizations"
@@ -7755,6 +8150,12 @@
     "msg": "PHONE_PASSWORD_FLOOD",
     "desc": "You have tried logging in too many times.",
     "affected": ["auth.SendCode"]
+  },
+  {
+    "code": 406,
+    "msg": "POLL_MEMBER_RESTRICTED",
+    "desc": "Only channel subscribers can vote in this poll.",
+    "affected": ["messages.SendVote"]
   },
   {
     "code": 406,
@@ -7919,6 +8320,12 @@
   },
   {
     "code": 500,
+    "msg": "AICOMPOSE_TIMEOUT",
+    "desc": "A timeout occurred while composing the message.",
+    "affected": ["messages.ComposeMessageWithAI"]
+  },
+  {
+    "code": 500,
     "msg": "API_CALL_ERROR",
     "desc": "API call error due to Telegram having internal problems. Please try again later",
     "affected": []
@@ -7933,7 +8340,13 @@
     "code": 500,
     "msg": "AUTH_RESTART",
     "desc": "Restart the authorization process.",
-    "affected": ["auth.FinishPasskeyLogin", "auth.InitPasskeyLogin", "auth.SendCode", "auth.SignIn"]
+    "affected": [
+      "auth.ExportLoginToken",
+      "auth.FinishPasskeyLogin",
+      "auth.InitPasskeyLogin",
+      "auth.SendCode",
+      "auth.SignIn"
+    ]
   },
   {
     "code": 500,
@@ -7984,12 +8397,7 @@
     "desc": "Telegram is having internal problems. Please try again later",
     "affected": []
   },
-  {
-    "code": 500,
-    "msg": "ENCRYPTION_DECLINE_ADMIN_FAILED",
-    "desc": "",
-    "affected": ["messages.DiscardEncryption"]
-  },
+  { "code": 500, "msg": "ENCRYPTION_DECLINE_ADMIN_FAILED", "desc": "", "affected": [] },
   {
     "code": 500,
     "msg": "ENCRYPTION_OCCUPY_ADMIN_FAILED",
@@ -8126,9 +8534,15 @@
   },
   {
     "code": 500,
+    "msg": "OAUTH_REQUEST_INVALID",
+    "desc": "The specified OAuth request is invalid.",
+    "affected": ["messages.RequestUrlAuth"]
+  },
+  {
+    "code": 500,
     "msg": "PARTICIPANT_CALL_FAILED",
     "desc": "Failure while making call due to Telegram having internal problems. Please try again later",
-    "affected": ["phone.RequestCall"]
+    "affected": []
   },
   {
     "code": 500,
@@ -8249,7 +8663,7 @@
     "desc": "Telegram is having internal problems. Please try again later",
     "affected": []
   },
-  { "code": 500, "msg": "VOLUME_MOVE_INVALID", "desc": "", "affected": ["messages.GetHistory"] },
+  { "code": 500, "msg": "VOLUME_MOVE_INVALID", "desc": "", "affected": [] },
   {
     "code": 500,
     "msg": "WORKER_BUSY_TOO_LONG_RETRY",
