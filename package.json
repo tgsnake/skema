@@ -1,6 +1,6 @@
 {
   "name": "@tgsnake/skema",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "A compiled Telegram TL Schema and Telegram errors Schema into usable JavaScript classes with full TypeScript support",
   "main": "dist/mod.js",
   "types": "dist/mod.d.ts",
