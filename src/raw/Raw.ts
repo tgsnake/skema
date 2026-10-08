@@ -36,7 +36,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 229;
+  export const Layer: number = 230;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -91,6 +91,7 @@ export namespace Raw {
     | Raw.auth.CheckPaidAuth
     | Raw.auth.InitPasskeyLogin
     | Raw.auth.FinishPasskeyLogin
+    | Raw.auth.CancelWebTokenAuthorization
     | Raw.auth.InitFirebasePnvLogin
     | Raw.auth.FinishFirebasePnvLogin
     | Raw.auth.FirebasePnvSignUp
@@ -653,6 +654,8 @@ export namespace Raw {
     | Raw.bots.GetAccessSettings
     | Raw.bots.EditAccessSettings
     | Raw.bots.SetJoinChatResults
+    | Raw.bots.AddUsername
+    | Raw.bots.RemoveUsername
     | Raw.payments.GetPaymentForm
     | Raw.payments.GetPaymentReceipt
     | Raw.payments.ValidateRequestedInfo
@@ -718,6 +721,13 @@ export namespace Raw {
     | Raw.payments.GetStarGiftUpgradeAttributes
     | Raw.payments.GetCraftStarGifts
     | Raw.payments.CraftStarGift
+    | Raw.payments.GetCurrencyRates
+    | Raw.payments.GetOnrampProviders
+    | Raw.payments.GetOnrampBaseCurrencies
+    | Raw.payments.GetOnrampAvailability
+    | Raw.payments.GetOnrampLimits
+    | Raw.payments.GetOnrampQuote
+    | Raw.payments.CreateOnrampSession
     | Raw.stickers.CreateStickerSet
     | Raw.stickers.RemoveStickerFromSet
     | Raw.stickers.ChangeStickerPosition
@@ -866,7 +876,34 @@ export namespace Raw {
     | Raw.ephemeral.EditMessage
     | Raw.ephemeral.DeleteWelcomeMessage
     | Raw.ephemeral.DeleteAllWelcomeMessages
-    | Raw.ephemeral.GetWelcomeMessages;
+    | Raw.ephemeral.GetWelcomeMessages
+    | Raw.toncenter.PerformApiRequest
+    | Raw.toncenter.GetStreamingUrl
+    | Raw.wallet.GetState
+    | Raw.wallet.GetUserAddresses
+    | Raw.wallet.GetTransactions
+    | Raw.wallet.GetTransactionsByIDs
+    | Raw.wallet.GetTransactionsByMsgHash
+    | Raw.wallet.ExportSecretPhrase
+    | Raw.wallet.FetchEncryptedSecretPhrasePart
+    | Raw.wallet.ReplaceWallet
+    | Raw.wallet.DisableBackup
+    | Raw.wallet.GetBackupHolderDcs
+    | Raw.wallet.EnableBackup
+    | Raw.wallet.GetProofChallenge
+    | Raw.wallet.SendTransfer
+    | Raw.wallet.GetGaslessInfo
+    | Raw.wallet.GetExistingWaltBalance
+    | Raw.wallet.GetNfts
+    | Raw.wallet.TonConnectCreateSession
+    | Raw.wallet.TonConnectRegisterKey
+    | Raw.wallet.TonConnectSubmitConnectResult
+    | Raw.wallet.TonConnectGetPending
+    | Raw.wallet.TonConnectClaimRequest
+    | Raw.wallet.TonConnectSubmitResponse
+    | Raw.wallet.TonConnectNextEventId
+    | Raw.wallet.TonConnectCloseSession
+    | Raw.wallet.TonConnectGetSessions;
   export type TypeFileLocation = Raw.FileLocationUnavailable23 | Raw.FileLocation23;
   export type TypeDecryptedMessage =
     | Raw.DecryptedMessage8
@@ -906,6 +943,8 @@ export namespace Raw {
     | Raw.DecryptedMessageMediaVenue45
     | Raw.DecryptedMessageMediaWebPage45
     | Raw.DecryptedMessageMediaDocument143;
+  export type TypeTonConnectNextEventId = Raw.TonConnectNextEventId;
+  export type TypeInputWalletReplacement = Raw.InputWalletNew | Raw.InputWalletImported;
   export type TypeInputCollectible = Raw.InputCollectibleUsername | Raw.InputCollectiblePhone;
   export type TypeSmsJob = Raw.SmsJob;
   export type TypeExportedStoryLink = Raw.ExportedStoryLink;
@@ -914,6 +953,11 @@ export namespace Raw {
   export type TypeLangPackLanguage = Raw.LangPackLanguage;
   export type TypeInputPhoneCall = Raw.InputPhoneCall;
   export type TypeInputStickerSetItem = Raw.InputStickerSetItem;
+  export type TypeOnrampSession = Raw.OnrampSession;
+  export type TypeOnrampQuote = Raw.OnrampQuote;
+  export type TypeOnrampLimits = Raw.OnrampLimits;
+  export type TypeOnrampAvailability = Raw.OnrampAvailability;
+  export type TypeOnrampProviderInfo = Raw.OnrampProviderInfo;
   export type TypeInputStarGiftAuction = Raw.InputStarGiftAuction | Raw.InputStarGiftAuctionSlug;
   export type TypeStarsGiveawayOption = Raw.StarsGiveawayOption;
   export type TypeStarsGiftOption = Raw.StarsGiftOption;
@@ -1116,9 +1160,7 @@ export namespace Raw {
     | Raw.InputNotifyBroadcasts
     | Raw.InputNotifyForumTopic
     | Raw.InputNotifyCommunity;
-  export type TypeInputPasskeyCredential =
-    | Raw.InputPasskeyCredentialPublicKey
-    | Raw.InputPasskeyCredentialFirebasePNV;
+  export type TypeInputPasskeyCredential = Raw.InputPasskeyCredentialPublicKey;
   export type TypeInputCheckPasswordSRP = Raw.InputCheckPasswordEmpty | Raw.InputCheckPasswordSRP;
   export type TypeEmailVerification =
     | Raw.EmailVerificationCode
@@ -1126,6 +1168,17 @@ export namespace Raw {
     | Raw.EmailVerificationApple;
   export type TypeCodeSettings = Raw.CodeSettings;
   export type TypeInputClientProxy = Raw.InputClientProxy;
+  export type TypeTonConnectRequest = Raw.TonConnectRequest;
+  export type TypeTonConnectManifest = Raw.TonConnectManifest;
+  export type TypeWalletOwnershipProof = Raw.WalletOwnershipProof;
+  export type TypeWalletTransactionPeer =
+    | Raw.WalletTransactionPeerUser
+    | Raw.WalletTransactionPeerAddress
+    | Raw.WalletTransactionPeerOnramp
+    | Raw.WalletTransactionPeerUnsupported;
+  export type TypeWalletUserAddress = Raw.WalletUserAddress;
+  export type TypeOnrampMethodAvailability = Raw.OnrampMethodAvailability;
+  export type TypeCurrencyRate = Raw.CurrencyRate;
   export type TypeKeyboardInlineButton = Raw.KeyboardInlineButton;
   export type TypeRequestPeerType =
     | Raw.RequestPeerTypeUser
@@ -1520,7 +1573,8 @@ export namespace Raw {
     | Raw.TextMentionName
     | Raw.TextDate
     | Raw.TextDiff
-    | Raw.TextButton;
+    | Raw.TextButton
+    | Raw.TextTonAddress;
   export type TypeHighScore = Raw.HighScore;
   export type TypeStickerSetCovered =
     | Raw.StickerSetCovered
@@ -1781,7 +1835,15 @@ export namespace Raw {
     | Raw.UpdateEditEphemeralMessage
     | Raw.UpdateEphemeralBotCallbackQuery
     | Raw.UpdateBotStarsSubscription
+    | Raw.UpdateWalletState
+    | Raw.UpdateSentWalletTransaction
+    | Raw.UpdateWalletGaslessInfo
+    | Raw.UpdateWalletTonConnectSession
+    | Raw.UpdateWalletTonConnectPendingDisconnect
     | UpdateSecretChatMessage;
+  export type TypeTonConnectSession = Raw.TonConnectSession;
+  export type TypeWalletTransaction = Raw.WalletTransaction;
+  export type TypeWalletState = Raw.WalletStateEmpty | Raw.WalletState;
   export type TypeEphemeralMessage = Raw.EphemeralMessage;
   export type TypeWebDomainException = Raw.WebDomainException;
   export type TypeJoinChatBotResult =
@@ -2082,7 +2144,10 @@ export namespace Raw {
     | Raw.MessageActionPollAppendAnswer
     | Raw.MessageActionPollDeleteAnswer
     | Raw.MessageActionManagedBotCreated
-    | Raw.MessageActionChangeCommunity;
+    | Raw.MessageActionChangeCommunity
+    | Raw.MessageActionChatJoinedViaCommunity
+    | Raw.MessageActionGramTransfer
+    | Raw.MessageActionWalletTonConnectRequest;
   export type TypeRichMessage = Raw.RichMessage;
   export type TypeSuggestedPost = Raw.SuggestedPost;
   export type TypeFactCheck = Raw.FactCheck;
@@ -2216,6 +2281,7 @@ export namespace Raw {
     | Raw.MessageEntityDiffInsert
     | Raw.MessageEntityDiffReplace
     | Raw.MessageEntityDiffDelete
+    | Raw.MessageEntityTonAddress
     | Raw.MessageEntityBlockquote101;
   export type TypePoll = Raw.Poll;
   export type TypeInputMedia =
@@ -16617,6 +16683,221 @@ export namespace Raw {
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
   }
+  export class MessageActionChatJoinedViaCommunity extends TLObject {
+    communityId!: long;
+
+    constructor(params: { communityId: long }) {
+      super();
+      this.classType = 'types';
+      this.className = 'MessageActionChatJoinedViaCommunity';
+      this.constructorId = 0x4a8bfe80;
+      this.subclassOfId = 0x8680d126;
+      this._slots = ['communityId'];
+      this.communityId = params.communityId;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.MessageActionChatJoinedViaCommunity> {
+      // no flags
+      let communityId = await Primitive.Long.read(_data);
+      return new Raw.MessageActionChatJoinedViaCommunity({ communityId: communityId });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.communityId !== undefined) {
+        b.write(Primitive.Long.write(this.communityId) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class MessageActionGramTransfer extends TLObject {
+    commentEncrypted?: boolean;
+    amount!: long;
+    peerAddress!: string;
+    transactionId!: string;
+    comment?: string;
+
+    constructor(params: {
+      commentEncrypted?: boolean;
+      amount: long;
+      peerAddress: string;
+      transactionId: string;
+      comment?: string;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'MessageActionGramTransfer';
+      this.constructorId = 0x9329ea33;
+      this.subclassOfId = 0x8680d126;
+      this._slots = ['commentEncrypted', 'amount', 'peerAddress', 'transactionId', 'comment'];
+      this.commentEncrypted = params.commentEncrypted;
+      this.amount = params.amount;
+      this.peerAddress = params.peerAddress;
+      this.transactionId = params.transactionId;
+      this.comment = params.comment;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.MessageActionGramTransfer> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let commentEncrypted = flags & (1 << 1) ? true : false;
+      let amount = await Primitive.Long.read(_data);
+      let peerAddress = await Primitive.String.read(_data);
+      let transactionId = await Primitive.String.read(_data);
+      let comment = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+      return new Raw.MessageActionGramTransfer({
+        commentEncrypted: commentEncrypted,
+        amount: amount,
+        peerAddress: peerAddress,
+        transactionId: transactionId,
+        comment: comment,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.commentEncrypted ? 1 << 1 : 0;
+      flags |= this.comment !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.amount !== undefined) {
+        b.write(Primitive.Long.write(this.amount) as unknown as Buffer);
+      }
+      if (this.peerAddress !== undefined) {
+        b.write(Primitive.String.write(this.peerAddress) as unknown as Buffer);
+      }
+      if (this.transactionId !== undefined) {
+        b.write(Primitive.String.write(this.transactionId) as unknown as Buffer);
+      }
+      if (this.comment !== undefined) {
+        b.write(Primitive.String.write(this.comment) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class MessageActionWalletTonConnectRequest extends TLObject {
+    accepted?: boolean;
+    declined?: boolean;
+    sessionId!: long;
+    expires!: int;
+    topic?: string;
+    traceId?: string;
+    dappName?: string;
+
+    constructor(params: {
+      accepted?: boolean;
+      declined?: boolean;
+      sessionId: long;
+      expires: int;
+      topic?: string;
+      traceId?: string;
+      dappName?: string;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'MessageActionWalletTonConnectRequest';
+      this.constructorId = 0x69b8c4bf;
+      this.subclassOfId = 0x8680d126;
+      this._slots = [
+        'accepted',
+        'declined',
+        'sessionId',
+        'expires',
+        'topic',
+        'traceId',
+        'dappName',
+      ];
+      this.accepted = params.accepted;
+      this.declined = params.declined;
+      this.sessionId = params.sessionId;
+      this.expires = params.expires;
+      this.topic = params.topic;
+      this.traceId = params.traceId;
+      this.dappName = params.dappName;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.MessageActionWalletTonConnectRequest> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let accepted = flags & (1 << 2) ? true : false;
+      let declined = flags & (1 << 3) ? true : false;
+      let sessionId = await Primitive.Long.read(_data);
+      let expires = await Primitive.Int.read(_data);
+      let topic = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+      let traceId = flags & (1 << 1) ? await Primitive.String.read(_data) : undefined;
+      let dappName = flags & (1 << 4) ? await Primitive.String.read(_data) : undefined;
+      return new Raw.MessageActionWalletTonConnectRequest({
+        accepted: accepted,
+        declined: declined,
+        sessionId: sessionId,
+        expires: expires,
+        topic: topic,
+        traceId: traceId,
+        dappName: dappName,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.accepted ? 1 << 2 : 0;
+      flags |= this.declined ? 1 << 3 : 0;
+      flags |= this.topic !== undefined ? 1 << 0 : 0;
+      flags |= this.traceId !== undefined ? 1 << 1 : 0;
+      flags |= this.dappName !== undefined ? 1 << 4 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.sessionId !== undefined) {
+        b.write(Primitive.Long.write(this.sessionId) as unknown as Buffer);
+      }
+      if (this.expires !== undefined) {
+        b.write(Primitive.Int.write(this.expires) as unknown as Buffer);
+      }
+      if (this.topic !== undefined) {
+        b.write(Primitive.String.write(this.topic) as unknown as Buffer);
+      }
+      if (this.traceId !== undefined) {
+        b.write(Primitive.String.write(this.traceId) as unknown as Buffer);
+      }
+      if (this.dappName !== undefined) {
+        b.write(Primitive.String.write(this.dappName) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
   export class Dialog extends TLObject {
     pinned?: boolean;
     unreadMark?: boolean;
@@ -28449,6 +28730,254 @@ export namespace Raw {
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
   }
+  export class UpdateWalletState extends TLObject {
+    state!: Raw.TypeWalletState;
+
+    constructor(params: { state: Raw.TypeWalletState }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateWalletState';
+      this.constructorId = 0x6ac3f2aa;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['state'];
+      this.state = params.state;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.UpdateWalletState> {
+      // no flags
+      let state = await TLObject.read(_data);
+      return new Raw.UpdateWalletState({ state: state });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.state !== undefined) {
+        b.write(this.state.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class UpdateSentWalletTransaction extends TLObject {
+    gasless?: boolean;
+    msgHash!: string;
+    transaction?: Raw.TypeWalletTransaction;
+
+    constructor(params: {
+      gasless?: boolean;
+      msgHash: string;
+      transaction?: Raw.TypeWalletTransaction;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateSentWalletTransaction';
+      this.constructorId = 0xb1434d4a;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['gasless', 'msgHash', 'transaction'];
+      this.gasless = params.gasless;
+      this.msgHash = params.msgHash;
+      this.transaction = params.transaction;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.UpdateSentWalletTransaction> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let gasless = flags & (1 << 0) ? true : false;
+      let msgHash = await Primitive.String.read(_data);
+      let transaction = flags & (1 << 1) ? await TLObject.read(_data) : undefined;
+      return new Raw.UpdateSentWalletTransaction({
+        gasless: gasless,
+        msgHash: msgHash,
+        transaction: transaction,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.gasless ? 1 << 0 : 0;
+      flags |= this.transaction !== undefined ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.msgHash !== undefined) {
+        b.write(Primitive.String.write(this.msgHash) as unknown as Buffer);
+      }
+      if (this.transaction !== undefined) {
+        b.write(this.transaction.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class UpdateWalletGaslessInfo extends TLObject {
+    available?: boolean;
+    left!: int;
+    resetAt!: int;
+    minAmount!: long;
+    relayerAddress!: string;
+
+    constructor(params: {
+      available?: boolean;
+      left: int;
+      resetAt: int;
+      minAmount: long;
+      relayerAddress: string;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateWalletGaslessInfo';
+      this.constructorId = 0xa8ae1cac;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['available', 'left', 'resetAt', 'minAmount', 'relayerAddress'];
+      this.available = params.available;
+      this.left = params.left;
+      this.resetAt = params.resetAt;
+      this.minAmount = params.minAmount;
+      this.relayerAddress = params.relayerAddress;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.UpdateWalletGaslessInfo> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let available = flags & (1 << 0) ? true : false;
+      let left = await Primitive.Int.read(_data);
+      let resetAt = await Primitive.Int.read(_data);
+      let minAmount = await Primitive.Long.read(_data);
+      let relayerAddress = await Primitive.String.read(_data);
+      return new Raw.UpdateWalletGaslessInfo({
+        available: available,
+        left: left,
+        resetAt: resetAt,
+        minAmount: minAmount,
+        relayerAddress: relayerAddress,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.available ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.left !== undefined) {
+        b.write(Primitive.Int.write(this.left) as unknown as Buffer);
+      }
+      if (this.resetAt !== undefined) {
+        b.write(Primitive.Int.write(this.resetAt) as unknown as Buffer);
+      }
+      if (this.minAmount !== undefined) {
+        b.write(Primitive.Long.write(this.minAmount) as unknown as Buffer);
+      }
+      if (this.relayerAddress !== undefined) {
+        b.write(Primitive.String.write(this.relayerAddress) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class UpdateWalletTonConnectSession extends TLObject {
+    session!: Raw.TypeTonConnectSession;
+
+    constructor(params: { session: Raw.TypeTonConnectSession }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateWalletTonConnectSession';
+      this.constructorId = 0x50a38e0e;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['session'];
+      this.session = params.session;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.UpdateWalletTonConnectSession> {
+      // no flags
+      let session = await TLObject.read(_data);
+      return new Raw.UpdateWalletTonConnectSession({ session: session });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.session !== undefined) {
+        b.write(this.session.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class UpdateWalletTonConnectPendingDisconnect extends TLObject {
+    sessionIds!: Vector<long>;
+
+    constructor(params: { sessionIds: Vector<long> }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateWalletTonConnectPendingDisconnect';
+      this.constructorId = 0xd1ee8199;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['sessionIds'];
+      this.sessionIds = params.sessionIds;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.UpdateWalletTonConnectPendingDisconnect> {
+      // no flags
+      let sessionIds = await TLObject.read(_data, Primitive.Long);
+      return new Raw.UpdateWalletTonConnectPendingDisconnect({ sessionIds: sessionIds });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.sessionIds) {
+        b.write(Primitive.Vector.write(this.sessionIds, Primitive.Long) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
   export class UpdatesTooLong extends TLObject {
     constructor() {
       super();
@@ -37329,6 +37858,49 @@ export namespace Raw {
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
   }
+  export class MessageEntityTonAddress extends TLObject {
+    offset!: int;
+    length!: int;
+
+    constructor(params: { offset: int; length: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'MessageEntityTonAddress';
+      this.constructorId = 0xfdabbfcd;
+      this.subclassOfId = 0xcf6419dc;
+      this._slots = ['offset', 'length'];
+      this.offset = params.offset;
+      this.length = params.length;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.MessageEntityTonAddress> {
+      // no flags
+      let offset = await Primitive.Int.read(_data);
+      let length = await Primitive.Int.read(_data);
+      return new Raw.MessageEntityTonAddress({ offset: offset, length: length });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.offset !== undefined) {
+        b.write(Primitive.Int.write(this.offset) as unknown as Buffer);
+      }
+      if (this.length !== undefined) {
+        b.write(Primitive.Int.write(this.length) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
   export class InputChannelEmpty extends TLObject {
     constructor() {
       super();
@@ -42881,6 +43453,40 @@ export namespace Raw {
       }
       if (this.style !== undefined) {
         b.write(this.style.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class TextTonAddress extends TLObject {
+    text!: Raw.TypeRichText;
+
+    constructor(params: { text: Raw.TypeRichText }) {
+      super();
+      this.classType = 'types';
+      this.className = 'TextTonAddress';
+      this.constructorId = 0x3cd2a36a;
+      this.subclassOfId = 0xf1d0b479;
+      this._slots = ['text'];
+      this.text = params.text;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(_data: BytesIO, ..._args: Array<any>): Promise<Raw.TextTonAddress> {
+      // no flags
+      let text = await TLObject.read(_data);
+      return new Raw.TextTonAddress({ text: text });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.text !== undefined) {
+        b.write(this.text.write() as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -63636,17 +64242,27 @@ export namespace Raw {
   export class Username extends TLObject {
     editable?: boolean;
     active?: boolean;
+    deletable?: boolean;
+    expired?: boolean;
     username!: string;
 
-    constructor(params: { editable?: boolean; active?: boolean; username: string }) {
+    constructor(params: {
+      editable?: boolean;
+      active?: boolean;
+      deletable?: boolean;
+      expired?: boolean;
+      username: string;
+    }) {
       super();
       this.classType = 'types';
       this.className = 'Username';
       this.constructorId = 0xb4073647;
       this.subclassOfId = 0x1286421;
-      this._slots = ['editable', 'active', 'username'];
+      this._slots = ['editable', 'active', 'deletable', 'expired', 'username'];
       this.editable = params.editable;
       this.active = params.active;
+      this.deletable = params.deletable;
+      this.expired = params.expired;
       this.username = params.username;
     }
     /**
@@ -63658,8 +64274,16 @@ export namespace Raw {
       let flags = await Primitive.Int.read(_data);
       let editable = flags & (1 << 0) ? true : false;
       let active = flags & (1 << 1) ? true : false;
+      let deletable = flags & (1 << 2) ? true : false;
+      let expired = flags & (1 << 3) ? true : false;
       let username = await Primitive.String.read(_data);
-      return new Raw.Username({ editable: editable, active: active, username: username });
+      return new Raw.Username({
+        editable: editable,
+        active: active,
+        deletable: deletable,
+        expired: expired,
+        username: username,
+      });
     }
     /**
      * Generate buffer from TLObject.
@@ -63672,6 +64296,8 @@ export namespace Raw {
       let flags = 0;
       flags |= this.editable ? 1 << 0 : 0;
       flags |= this.active ? 1 << 1 : 0;
+      flags |= this.deletable ? 1 << 2 : 0;
+      flags |= this.expired ? 1 << 3 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.username !== undefined) {
@@ -72912,18 +73538,18 @@ export namespace Raw {
     canModifyCustomDescription?: boolean;
     icon!: long;
     company!: string;
-    customDescription?: string;
+    customDescription?: Raw.TypeTextWithEntities;
 
     constructor(params: {
       canModifyCustomDescription?: boolean;
       icon: long;
       company: string;
-      customDescription?: string;
+      customDescription?: Raw.TypeTextWithEntities;
     }) {
       super();
       this.classType = 'types';
       this.className = 'BotVerifierSettings';
-      this.constructorId = 0xb0cd6617;
+      this.constructorId = 0xa12aefff;
       this.subclassOfId = 0xf1d6034c;
       this._slots = ['canModifyCustomDescription', 'icon', 'company', 'customDescription'];
       this.canModifyCustomDescription = params.canModifyCustomDescription;
@@ -72944,7 +73570,7 @@ export namespace Raw {
       let canModifyCustomDescription = flags & (1 << 1) ? true : false;
       let icon = await Primitive.Long.read(_data);
       let company = await Primitive.String.read(_data);
-      let customDescription = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+      let customDescription = flags & (1 << 0) ? await TLObject.read(_data) : undefined;
       return new Raw.BotVerifierSettings({
         canModifyCustomDescription: canModifyCustomDescription,
         icon: icon,
@@ -72972,7 +73598,7 @@ export namespace Raw {
         b.write(Primitive.String.write(this.company) as unknown as Buffer);
       }
       if (this.customDescription !== undefined) {
-        b.write(Primitive.String.write(this.customDescription) as unknown as Buffer);
+        b.write(this.customDescription.write() as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -72980,13 +73606,13 @@ export namespace Raw {
   export class BotVerification extends TLObject {
     botId!: long;
     icon!: long;
-    description!: string;
+    description!: Raw.TypeTextWithEntities;
 
-    constructor(params: { botId: long; icon: long; description: string }) {
+    constructor(params: { botId: long; icon: long; description: Raw.TypeTextWithEntities }) {
       super();
       this.classType = 'types';
       this.className = 'BotVerification';
-      this.constructorId = 0xf93cd45c;
+      this.constructorId = 0xf72e0ed9;
       this.subclassOfId = 0x2cbf3c5a;
       this._slots = ['botId', 'icon', 'description'];
       this.botId = params.botId;
@@ -73001,7 +73627,7 @@ export namespace Raw {
       // no flags
       let botId = await Primitive.Long.read(_data);
       let icon = await Primitive.Long.read(_data);
-      let description = await Primitive.String.read(_data);
+      let description = await TLObject.read(_data);
       return new Raw.BotVerification({ botId: botId, icon: icon, description: description });
     }
     /**
@@ -73018,7 +73644,7 @@ export namespace Raw {
         b.write(Primitive.Long.write(this.icon) as unknown as Buffer);
       }
       if (this.description !== undefined) {
-        b.write(Primitive.String.write(this.description) as unknown as Buffer);
+        b.write(this.description.write() as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -76304,43 +76930,6 @@ export namespace Raw {
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
   }
-  export class InputPasskeyCredentialFirebasePNV extends TLObject {
-    pnvToken!: string;
-
-    constructor(params: { pnvToken: string }) {
-      super();
-      this.classType = 'types';
-      this.className = 'InputPasskeyCredentialFirebasePNV';
-      this.constructorId = 0x5b1ccb28;
-      this.subclassOfId = 0x1eb1222e;
-      this._slots = ['pnvToken'];
-      this.pnvToken = params.pnvToken;
-    }
-    /**
-     * Generate the TLObject from buffer.
-     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
-     */
-    static override async read(
-      _data: BytesIO,
-      ..._args: Array<any>
-    ): Promise<Raw.InputPasskeyCredentialFirebasePNV> {
-      // no flags
-      let pnvToken = await Primitive.String.read(_data);
-      return new Raw.InputPasskeyCredentialFirebasePNV({ pnvToken: pnvToken });
-    }
-    /**
-     * Generate buffer from TLObject.
-     */
-    override write(): Buffer {
-      const b: BytesIO = new BytesIO();
-      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-      // no flags
-      if (this.pnvToken !== undefined) {
-        b.write(Primitive.String.write(this.pnvToken) as unknown as Buffer);
-      }
-      return Buffer.from(b.buffer as unknown as Uint8Array);
-    }
-  }
   export class StarGiftBackground extends TLObject {
     centerColor!: int;
     edgeColor!: int;
@@ -79100,6 +79689,1495 @@ export namespace Raw {
       }
       if (this.style !== undefined) {
         b.write(this.style.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class CurrencyRate extends TLObject {
+    currency!: string;
+    rate!: double;
+
+    constructor(params: { currency: string; rate: double }) {
+      super();
+      this.classType = 'types';
+      this.className = 'CurrencyRate';
+      this.constructorId = 0x30d9743c;
+      this.subclassOfId = 0xf80eca1e;
+      this._slots = ['currency', 'rate'];
+      this.currency = params.currency;
+      this.rate = params.rate;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(_data: BytesIO, ..._args: Array<any>): Promise<Raw.CurrencyRate> {
+      // no flags
+      let currency = await Primitive.String.read(_data);
+      let rate = await Primitive.Double.read(_data);
+      return new Raw.CurrencyRate({ currency: currency, rate: rate });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.currency !== undefined) {
+        b.write(Primitive.String.write(this.currency) as unknown as Buffer);
+      }
+      if (this.rate !== undefined) {
+        b.write(Primitive.Double.write(this.rate) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class OnrampMethodAvailability extends TLObject {
+    available?: boolean;
+    paymentMethod!: string;
+
+    constructor(params: { available?: boolean; paymentMethod: string }) {
+      super();
+      this.classType = 'types';
+      this.className = 'OnrampMethodAvailability';
+      this.constructorId = 0x9ec8c6a8;
+      this.subclassOfId = 0x5497d790;
+      this._slots = ['available', 'paymentMethod'];
+      this.available = params.available;
+      this.paymentMethod = params.paymentMethod;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.OnrampMethodAvailability> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let available = flags & (1 << 0) ? true : false;
+      let paymentMethod = await Primitive.String.read(_data);
+      return new Raw.OnrampMethodAvailability({
+        available: available,
+        paymentMethod: paymentMethod,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.available ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.paymentMethod !== undefined) {
+        b.write(Primitive.String.write(this.paymentMethod) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class OnrampProviderInfo extends TLObject {
+    supportsBaseCurrencies?: boolean;
+    supportsLimits?: boolean;
+    supportsQuote?: boolean;
+    id!: string;
+    name!: string;
+    cryptoCurrencies!: Vector<string>;
+
+    constructor(params: {
+      supportsBaseCurrencies?: boolean;
+      supportsLimits?: boolean;
+      supportsQuote?: boolean;
+      id: string;
+      name: string;
+      cryptoCurrencies: Vector<string>;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'OnrampProviderInfo';
+      this.constructorId = 0xdc27582;
+      this.subclassOfId = 0x2311d493;
+      this._slots = [
+        'supportsBaseCurrencies',
+        'supportsLimits',
+        'supportsQuote',
+        'id',
+        'name',
+        'cryptoCurrencies',
+      ];
+      this.supportsBaseCurrencies = params.supportsBaseCurrencies;
+      this.supportsLimits = params.supportsLimits;
+      this.supportsQuote = params.supportsQuote;
+      this.id = params.id;
+      this.name = params.name;
+      this.cryptoCurrencies = params.cryptoCurrencies;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.OnrampProviderInfo> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let supportsBaseCurrencies = flags & (1 << 0) ? true : false;
+      let supportsLimits = flags & (1 << 1) ? true : false;
+      let supportsQuote = flags & (1 << 2) ? true : false;
+      let id = await Primitive.String.read(_data);
+      let name = await Primitive.String.read(_data);
+      let cryptoCurrencies = await TLObject.read(_data, Primitive.String);
+      return new Raw.OnrampProviderInfo({
+        supportsBaseCurrencies: supportsBaseCurrencies,
+        supportsLimits: supportsLimits,
+        supportsQuote: supportsQuote,
+        id: id,
+        name: name,
+        cryptoCurrencies: cryptoCurrencies,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.supportsBaseCurrencies ? 1 << 0 : 0;
+      flags |= this.supportsLimits ? 1 << 1 : 0;
+      flags |= this.supportsQuote ? 1 << 2 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.id !== undefined) {
+        b.write(Primitive.String.write(this.id) as unknown as Buffer);
+      }
+      if (this.name !== undefined) {
+        b.write(Primitive.String.write(this.name) as unknown as Buffer);
+      }
+      if (this.cryptoCurrencies) {
+        b.write(
+          Primitive.Vector.write(this.cryptoCurrencies, Primitive.String) as unknown as Buffer,
+        );
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class OnrampAvailability extends TLObject {
+    allowed?: boolean;
+    buyAllowed?: boolean;
+    countryCode!: string;
+    state?: string;
+    methods!: Vector<Raw.TypeOnrampMethodAvailability>;
+
+    constructor(params: {
+      allowed?: boolean;
+      buyAllowed?: boolean;
+      countryCode: string;
+      state?: string;
+      methods: Vector<Raw.TypeOnrampMethodAvailability>;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'OnrampAvailability';
+      this.constructorId = 0xf9c84973;
+      this.subclassOfId = 0x67ab8072;
+      this._slots = ['allowed', 'buyAllowed', 'countryCode', 'state', 'methods'];
+      this.allowed = params.allowed;
+      this.buyAllowed = params.buyAllowed;
+      this.countryCode = params.countryCode;
+      this.state = params.state;
+      this.methods = params.methods;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.OnrampAvailability> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let allowed = flags & (1 << 0) ? true : false;
+      let buyAllowed = flags & (1 << 1) ? true : false;
+      let countryCode = await Primitive.String.read(_data);
+      let state = flags & (1 << 2) ? await Primitive.String.read(_data) : undefined;
+      let methods = await TLObject.read(_data);
+      return new Raw.OnrampAvailability({
+        allowed: allowed,
+        buyAllowed: buyAllowed,
+        countryCode: countryCode,
+        state: state,
+        methods: methods,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.allowed ? 1 << 0 : 0;
+      flags |= this.buyAllowed ? 1 << 1 : 0;
+      flags |= this.state !== undefined ? 1 << 2 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.countryCode !== undefined) {
+        b.write(Primitive.String.write(this.countryCode) as unknown as Buffer);
+      }
+      if (this.state !== undefined) {
+        b.write(Primitive.String.write(this.state) as unknown as Buffer);
+      }
+      if (this.methods) {
+        b.write(Primitive.Vector.write(this.methods) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class OnrampLimits extends TLObject {
+    baseCurrency!: string;
+    baseMinAmount!: string;
+    baseMaxAmount!: string;
+    cryptoMinAmount!: string;
+    cryptoMaxAmount!: string;
+    paymentMethod!: string;
+
+    constructor(params: {
+      baseCurrency: string;
+      baseMinAmount: string;
+      baseMaxAmount: string;
+      cryptoMinAmount: string;
+      cryptoMaxAmount: string;
+      paymentMethod: string;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'OnrampLimits';
+      this.constructorId = 0x7be2677e;
+      this.subclassOfId = 0xc50f6afd;
+      this._slots = [
+        'baseCurrency',
+        'baseMinAmount',
+        'baseMaxAmount',
+        'cryptoMinAmount',
+        'cryptoMaxAmount',
+        'paymentMethod',
+      ];
+      this.baseCurrency = params.baseCurrency;
+      this.baseMinAmount = params.baseMinAmount;
+      this.baseMaxAmount = params.baseMaxAmount;
+      this.cryptoMinAmount = params.cryptoMinAmount;
+      this.cryptoMaxAmount = params.cryptoMaxAmount;
+      this.paymentMethod = params.paymentMethod;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(_data: BytesIO, ..._args: Array<any>): Promise<Raw.OnrampLimits> {
+      // no flags
+      let baseCurrency = await Primitive.String.read(_data);
+      let baseMinAmount = await Primitive.String.read(_data);
+      let baseMaxAmount = await Primitive.String.read(_data);
+      let cryptoMinAmount = await Primitive.String.read(_data);
+      let cryptoMaxAmount = await Primitive.String.read(_data);
+      let paymentMethod = await Primitive.String.read(_data);
+      return new Raw.OnrampLimits({
+        baseCurrency: baseCurrency,
+        baseMinAmount: baseMinAmount,
+        baseMaxAmount: baseMaxAmount,
+        cryptoMinAmount: cryptoMinAmount,
+        cryptoMaxAmount: cryptoMaxAmount,
+        paymentMethod: paymentMethod,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.baseCurrency !== undefined) {
+        b.write(Primitive.String.write(this.baseCurrency) as unknown as Buffer);
+      }
+      if (this.baseMinAmount !== undefined) {
+        b.write(Primitive.String.write(this.baseMinAmount) as unknown as Buffer);
+      }
+      if (this.baseMaxAmount !== undefined) {
+        b.write(Primitive.String.write(this.baseMaxAmount) as unknown as Buffer);
+      }
+      if (this.cryptoMinAmount !== undefined) {
+        b.write(Primitive.String.write(this.cryptoMinAmount) as unknown as Buffer);
+      }
+      if (this.cryptoMaxAmount !== undefined) {
+        b.write(Primitive.String.write(this.cryptoMaxAmount) as unknown as Buffer);
+      }
+      if (this.paymentMethod !== undefined) {
+        b.write(Primitive.String.write(this.paymentMethod) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class OnrampQuote extends TLObject {
+    baseCurrency!: string;
+    baseAmount!: string;
+    cryptoCurrency!: string;
+    cryptoAmount!: string;
+    cryptoPrice!: string;
+    feeAmount!: string;
+    extraFeeAmount!: string;
+    networkFeeAmount!: string;
+    totalAmount!: string;
+    paymentMethod!: string;
+    expiresDate!: int;
+
+    constructor(params: {
+      baseCurrency: string;
+      baseAmount: string;
+      cryptoCurrency: string;
+      cryptoAmount: string;
+      cryptoPrice: string;
+      feeAmount: string;
+      extraFeeAmount: string;
+      networkFeeAmount: string;
+      totalAmount: string;
+      paymentMethod: string;
+      expiresDate: int;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'OnrampQuote';
+      this.constructorId = 0x7a8011e9;
+      this.subclassOfId = 0xaedc1079;
+      this._slots = [
+        'baseCurrency',
+        'baseAmount',
+        'cryptoCurrency',
+        'cryptoAmount',
+        'cryptoPrice',
+        'feeAmount',
+        'extraFeeAmount',
+        'networkFeeAmount',
+        'totalAmount',
+        'paymentMethod',
+        'expiresDate',
+      ];
+      this.baseCurrency = params.baseCurrency;
+      this.baseAmount = params.baseAmount;
+      this.cryptoCurrency = params.cryptoCurrency;
+      this.cryptoAmount = params.cryptoAmount;
+      this.cryptoPrice = params.cryptoPrice;
+      this.feeAmount = params.feeAmount;
+      this.extraFeeAmount = params.extraFeeAmount;
+      this.networkFeeAmount = params.networkFeeAmount;
+      this.totalAmount = params.totalAmount;
+      this.paymentMethod = params.paymentMethod;
+      this.expiresDate = params.expiresDate;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(_data: BytesIO, ..._args: Array<any>): Promise<Raw.OnrampQuote> {
+      // no flags
+      let baseCurrency = await Primitive.String.read(_data);
+      let baseAmount = await Primitive.String.read(_data);
+      let cryptoCurrency = await Primitive.String.read(_data);
+      let cryptoAmount = await Primitive.String.read(_data);
+      let cryptoPrice = await Primitive.String.read(_data);
+      let feeAmount = await Primitive.String.read(_data);
+      let extraFeeAmount = await Primitive.String.read(_data);
+      let networkFeeAmount = await Primitive.String.read(_data);
+      let totalAmount = await Primitive.String.read(_data);
+      let paymentMethod = await Primitive.String.read(_data);
+      let expiresDate = await Primitive.Int.read(_data);
+      return new Raw.OnrampQuote({
+        baseCurrency: baseCurrency,
+        baseAmount: baseAmount,
+        cryptoCurrency: cryptoCurrency,
+        cryptoAmount: cryptoAmount,
+        cryptoPrice: cryptoPrice,
+        feeAmount: feeAmount,
+        extraFeeAmount: extraFeeAmount,
+        networkFeeAmount: networkFeeAmount,
+        totalAmount: totalAmount,
+        paymentMethod: paymentMethod,
+        expiresDate: expiresDate,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.baseCurrency !== undefined) {
+        b.write(Primitive.String.write(this.baseCurrency) as unknown as Buffer);
+      }
+      if (this.baseAmount !== undefined) {
+        b.write(Primitive.String.write(this.baseAmount) as unknown as Buffer);
+      }
+      if (this.cryptoCurrency !== undefined) {
+        b.write(Primitive.String.write(this.cryptoCurrency) as unknown as Buffer);
+      }
+      if (this.cryptoAmount !== undefined) {
+        b.write(Primitive.String.write(this.cryptoAmount) as unknown as Buffer);
+      }
+      if (this.cryptoPrice !== undefined) {
+        b.write(Primitive.String.write(this.cryptoPrice) as unknown as Buffer);
+      }
+      if (this.feeAmount !== undefined) {
+        b.write(Primitive.String.write(this.feeAmount) as unknown as Buffer);
+      }
+      if (this.extraFeeAmount !== undefined) {
+        b.write(Primitive.String.write(this.extraFeeAmount) as unknown as Buffer);
+      }
+      if (this.networkFeeAmount !== undefined) {
+        b.write(Primitive.String.write(this.networkFeeAmount) as unknown as Buffer);
+      }
+      if (this.totalAmount !== undefined) {
+        b.write(Primitive.String.write(this.totalAmount) as unknown as Buffer);
+      }
+      if (this.paymentMethod !== undefined) {
+        b.write(Primitive.String.write(this.paymentMethod) as unknown as Buffer);
+      }
+      if (this.expiresDate !== undefined) {
+        b.write(Primitive.Int.write(this.expiresDate) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class OnrampSession extends TLObject {
+    provider!: string;
+    sessionId!: string;
+    url!: string;
+    expiresDate!: int;
+
+    constructor(params: { provider: string; sessionId: string; url: string; expiresDate: int }) {
+      super();
+      this.classType = 'types';
+      this.className = 'OnrampSession';
+      this.constructorId = 0xd1e42e24;
+      this.subclassOfId = 0x4f68fd23;
+      this._slots = ['provider', 'sessionId', 'url', 'expiresDate'];
+      this.provider = params.provider;
+      this.sessionId = params.sessionId;
+      this.url = params.url;
+      this.expiresDate = params.expiresDate;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(_data: BytesIO, ..._args: Array<any>): Promise<Raw.OnrampSession> {
+      // no flags
+      let provider = await Primitive.String.read(_data);
+      let sessionId = await Primitive.String.read(_data);
+      let url = await Primitive.String.read(_data);
+      let expiresDate = await Primitive.Int.read(_data);
+      return new Raw.OnrampSession({
+        provider: provider,
+        sessionId: sessionId,
+        url: url,
+        expiresDate: expiresDate,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.provider !== undefined) {
+        b.write(Primitive.String.write(this.provider) as unknown as Buffer);
+      }
+      if (this.sessionId !== undefined) {
+        b.write(Primitive.String.write(this.sessionId) as unknown as Buffer);
+      }
+      if (this.url !== undefined) {
+        b.write(Primitive.String.write(this.url) as unknown as Buffer);
+      }
+      if (this.expiresDate !== undefined) {
+        b.write(Primitive.Int.write(this.expiresDate) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class WalletStateEmpty extends TLObject {
+    creating?: boolean;
+
+    constructor(params: { creating?: boolean }) {
+      super();
+      this.classType = 'types';
+      this.className = 'WalletStateEmpty';
+      this.constructorId = 0x9cb9b2ec;
+      this.subclassOfId = 0xd479f736;
+      this._slots = ['creating'];
+      this.creating = params.creating;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.WalletStateEmpty> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let creating = flags & (1 << 0) ? true : false;
+      return new Raw.WalletStateEmpty({ creating: creating });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.creating ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class WalletState extends TLObject {
+    backupEnabled?: boolean;
+    canExportPhrase?: boolean;
+    canEnableBackup?: boolean;
+    address!: string;
+    publicKey!: bytes;
+    balance!: long;
+
+    constructor(params: {
+      backupEnabled?: boolean;
+      canExportPhrase?: boolean;
+      canEnableBackup?: boolean;
+      address: string;
+      publicKey: bytes;
+      balance: long;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'WalletState';
+      this.constructorId = 0x95c5346b;
+      this.subclassOfId = 0xd479f736;
+      this._slots = [
+        'backupEnabled',
+        'canExportPhrase',
+        'canEnableBackup',
+        'address',
+        'publicKey',
+        'balance',
+      ];
+      this.backupEnabled = params.backupEnabled;
+      this.canExportPhrase = params.canExportPhrase;
+      this.canEnableBackup = params.canEnableBackup;
+      this.address = params.address;
+      this.publicKey = params.publicKey;
+      this.balance = params.balance;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(_data: BytesIO, ..._args: Array<any>): Promise<Raw.WalletState> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let backupEnabled = flags & (1 << 0) ? true : false;
+      let canExportPhrase = flags & (1 << 1) ? true : false;
+      let canEnableBackup = flags & (1 << 2) ? true : false;
+      let address = await Primitive.String.read(_data);
+      let publicKey = await Primitive.Bytes.read(_data);
+      let balance = await Primitive.Long.read(_data);
+      return new Raw.WalletState({
+        backupEnabled: backupEnabled,
+        canExportPhrase: canExportPhrase,
+        canEnableBackup: canEnableBackup,
+        address: address,
+        publicKey: publicKey,
+        balance: balance,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.backupEnabled ? 1 << 0 : 0;
+      flags |= this.canExportPhrase ? 1 << 1 : 0;
+      flags |= this.canEnableBackup ? 1 << 2 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.address !== undefined) {
+        b.write(Primitive.String.write(this.address) as unknown as Buffer);
+      }
+      if (this.publicKey !== undefined) {
+        b.write(Primitive.Bytes.write(this.publicKey) as unknown as Buffer);
+      }
+      if (this.balance !== undefined) {
+        b.write(Primitive.Long.write(this.balance) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class WalletUserAddress extends TLObject {
+    userId?: long;
+    address!: string;
+    publicKey!: bytes;
+
+    constructor(params: { userId?: long; address: string; publicKey: bytes }) {
+      super();
+      this.classType = 'types';
+      this.className = 'WalletUserAddress';
+      this.constructorId = 0xfe78eecc;
+      this.subclassOfId = 0x12b9d834;
+      this._slots = ['userId', 'address', 'publicKey'];
+      this.userId = params.userId;
+      this.address = params.address;
+      this.publicKey = params.publicKey;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.WalletUserAddress> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let userId = flags & (1 << 0) ? await Primitive.Long.read(_data) : undefined;
+      let address = await Primitive.String.read(_data);
+      let publicKey = await Primitive.Bytes.read(_data);
+      return new Raw.WalletUserAddress({ userId: userId, address: address, publicKey: publicKey });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.userId !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.userId !== undefined) {
+        b.write(Primitive.Long.write(this.userId) as unknown as Buffer);
+      }
+      if (this.address !== undefined) {
+        b.write(Primitive.String.write(this.address) as unknown as Buffer);
+      }
+      if (this.publicKey !== undefined) {
+        b.write(Primitive.Bytes.write(this.publicKey) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class WalletTransactionPeerUser extends TLObject {
+    userId!: long;
+    address!: string;
+    domain?: string;
+
+    constructor(params: { userId: long; address: string; domain?: string }) {
+      super();
+      this.classType = 'types';
+      this.className = 'WalletTransactionPeerUser';
+      this.constructorId = 0xd4ea706d;
+      this.subclassOfId = 0xca036f45;
+      this._slots = ['userId', 'address', 'domain'];
+      this.userId = params.userId;
+      this.address = params.address;
+      this.domain = params.domain;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.WalletTransactionPeerUser> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let userId = await Primitive.Long.read(_data);
+      let address = await Primitive.String.read(_data);
+      let domain = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+      return new Raw.WalletTransactionPeerUser({
+        userId: userId,
+        address: address,
+        domain: domain,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.domain !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.userId !== undefined) {
+        b.write(Primitive.Long.write(this.userId) as unknown as Buffer);
+      }
+      if (this.address !== undefined) {
+        b.write(Primitive.String.write(this.address) as unknown as Buffer);
+      }
+      if (this.domain !== undefined) {
+        b.write(Primitive.String.write(this.domain) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class WalletTransactionPeerAddress extends TLObject {
+    address!: string;
+    domain?: string;
+
+    constructor(params: { address: string; domain?: string }) {
+      super();
+      this.classType = 'types';
+      this.className = 'WalletTransactionPeerAddress';
+      this.constructorId = 0x62cc1bc;
+      this.subclassOfId = 0xca036f45;
+      this._slots = ['address', 'domain'];
+      this.address = params.address;
+      this.domain = params.domain;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.WalletTransactionPeerAddress> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let address = await Primitive.String.read(_data);
+      let domain = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+      return new Raw.WalletTransactionPeerAddress({ address: address, domain: domain });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.domain !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.address !== undefined) {
+        b.write(Primitive.String.write(this.address) as unknown as Buffer);
+      }
+      if (this.domain !== undefined) {
+        b.write(Primitive.String.write(this.domain) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class WalletTransactionPeerOnramp extends TLObject {
+    address!: string;
+    domain?: string;
+    providerName!: string;
+
+    constructor(params: { address: string; domain?: string; providerName: string }) {
+      super();
+      this.classType = 'types';
+      this.className = 'WalletTransactionPeerOnramp';
+      this.constructorId = 0xe595186e;
+      this.subclassOfId = 0xca036f45;
+      this._slots = ['address', 'domain', 'providerName'];
+      this.address = params.address;
+      this.domain = params.domain;
+      this.providerName = params.providerName;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.WalletTransactionPeerOnramp> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let address = await Primitive.String.read(_data);
+      let domain = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+      let providerName = await Primitive.String.read(_data);
+      return new Raw.WalletTransactionPeerOnramp({
+        address: address,
+        domain: domain,
+        providerName: providerName,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.domain !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.address !== undefined) {
+        b.write(Primitive.String.write(this.address) as unknown as Buffer);
+      }
+      if (this.domain !== undefined) {
+        b.write(Primitive.String.write(this.domain) as unknown as Buffer);
+      }
+      if (this.providerName !== undefined) {
+        b.write(Primitive.String.write(this.providerName) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class WalletTransactionPeerUnsupported extends TLObject {
+    constructor() {
+      super();
+      this.classType = 'types';
+      this.className = 'WalletTransactionPeerUnsupported';
+      this.constructorId = 0x728bed5a;
+      this.subclassOfId = 0xca036f45;
+      this._slots = [];
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.WalletTransactionPeerUnsupported> {
+      // no flags
+      return new Raw.WalletTransactionPeerUnsupported();
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class WalletTransaction extends TLObject {
+    incoming?: boolean;
+    gasless?: boolean;
+    failed?: boolean;
+    keyChange?: boolean;
+    commentEncrypted?: boolean;
+    id!: string;
+    amount!: long;
+    fee!: long;
+    date!: int;
+    peer!: Raw.TypeWalletTransactionPeer;
+    comment?: string;
+    txHash?: string;
+    nft?: Raw.wallet.TypeNftItem;
+
+    constructor(params: {
+      incoming?: boolean;
+      gasless?: boolean;
+      failed?: boolean;
+      keyChange?: boolean;
+      commentEncrypted?: boolean;
+      id: string;
+      amount: long;
+      fee: long;
+      date: int;
+      peer: Raw.TypeWalletTransactionPeer;
+      comment?: string;
+      txHash?: string;
+      nft?: Raw.wallet.TypeNftItem;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'WalletTransaction';
+      this.constructorId = 0x952dc143;
+      this.subclassOfId = 0x3e1c7746;
+      this._slots = [
+        'incoming',
+        'gasless',
+        'failed',
+        'keyChange',
+        'commentEncrypted',
+        'id',
+        'amount',
+        'fee',
+        'date',
+        'peer',
+        'comment',
+        'txHash',
+        'nft',
+      ];
+      this.incoming = params.incoming;
+      this.gasless = params.gasless;
+      this.failed = params.failed;
+      this.keyChange = params.keyChange;
+      this.commentEncrypted = params.commentEncrypted;
+      this.id = params.id;
+      this.amount = params.amount;
+      this.fee = params.fee;
+      this.date = params.date;
+      this.peer = params.peer;
+      this.comment = params.comment;
+      this.txHash = params.txHash;
+      this.nft = params.nft;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.WalletTransaction> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let incoming = flags & (1 << 0) ? true : false;
+      let gasless = flags & (1 << 1) ? true : false;
+      let failed = flags & (1 << 2) ? true : false;
+      let keyChange = flags & (1 << 5) ? true : false;
+      let commentEncrypted = flags & (1 << 6) ? true : false;
+      let id = await Primitive.String.read(_data);
+      let amount = await Primitive.Long.read(_data);
+      let fee = await Primitive.Long.read(_data);
+      let date = await Primitive.Int.read(_data);
+      let peer = await TLObject.read(_data);
+      let comment = flags & (1 << 3) ? await Primitive.String.read(_data) : undefined;
+      let txHash = flags & (1 << 4) ? await Primitive.String.read(_data) : undefined;
+      let nft = flags & (1 << 7) ? await TLObject.read(_data) : undefined;
+      return new Raw.WalletTransaction({
+        incoming: incoming,
+        gasless: gasless,
+        failed: failed,
+        keyChange: keyChange,
+        commentEncrypted: commentEncrypted,
+        id: id,
+        amount: amount,
+        fee: fee,
+        date: date,
+        peer: peer,
+        comment: comment,
+        txHash: txHash,
+        nft: nft,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.incoming ? 1 << 0 : 0;
+      flags |= this.gasless ? 1 << 1 : 0;
+      flags |= this.failed ? 1 << 2 : 0;
+      flags |= this.keyChange ? 1 << 5 : 0;
+      flags |= this.commentEncrypted ? 1 << 6 : 0;
+      flags |= this.comment !== undefined ? 1 << 3 : 0;
+      flags |= this.txHash !== undefined ? 1 << 4 : 0;
+      flags |= this.nft !== undefined ? 1 << 7 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.id !== undefined) {
+        b.write(Primitive.String.write(this.id) as unknown as Buffer);
+      }
+      if (this.amount !== undefined) {
+        b.write(Primitive.Long.write(this.amount) as unknown as Buffer);
+      }
+      if (this.fee !== undefined) {
+        b.write(Primitive.Long.write(this.fee) as unknown as Buffer);
+      }
+      if (this.date !== undefined) {
+        b.write(Primitive.Int.write(this.date) as unknown as Buffer);
+      }
+      if (this.peer !== undefined) {
+        b.write(this.peer.write() as unknown as Buffer);
+      }
+      if (this.comment !== undefined) {
+        b.write(Primitive.String.write(this.comment) as unknown as Buffer);
+      }
+      if (this.txHash !== undefined) {
+        b.write(Primitive.String.write(this.txHash) as unknown as Buffer);
+      }
+      if (this.nft !== undefined) {
+        b.write(this.nft.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class WalletOwnershipProof extends TLObject {
+    timestamp!: int;
+    signature!: bytes;
+
+    constructor(params: { timestamp: int; signature: bytes }) {
+      super();
+      this.classType = 'types';
+      this.className = 'WalletOwnershipProof';
+      this.constructorId = 0x60bccb0d;
+      this.subclassOfId = 0xb4f67c2d;
+      this._slots = ['timestamp', 'signature'];
+      this.timestamp = params.timestamp;
+      this.signature = params.signature;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.WalletOwnershipProof> {
+      // no flags
+      let timestamp = await Primitive.Int.read(_data);
+      let signature = await Primitive.Bytes.read(_data);
+      return new Raw.WalletOwnershipProof({ timestamp: timestamp, signature: signature });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.timestamp !== undefined) {
+        b.write(Primitive.Int.write(this.timestamp) as unknown as Buffer);
+      }
+      if (this.signature !== undefined) {
+        b.write(Primitive.Bytes.write(this.signature) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class InputWalletNew extends TLObject {
+    constructor() {
+      super();
+      this.classType = 'types';
+      this.className = 'InputWalletNew';
+      this.constructorId = 0x63a440dc;
+      this.subclassOfId = 0xe6bdf7e4;
+      this._slots = [];
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(_data: BytesIO, ..._args: Array<any>): Promise<Raw.InputWalletNew> {
+      // no flags
+      return new Raw.InputWalletNew();
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class InputWalletImported extends TLObject {
+    publicKey!: bytes;
+    anchorPublicKey?: bytes;
+    proof!: Raw.TypeWalletOwnershipProof;
+
+    constructor(params: {
+      publicKey: bytes;
+      anchorPublicKey?: bytes;
+      proof: Raw.TypeWalletOwnershipProof;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputWalletImported';
+      this.constructorId = 0x66a66a3b;
+      this.subclassOfId = 0xe6bdf7e4;
+      this._slots = ['publicKey', 'anchorPublicKey', 'proof'];
+      this.publicKey = params.publicKey;
+      this.anchorPublicKey = params.anchorPublicKey;
+      this.proof = params.proof;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.InputWalletImported> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let publicKey = await Primitive.Bytes.read(_data);
+      let anchorPublicKey = flags & (1 << 0) ? await Primitive.Bytes.read(_data) : undefined;
+      let proof = await TLObject.read(_data);
+      return new Raw.InputWalletImported({
+        publicKey: publicKey,
+        anchorPublicKey: anchorPublicKey,
+        proof: proof,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.anchorPublicKey !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.publicKey !== undefined) {
+        b.write(Primitive.Bytes.write(this.publicKey) as unknown as Buffer);
+      }
+      if (this.anchorPublicKey !== undefined) {
+        b.write(Primitive.Bytes.write(this.anchorPublicKey) as unknown as Buffer);
+      }
+      if (this.proof !== undefined) {
+        b.write(this.proof.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class TonConnectManifest extends TLObject {
+    url!: string;
+    name!: string;
+    icon?: Raw.TypeWebDocument;
+
+    constructor(params: { url: string; name: string; icon?: Raw.TypeWebDocument }) {
+      super();
+      this.classType = 'types';
+      this.className = 'TonConnectManifest';
+      this.constructorId = 0x12229264;
+      this.subclassOfId = 0xec32aa48;
+      this._slots = ['url', 'name', 'icon'];
+      this.url = params.url;
+      this.name = params.name;
+      this.icon = params.icon;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.TonConnectManifest> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let url = await Primitive.String.read(_data);
+      let name = await Primitive.String.read(_data);
+      let icon = flags & (1 << 0) ? await TLObject.read(_data) : undefined;
+      return new Raw.TonConnectManifest({ url: url, name: name, icon: icon });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.icon !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.url !== undefined) {
+        b.write(Primitive.String.write(this.url) as unknown as Buffer);
+      }
+      if (this.name !== undefined) {
+        b.write(Primitive.String.write(this.name) as unknown as Buffer);
+      }
+      if (this.icon !== undefined) {
+        b.write(this.icon.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class TonConnectSession extends TLObject {
+    pending?: boolean;
+    closing?: boolean;
+    closed?: boolean;
+    id!: long;
+    dappClientId!: string;
+    clientId?: string;
+    nonce!: bytes;
+    manifest?: Raw.TypeTonConnectManifest;
+    manifestError?: int;
+    date!: int;
+
+    constructor(params: {
+      pending?: boolean;
+      closing?: boolean;
+      closed?: boolean;
+      id: long;
+      dappClientId: string;
+      clientId?: string;
+      nonce: bytes;
+      manifest?: Raw.TypeTonConnectManifest;
+      manifestError?: int;
+      date: int;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'TonConnectSession';
+      this.constructorId = 0x126556c6;
+      this.subclassOfId = 0xc7239cb0;
+      this._slots = [
+        'pending',
+        'closing',
+        'closed',
+        'id',
+        'dappClientId',
+        'clientId',
+        'nonce',
+        'manifest',
+        'manifestError',
+        'date',
+      ];
+      this.pending = params.pending;
+      this.closing = params.closing;
+      this.closed = params.closed;
+      this.id = params.id;
+      this.dappClientId = params.dappClientId;
+      this.clientId = params.clientId;
+      this.nonce = params.nonce;
+      this.manifest = params.manifest;
+      this.manifestError = params.manifestError;
+      this.date = params.date;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.TonConnectSession> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let pending = flags & (1 << 0) ? true : false;
+      let closing = flags & (1 << 1) ? true : false;
+      let closed = flags & (1 << 2) ? true : false;
+      let id = await Primitive.Long.read(_data);
+      let dappClientId = await Primitive.String.read(_data);
+      let clientId = flags & (1 << 3) ? await Primitive.String.read(_data) : undefined;
+      let nonce = await Primitive.Bytes.read(_data);
+      let manifest = flags & (1 << 4) ? await TLObject.read(_data) : undefined;
+      let manifestError = flags & (1 << 5) ? await Primitive.Int.read(_data) : undefined;
+      let date = await Primitive.Int.read(_data);
+      return new Raw.TonConnectSession({
+        pending: pending,
+        closing: closing,
+        closed: closed,
+        id: id,
+        dappClientId: dappClientId,
+        clientId: clientId,
+        nonce: nonce,
+        manifest: manifest,
+        manifestError: manifestError,
+        date: date,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.pending ? 1 << 0 : 0;
+      flags |= this.closing ? 1 << 1 : 0;
+      flags |= this.closed ? 1 << 2 : 0;
+      flags |= this.clientId !== undefined ? 1 << 3 : 0;
+      flags |= this.manifest !== undefined ? 1 << 4 : 0;
+      flags |= this.manifestError !== undefined ? 1 << 5 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.id !== undefined) {
+        b.write(Primitive.Long.write(this.id) as unknown as Buffer);
+      }
+      if (this.dappClientId !== undefined) {
+        b.write(Primitive.String.write(this.dappClientId) as unknown as Buffer);
+      }
+      if (this.clientId !== undefined) {
+        b.write(Primitive.String.write(this.clientId) as unknown as Buffer);
+      }
+      if (this.nonce !== undefined) {
+        b.write(Primitive.Bytes.write(this.nonce) as unknown as Buffer);
+      }
+      if (this.manifest !== undefined) {
+        b.write(this.manifest.write() as unknown as Buffer);
+      }
+      if (this.manifestError !== undefined) {
+        b.write(Primitive.Int.write(this.manifestError) as unknown as Buffer);
+      }
+      if (this.date !== undefined) {
+        b.write(Primitive.Int.write(this.date) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class TonConnectNextEventId extends TLObject {
+    eventId!: long;
+
+    constructor(params: { eventId: long }) {
+      super();
+      this.classType = 'types';
+      this.className = 'TonConnectNextEventId';
+      this.constructorId = 0x582464e3;
+      this.subclassOfId = 0x2615ce73;
+      this._slots = ['eventId'];
+      this.eventId = params.eventId;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.TonConnectNextEventId> {
+      // no flags
+      let eventId = await Primitive.Long.read(_data);
+      return new Raw.TonConnectNextEventId({ eventId: eventId });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.eventId !== undefined) {
+        b.write(Primitive.Long.write(this.eventId) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class TonConnectRequest extends TLObject {
+    sessionId!: long;
+    msgId!: int;
+    body!: bytes;
+    expires!: int;
+    topic?: string;
+    traceId?: string;
+
+    constructor(params: {
+      sessionId: long;
+      msgId: int;
+      body: bytes;
+      expires: int;
+      topic?: string;
+      traceId?: string;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'TonConnectRequest';
+      this.constructorId = 0xa15f8513;
+      this.subclassOfId = 0x2cf0c6fb;
+      this._slots = ['sessionId', 'msgId', 'body', 'expires', 'topic', 'traceId'];
+      this.sessionId = params.sessionId;
+      this.msgId = params.msgId;
+      this.body = params.body;
+      this.expires = params.expires;
+      this.topic = params.topic;
+      this.traceId = params.traceId;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.TonConnectRequest> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let sessionId = await Primitive.Long.read(_data);
+      let msgId = await Primitive.Int.read(_data);
+      let body = await Primitive.Bytes.read(_data);
+      let expires = await Primitive.Int.read(_data);
+      let topic = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+      let traceId = flags & (1 << 1) ? await Primitive.String.read(_data) : undefined;
+      return new Raw.TonConnectRequest({
+        sessionId: sessionId,
+        msgId: msgId,
+        body: body,
+        expires: expires,
+        topic: topic,
+        traceId: traceId,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.topic !== undefined ? 1 << 0 : 0;
+      flags |= this.traceId !== undefined ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.sessionId !== undefined) {
+        b.write(Primitive.Long.write(this.sessionId) as unknown as Buffer);
+      }
+      if (this.msgId !== undefined) {
+        b.write(Primitive.Int.write(this.msgId) as unknown as Buffer);
+      }
+      if (this.body !== undefined) {
+        b.write(Primitive.Bytes.write(this.body) as unknown as Buffer);
+      }
+      if (this.expires !== undefined) {
+        b.write(Primitive.Int.write(this.expires) as unknown as Buffer);
+      }
+      if (this.topic !== undefined) {
+        b.write(Primitive.String.write(this.topic) as unknown as Buffer);
+      }
+      if (this.traceId !== undefined) {
+        b.write(Primitive.String.write(this.traceId) as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -88441,18 +90519,58 @@ export namespace Raw {
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
     }
+    export class CancelWebTokenAuthorization extends TLObject {
+      __response__!: Bool;
+      webAuthToken!: string;
+
+      constructor(params: { webAuthToken: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'auth.CancelWebTokenAuthorization';
+        this.constructorId = 0x490dada1;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['webAuthToken'];
+        this.webAuthToken = params.webAuthToken;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.auth.CancelWebTokenAuthorization> {
+        // no flags
+        let webAuthToken = await Primitive.String.read(_data);
+        return new Raw.auth.CancelWebTokenAuthorization({ webAuthToken: webAuthToken });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.webAuthToken !== undefined) {
+          b.write(Primitive.String.write(this.webAuthToken) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
     export class InitFirebasePnvLogin extends TLObject {
       __response__!: Raw.auth.TypeFirebasePnvIntent;
+      exceptIds?: Vector<long>;
       apiId!: int;
       apiHash!: string;
 
-      constructor(params: { apiId: int; apiHash: string }) {
+      constructor(params: { exceptIds?: Vector<long>; apiId: int; apiHash: string }) {
         super();
         this.classType = 'functions';
         this.className = 'auth.InitFirebasePnvLogin';
-        this.constructorId = 0x777df37a;
+        this.constructorId = 0x644f15c0;
         this.subclassOfId = 0xfa6422a7;
-        this._slots = ['apiId', 'apiHash'];
+        this._slots = ['exceptIds', 'apiId', 'apiHash'];
+        this.exceptIds = params.exceptIds;
         this.apiId = params.apiId;
         this.apiHash = params.apiHash;
       }
@@ -88464,10 +90582,16 @@ export namespace Raw {
         _data: BytesIO,
         ..._args: Array<any>
       ): Promise<Raw.auth.InitFirebasePnvLogin> {
-        // no flags
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let exceptIds = flags & (1 << 0) ? await TLObject.read(_data, Primitive.Long) : [];
         let apiId = await Primitive.Int.read(_data);
         let apiHash = await Primitive.String.read(_data);
-        return new Raw.auth.InitFirebasePnvLogin({ apiId: apiId, apiHash: apiHash });
+        return new Raw.auth.InitFirebasePnvLogin({
+          exceptIds: exceptIds,
+          apiId: apiId,
+          apiHash: apiHash,
+        });
       }
       /**
        * Generate buffer from TLObject.
@@ -88475,7 +90599,15 @@ export namespace Raw {
       override write(): Buffer {
         const b: BytesIO = new BytesIO();
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-        // no flags
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.exceptIds ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.exceptIds) {
+          b.write(Primitive.Vector.write(this.exceptIds, Primitive.Long) as unknown as Buffer);
+        }
         if (this.apiId !== undefined) {
           b.write(Primitive.Int.write(this.apiId) as unknown as Buffer);
         }
@@ -124055,6 +126187,7 @@ export namespace Raw {
     }
   }
   export namespace payments {
+    export type TypeCurrencyRates = Raw.payments.CurrencyRates;
     export type TypeStarGiftUpgradeAttributes = Raw.payments.StarGiftUpgradeAttributes;
     export type TypeStarGiftActiveAuctions =
       | Raw.payments.StarGiftActiveAuctionsNotModified
@@ -126699,6 +128832,43 @@ export namespace Raw {
         // no flags
         if (this.attributes) {
           b.write(Primitive.Vector.write(this.attributes) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class CurrencyRates extends TLObject {
+      rates!: Vector<Raw.TypeCurrencyRate>;
+
+      constructor(params: { rates: Vector<Raw.TypeCurrencyRate> }) {
+        super();
+        this.classType = 'types';
+        this.className = 'payments.CurrencyRates';
+        this.constructorId = 0xbbcce4c2;
+        this.subclassOfId = 0x11d1c3c1;
+        this._slots = ['rates'];
+        this.rates = params.rates;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.payments.CurrencyRates> {
+        // no flags
+        let rates = await TLObject.read(_data);
+        return new Raw.payments.CurrencyRates({ rates: rates });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.rates) {
+          b.write(Primitive.Vector.write(this.rates) as unknown as Buffer);
         }
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
@@ -130050,6 +132220,505 @@ export namespace Raw {
         // no flags
         if (this.stargift) {
           b.write(Primitive.Vector.write(this.stargift) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetCurrencyRates extends TLObject {
+      __response__!: Raw.payments.TypeCurrencyRates;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.GetCurrencyRates';
+        this.constructorId = 0xd35983e8;
+        this.subclassOfId = 0x11d1c3c1;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.payments.GetCurrencyRates> {
+        // no flags
+        return new Raw.payments.GetCurrencyRates();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetOnrampProviders extends TLObject {
+      __response__!: Vector<Raw.TypeOnrampProviderInfo>;
+      cryptoCurrency?: string;
+
+      constructor(params: { cryptoCurrency?: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.GetOnrampProviders';
+        this.constructorId = 0x3f3e00dc;
+        this.subclassOfId = 0xf69a33c2;
+        this._slots = ['cryptoCurrency'];
+        this.cryptoCurrency = params.cryptoCurrency;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.payments.GetOnrampProviders> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let cryptoCurrency = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+        return new Raw.payments.GetOnrampProviders({ cryptoCurrency: cryptoCurrency });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.cryptoCurrency !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.cryptoCurrency !== undefined) {
+          b.write(Primitive.String.write(this.cryptoCurrency) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetOnrampBaseCurrencies extends TLObject {
+      __response__!: Vector<string>;
+      provider!: string;
+      cryptoCurrency!: string;
+
+      constructor(params: { provider: string; cryptoCurrency: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.GetOnrampBaseCurrencies';
+        this.constructorId = 0x1c8bedf3;
+        this.subclassOfId = 0x1d97512;
+        this._slots = ['provider', 'cryptoCurrency'];
+        this.provider = params.provider;
+        this.cryptoCurrency = params.cryptoCurrency;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.payments.GetOnrampBaseCurrencies> {
+        // no flags
+        let provider = await Primitive.String.read(_data);
+        let cryptoCurrency = await Primitive.String.read(_data);
+        return new Raw.payments.GetOnrampBaseCurrencies({
+          provider: provider,
+          cryptoCurrency: cryptoCurrency,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.provider !== undefined) {
+          b.write(Primitive.String.write(this.provider) as unknown as Buffer);
+        }
+        if (this.cryptoCurrency !== undefined) {
+          b.write(Primitive.String.write(this.cryptoCurrency) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetOnrampAvailability extends TLObject {
+      __response__!: Raw.TypeOnrampAvailability;
+      provider!: string;
+      cryptoCurrency!: string;
+      baseCurrency?: string;
+
+      constructor(params: { provider: string; cryptoCurrency: string; baseCurrency?: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.GetOnrampAvailability';
+        this.constructorId = 0x2ec29951;
+        this.subclassOfId = 0x67ab8072;
+        this._slots = ['provider', 'cryptoCurrency', 'baseCurrency'];
+        this.provider = params.provider;
+        this.cryptoCurrency = params.cryptoCurrency;
+        this.baseCurrency = params.baseCurrency;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.payments.GetOnrampAvailability> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let provider = await Primitive.String.read(_data);
+        let cryptoCurrency = await Primitive.String.read(_data);
+        let baseCurrency = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+        return new Raw.payments.GetOnrampAvailability({
+          provider: provider,
+          cryptoCurrency: cryptoCurrency,
+          baseCurrency: baseCurrency,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.baseCurrency !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.provider !== undefined) {
+          b.write(Primitive.String.write(this.provider) as unknown as Buffer);
+        }
+        if (this.cryptoCurrency !== undefined) {
+          b.write(Primitive.String.write(this.cryptoCurrency) as unknown as Buffer);
+        }
+        if (this.baseCurrency !== undefined) {
+          b.write(Primitive.String.write(this.baseCurrency) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetOnrampLimits extends TLObject {
+      __response__!: Raw.TypeOnrampLimits;
+      provider!: string;
+      cryptoCurrency!: string;
+      baseCurrency!: string;
+      paymentMethod?: string;
+
+      constructor(params: {
+        provider: string;
+        cryptoCurrency: string;
+        baseCurrency: string;
+        paymentMethod?: string;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.GetOnrampLimits';
+        this.constructorId = 0x80e851fd;
+        this.subclassOfId = 0xc50f6afd;
+        this._slots = ['provider', 'cryptoCurrency', 'baseCurrency', 'paymentMethod'];
+        this.provider = params.provider;
+        this.cryptoCurrency = params.cryptoCurrency;
+        this.baseCurrency = params.baseCurrency;
+        this.paymentMethod = params.paymentMethod;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.payments.GetOnrampLimits> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let provider = await Primitive.String.read(_data);
+        let cryptoCurrency = await Primitive.String.read(_data);
+        let baseCurrency = await Primitive.String.read(_data);
+        let paymentMethod = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+        return new Raw.payments.GetOnrampLimits({
+          provider: provider,
+          cryptoCurrency: cryptoCurrency,
+          baseCurrency: baseCurrency,
+          paymentMethod: paymentMethod,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.paymentMethod !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.provider !== undefined) {
+          b.write(Primitive.String.write(this.provider) as unknown as Buffer);
+        }
+        if (this.cryptoCurrency !== undefined) {
+          b.write(Primitive.String.write(this.cryptoCurrency) as unknown as Buffer);
+        }
+        if (this.baseCurrency !== undefined) {
+          b.write(Primitive.String.write(this.baseCurrency) as unknown as Buffer);
+        }
+        if (this.paymentMethod !== undefined) {
+          b.write(Primitive.String.write(this.paymentMethod) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetOnrampQuote extends TLObject {
+      __response__!: Raw.TypeOnrampQuote;
+      provider!: string;
+      cryptoCurrency!: string;
+      baseCurrency!: string;
+      baseAmount?: string;
+      cryptoAmount?: string;
+      paymentMethod?: string;
+
+      constructor(params: {
+        provider: string;
+        cryptoCurrency: string;
+        baseCurrency: string;
+        baseAmount?: string;
+        cryptoAmount?: string;
+        paymentMethod?: string;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.GetOnrampQuote';
+        this.constructorId = 0xe06645fa;
+        this.subclassOfId = 0xaedc1079;
+        this._slots = [
+          'provider',
+          'cryptoCurrency',
+          'baseCurrency',
+          'baseAmount',
+          'cryptoAmount',
+          'paymentMethod',
+        ];
+        this.provider = params.provider;
+        this.cryptoCurrency = params.cryptoCurrency;
+        this.baseCurrency = params.baseCurrency;
+        this.baseAmount = params.baseAmount;
+        this.cryptoAmount = params.cryptoAmount;
+        this.paymentMethod = params.paymentMethod;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.payments.GetOnrampQuote> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let provider = await Primitive.String.read(_data);
+        let cryptoCurrency = await Primitive.String.read(_data);
+        let baseCurrency = await Primitive.String.read(_data);
+        let baseAmount = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+        let cryptoAmount = flags & (1 << 1) ? await Primitive.String.read(_data) : undefined;
+        let paymentMethod = flags & (1 << 2) ? await Primitive.String.read(_data) : undefined;
+        return new Raw.payments.GetOnrampQuote({
+          provider: provider,
+          cryptoCurrency: cryptoCurrency,
+          baseCurrency: baseCurrency,
+          baseAmount: baseAmount,
+          cryptoAmount: cryptoAmount,
+          paymentMethod: paymentMethod,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.baseAmount !== undefined ? 1 << 0 : 0;
+        flags |= this.cryptoAmount !== undefined ? 1 << 1 : 0;
+        flags |= this.paymentMethod !== undefined ? 1 << 2 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.provider !== undefined) {
+          b.write(Primitive.String.write(this.provider) as unknown as Buffer);
+        }
+        if (this.cryptoCurrency !== undefined) {
+          b.write(Primitive.String.write(this.cryptoCurrency) as unknown as Buffer);
+        }
+        if (this.baseCurrency !== undefined) {
+          b.write(Primitive.String.write(this.baseCurrency) as unknown as Buffer);
+        }
+        if (this.baseAmount !== undefined) {
+          b.write(Primitive.String.write(this.baseAmount) as unknown as Buffer);
+        }
+        if (this.cryptoAmount !== undefined) {
+          b.write(Primitive.String.write(this.cryptoAmount) as unknown as Buffer);
+        }
+        if (this.paymentMethod !== undefined) {
+          b.write(Primitive.String.write(this.paymentMethod) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class CreateOnrampSession extends TLObject {
+      __response__!: Raw.TypeOnrampSession;
+      provider!: string;
+      cryptoCurrency!: string;
+      address!: string;
+      paymentMethod?: string;
+      baseCurrency?: string;
+      baseAmount?: string;
+      memo?: string;
+      theme?: string;
+      successReturnUrl?: string;
+      failReturnUrl?: string;
+      cryptoAmount?: string;
+
+      constructor(params: {
+        provider: string;
+        cryptoCurrency: string;
+        address: string;
+        paymentMethod?: string;
+        baseCurrency?: string;
+        baseAmount?: string;
+        memo?: string;
+        theme?: string;
+        successReturnUrl?: string;
+        failReturnUrl?: string;
+        cryptoAmount?: string;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'payments.CreateOnrampSession';
+        this.constructorId = 0xa2197cf6;
+        this.subclassOfId = 0x4f68fd23;
+        this._slots = [
+          'provider',
+          'cryptoCurrency',
+          'address',
+          'paymentMethod',
+          'baseCurrency',
+          'baseAmount',
+          'memo',
+          'theme',
+          'successReturnUrl',
+          'failReturnUrl',
+          'cryptoAmount',
+        ];
+        this.provider = params.provider;
+        this.cryptoCurrency = params.cryptoCurrency;
+        this.address = params.address;
+        this.paymentMethod = params.paymentMethod;
+        this.baseCurrency = params.baseCurrency;
+        this.baseAmount = params.baseAmount;
+        this.memo = params.memo;
+        this.theme = params.theme;
+        this.successReturnUrl = params.successReturnUrl;
+        this.failReturnUrl = params.failReturnUrl;
+        this.cryptoAmount = params.cryptoAmount;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.payments.CreateOnrampSession> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let provider = await Primitive.String.read(_data);
+        let cryptoCurrency = await Primitive.String.read(_data);
+        let address = await Primitive.String.read(_data);
+        let paymentMethod = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+        let baseCurrency = flags & (1 << 1) ? await Primitive.String.read(_data) : undefined;
+        let baseAmount = flags & (1 << 2) ? await Primitive.String.read(_data) : undefined;
+        let memo = flags & (1 << 3) ? await Primitive.String.read(_data) : undefined;
+        let theme = flags & (1 << 4) ? await Primitive.String.read(_data) : undefined;
+        let successReturnUrl = flags & (1 << 5) ? await Primitive.String.read(_data) : undefined;
+        let failReturnUrl = flags & (1 << 6) ? await Primitive.String.read(_data) : undefined;
+        let cryptoAmount = flags & (1 << 7) ? await Primitive.String.read(_data) : undefined;
+        return new Raw.payments.CreateOnrampSession({
+          provider: provider,
+          cryptoCurrency: cryptoCurrency,
+          address: address,
+          paymentMethod: paymentMethod,
+          baseCurrency: baseCurrency,
+          baseAmount: baseAmount,
+          memo: memo,
+          theme: theme,
+          successReturnUrl: successReturnUrl,
+          failReturnUrl: failReturnUrl,
+          cryptoAmount: cryptoAmount,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.paymentMethod !== undefined ? 1 << 0 : 0;
+        flags |= this.baseCurrency !== undefined ? 1 << 1 : 0;
+        flags |= this.baseAmount !== undefined ? 1 << 2 : 0;
+        flags |= this.memo !== undefined ? 1 << 3 : 0;
+        flags |= this.theme !== undefined ? 1 << 4 : 0;
+        flags |= this.successReturnUrl !== undefined ? 1 << 5 : 0;
+        flags |= this.failReturnUrl !== undefined ? 1 << 6 : 0;
+        flags |= this.cryptoAmount !== undefined ? 1 << 7 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.provider !== undefined) {
+          b.write(Primitive.String.write(this.provider) as unknown as Buffer);
+        }
+        if (this.cryptoCurrency !== undefined) {
+          b.write(Primitive.String.write(this.cryptoCurrency) as unknown as Buffer);
+        }
+        if (this.address !== undefined) {
+          b.write(Primitive.String.write(this.address) as unknown as Buffer);
+        }
+        if (this.paymentMethod !== undefined) {
+          b.write(Primitive.String.write(this.paymentMethod) as unknown as Buffer);
+        }
+        if (this.baseCurrency !== undefined) {
+          b.write(Primitive.String.write(this.baseCurrency) as unknown as Buffer);
+        }
+        if (this.baseAmount !== undefined) {
+          b.write(Primitive.String.write(this.baseAmount) as unknown as Buffer);
+        }
+        if (this.memo !== undefined) {
+          b.write(Primitive.String.write(this.memo) as unknown as Buffer);
+        }
+        if (this.theme !== undefined) {
+          b.write(Primitive.String.write(this.theme) as unknown as Buffer);
+        }
+        if (this.successReturnUrl !== undefined) {
+          b.write(Primitive.String.write(this.successReturnUrl) as unknown as Buffer);
+        }
+        if (this.failReturnUrl !== undefined) {
+          b.write(Primitive.String.write(this.failReturnUrl) as unknown as Buffer);
+        }
+        if (this.cryptoAmount !== undefined) {
+          b.write(Primitive.String.write(this.cryptoAmount) as unknown as Buffer);
         }
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
@@ -137589,18 +140258,18 @@ export namespace Raw {
       enabled?: boolean;
       bot?: Raw.TypeInputUser;
       peer!: Raw.TypeInputPeer;
-      customDescription?: string;
+      customDescription?: Raw.TypeTextWithEntities;
 
       constructor(params: {
         enabled?: boolean;
         bot?: Raw.TypeInputUser;
         peer: Raw.TypeInputPeer;
-        customDescription?: string;
+        customDescription?: Raw.TypeTextWithEntities;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'bots.SetCustomVerification';
-        this.constructorId = 0x8b89dfbd;
+        this.constructorId = 0xf4946757;
         this.subclassOfId = 0xf5b399ac;
         this._slots = ['enabled', 'bot', 'peer', 'customDescription'];
         this.enabled = params.enabled;
@@ -137621,7 +140290,7 @@ export namespace Raw {
         let enabled = flags & (1 << 1) ? true : false;
         let bot = flags & (1 << 0) ? await TLObject.read(_data) : undefined;
         let peer = await TLObject.read(_data);
-        let customDescription = flags & (1 << 2) ? await Primitive.String.read(_data) : undefined;
+        let customDescription = flags & (1 << 2) ? await TLObject.read(_data) : undefined;
         return new Raw.bots.SetCustomVerification({
           enabled: enabled,
           bot: bot,
@@ -137650,7 +140319,7 @@ export namespace Raw {
           b.write(this.peer.write() as unknown as Buffer);
         }
         if (this.customDescription !== undefined) {
-          b.write(Primitive.String.write(this.customDescription) as unknown as Buffer);
+          b.write(this.customDescription.write() as unknown as Buffer);
         }
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
@@ -137695,15 +140364,17 @@ export namespace Raw {
     }
     export class CheckUsername extends TLObject {
       __response__!: Bool;
+      additional?: boolean;
       username!: string;
 
-      constructor(params: { username: string }) {
+      constructor(params: { additional?: boolean; username: string }) {
         super();
         this.classType = 'functions';
         this.className = 'bots.CheckUsername';
-        this.constructorId = 0x87f2219b;
+        this.constructorId = 0xe3ac4c61;
         this.subclassOfId = 0xf5b399ac;
-        this._slots = ['username'];
+        this._slots = ['additional', 'username'];
+        this.additional = params.additional;
         this.username = params.username;
       }
       /**
@@ -137714,9 +140385,11 @@ export namespace Raw {
         _data: BytesIO,
         ..._args: Array<any>
       ): Promise<Raw.bots.CheckUsername> {
-        // no flags
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let additional = flags & (1 << 0) ? true : false;
         let username = await Primitive.String.read(_data);
-        return new Raw.bots.CheckUsername({ username: username });
+        return new Raw.bots.CheckUsername({ additional: additional, username: username });
       }
       /**
        * Generate buffer from TLObject.
@@ -137724,7 +140397,12 @@ export namespace Raw {
       override write(): Buffer {
         const b: BytesIO = new BytesIO();
         b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
-        // no flags
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.additional ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
         if (this.username !== undefined) {
           b.write(Primitive.String.write(this.username) as unknown as Buffer);
         }
@@ -138072,6 +140750,94 @@ export namespace Raw {
         }
         if (this.result !== undefined) {
           b.write(this.result.write() as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class AddUsername extends TLObject {
+      __response__!: Bool;
+      bot!: Raw.TypeInputUser;
+      username!: string;
+
+      constructor(params: { bot: Raw.TypeInputUser; username: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'bots.AddUsername';
+        this.constructorId = 0x3501c08a;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['bot', 'username'];
+        this.bot = params.bot;
+        this.username = params.username;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.bots.AddUsername> {
+        // no flags
+        let bot = await TLObject.read(_data);
+        let username = await Primitive.String.read(_data);
+        return new Raw.bots.AddUsername({ bot: bot, username: username });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.bot !== undefined) {
+          b.write(this.bot.write() as unknown as Buffer);
+        }
+        if (this.username !== undefined) {
+          b.write(Primitive.String.write(this.username) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class RemoveUsername extends TLObject {
+      __response__!: Bool;
+      bot!: Raw.TypeInputUser;
+      username!: string;
+
+      constructor(params: { bot: Raw.TypeInputUser; username: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'bots.RemoveUsername';
+        this.constructorId = 0xc704147d;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['bot', 'username'];
+        this.bot = params.bot;
+        this.username = params.username;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.bots.RemoveUsername> {
+        // no flags
+        let bot = await TLObject.read(_data);
+        let username = await Primitive.String.read(_data);
+        return new Raw.bots.RemoveUsername({ bot: bot, username: username });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.bot !== undefined) {
+          b.write(this.bot.write() as unknown as Buffer);
+        }
+        if (this.username !== undefined) {
+          b.write(Primitive.String.write(this.username) as unknown as Buffer);
         }
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
@@ -143552,6 +146318,2158 @@ export namespace Raw {
         if (this.hash !== undefined) {
           b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
         }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+  }
+  export namespace toncenter {
+    export type TypeStreamingUrl = Raw.toncenter.StreamingUrl;
+    export type TypeApiResponse = Raw.toncenter.ApiResponse;
+    export class ApiResponse extends TLObject {
+      response!: Raw.TypeDataJSON;
+
+      constructor(params: { response: Raw.TypeDataJSON }) {
+        super();
+        this.classType = 'types';
+        this.className = 'toncenter.ApiResponse';
+        this.constructorId = 0xac8dfe19;
+        this.subclassOfId = 0x58093fd1;
+        this._slots = ['response'];
+        this.response = params.response;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.toncenter.ApiResponse> {
+        // no flags
+        let response = await TLObject.read(_data);
+        return new Raw.toncenter.ApiResponse({ response: response });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.response !== undefined) {
+          b.write(this.response.write() as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class StreamingUrl extends TLObject {
+      url!: string;
+      expires!: int;
+
+      constructor(params: { url: string; expires: int }) {
+        super();
+        this.classType = 'types';
+        this.className = 'toncenter.StreamingUrl';
+        this.constructorId = 0x19887601;
+        this.subclassOfId = 0x4c379ca2;
+        this._slots = ['url', 'expires'];
+        this.url = params.url;
+        this.expires = params.expires;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.toncenter.StreamingUrl> {
+        // no flags
+        let url = await Primitive.String.read(_data);
+        let expires = await Primitive.Int.read(_data);
+        return new Raw.toncenter.StreamingUrl({ url: url, expires: expires });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.url !== undefined) {
+          b.write(Primitive.String.write(this.url) as unknown as Buffer);
+        }
+        if (this.expires !== undefined) {
+          b.write(Primitive.Int.write(this.expires) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class PerformApiRequest extends TLObject {
+      __response__!: Raw.toncenter.TypeApiResponse;
+      post?: boolean;
+      endpoint!: string;
+      query?: string;
+      payload?: string;
+
+      constructor(params: { post?: boolean; endpoint: string; query?: string; payload?: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'toncenter.PerformApiRequest';
+        this.constructorId = 0x8d7bdd61;
+        this.subclassOfId = 0x58093fd1;
+        this._slots = ['post', 'endpoint', 'query', 'payload'];
+        this.post = params.post;
+        this.endpoint = params.endpoint;
+        this.query = params.query;
+        this.payload = params.payload;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.toncenter.PerformApiRequest> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let post = flags & (1 << 0) ? true : false;
+        let endpoint = await Primitive.String.read(_data);
+        let query = flags & (1 << 1) ? await Primitive.String.read(_data) : undefined;
+        let payload = flags & (1 << 2) ? await Primitive.String.read(_data) : undefined;
+        return new Raw.toncenter.PerformApiRequest({
+          post: post,
+          endpoint: endpoint,
+          query: query,
+          payload: payload,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.post ? 1 << 0 : 0;
+        flags |= this.query !== undefined ? 1 << 1 : 0;
+        flags |= this.payload !== undefined ? 1 << 2 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.endpoint !== undefined) {
+          b.write(Primitive.String.write(this.endpoint) as unknown as Buffer);
+        }
+        if (this.query !== undefined) {
+          b.write(Primitive.String.write(this.query) as unknown as Buffer);
+        }
+        if (this.payload !== undefined) {
+          b.write(Primitive.String.write(this.payload) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetStreamingUrl extends TLObject {
+      __response__!: Raw.toncenter.TypeStreamingUrl;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'toncenter.GetStreamingUrl';
+        this.constructorId = 0xcdaf63c7;
+        this.subclassOfId = 0x4c379ca2;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.toncenter.GetStreamingUrl> {
+        // no flags
+        return new Raw.toncenter.GetStreamingUrl();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+  }
+  export namespace wallet {
+    export type TypeTonConnectSessions = Raw.wallet.TonConnectSessions;
+    export type TypeTonConnectPending = Raw.wallet.TonConnectPending;
+    export type TypeTonConnectChallenge = Raw.wallet.TonConnectChallenge;
+    export type TypeNftItems = Raw.wallet.NftItems;
+    export type TypeExistingBalance = Raw.wallet.ExistingBalance;
+    export type TypeProofChallenge = Raw.wallet.ProofChallenge;
+    export type TypeHolderDc = Raw.wallet.HolderDc;
+    export type TypeEncryptedSecretPhrasePart = Raw.wallet.EncryptedSecretPhrasePart;
+    export type TypeSecretPhraseParts = Raw.wallet.SecretPhraseParts;
+    export type TypeTransactions = Raw.wallet.Transactions;
+    export type TypeUserAddresses = Raw.wallet.UserAddresses;
+    export type TypeNftAttribute = Raw.wallet.NftAttribute;
+    export type TypeNftItem = Raw.wallet.NftItem;
+    export class UserAddresses extends TLObject {
+      addresses!: Vector<Raw.TypeWalletUserAddress>;
+      users!: Vector<Raw.TypeUser>;
+
+      constructor(params: {
+        addresses: Vector<Raw.TypeWalletUserAddress>;
+        users: Vector<Raw.TypeUser>;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'wallet.UserAddresses';
+        this.constructorId = 0x928e7b55;
+        this.subclassOfId = 0xd6496be3;
+        this._slots = ['addresses', 'users'];
+        this.addresses = params.addresses;
+        this.users = params.users;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.UserAddresses> {
+        // no flags
+        let addresses = await TLObject.read(_data);
+        let users = await TLObject.read(_data);
+        return new Raw.wallet.UserAddresses({ addresses: addresses, users: users });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.addresses) {
+          b.write(Primitive.Vector.write(this.addresses) as unknown as Buffer);
+        }
+        if (this.users) {
+          b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class Transactions extends TLObject {
+      balance!: long;
+      transactions!: Vector<Raw.TypeWalletTransaction>;
+      nextOffset?: string;
+      chats!: Vector<Raw.TypeChat>;
+      users!: Vector<Raw.TypeUser>;
+
+      constructor(params: {
+        balance: long;
+        transactions: Vector<Raw.TypeWalletTransaction>;
+        nextOffset?: string;
+        chats: Vector<Raw.TypeChat>;
+        users: Vector<Raw.TypeUser>;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'wallet.Transactions';
+        this.constructorId = 0x4322d5a5;
+        this.subclassOfId = 0xda517b1b;
+        this._slots = ['balance', 'transactions', 'nextOffset', 'chats', 'users'];
+        this.balance = params.balance;
+        this.transactions = params.transactions;
+        this.nextOffset = params.nextOffset;
+        this.chats = params.chats;
+        this.users = params.users;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.Transactions> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let balance = await Primitive.Long.read(_data);
+        let transactions = await TLObject.read(_data);
+        let nextOffset = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+        let chats = await TLObject.read(_data);
+        let users = await TLObject.read(_data);
+        return new Raw.wallet.Transactions({
+          balance: balance,
+          transactions: transactions,
+          nextOffset: nextOffset,
+          chats: chats,
+          users: users,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.nextOffset !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.balance !== undefined) {
+          b.write(Primitive.Long.write(this.balance) as unknown as Buffer);
+        }
+        if (this.transactions) {
+          b.write(Primitive.Vector.write(this.transactions) as unknown as Buffer);
+        }
+        if (this.nextOffset !== undefined) {
+          b.write(Primitive.String.write(this.nextOffset) as unknown as Buffer);
+        }
+        if (this.chats) {
+          b.write(Primitive.Vector.write(this.chats) as unknown as Buffer);
+        }
+        if (this.users) {
+          b.write(Primitive.Vector.write(this.users) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class SecretPhraseParts extends TLObject {
+      token!: string;
+      dcs!: Vector<int>;
+
+      constructor(params: { token: string; dcs: Vector<int> }) {
+        super();
+        this.classType = 'types';
+        this.className = 'wallet.SecretPhraseParts';
+        this.constructorId = 0xe6d0ef01;
+        this.subclassOfId = 0x2e71bb10;
+        this._slots = ['token', 'dcs'];
+        this.token = params.token;
+        this.dcs = params.dcs;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.SecretPhraseParts> {
+        // no flags
+        let token = await Primitive.String.read(_data);
+        let dcs = await TLObject.read(_data, Primitive.Int);
+        return new Raw.wallet.SecretPhraseParts({ token: token, dcs: dcs });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.token !== undefined) {
+          b.write(Primitive.String.write(this.token) as unknown as Buffer);
+        }
+        if (this.dcs) {
+          b.write(Primitive.Vector.write(this.dcs, Primitive.Int) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class EncryptedSecretPhrasePart extends TLObject {
+      data!: bytes;
+
+      constructor(params: { data: bytes }) {
+        super();
+        this.classType = 'types';
+        this.className = 'wallet.EncryptedSecretPhrasePart';
+        this.constructorId = 0x18e82537;
+        this.subclassOfId = 0xed624c52;
+        this._slots = ['data'];
+        this.data = params.data;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.EncryptedSecretPhrasePart> {
+        // no flags
+        let data = await Primitive.Bytes.read(_data);
+        return new Raw.wallet.EncryptedSecretPhrasePart({ data: data });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.data !== undefined) {
+          b.write(Primitive.Bytes.write(this.data) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class HolderDc extends TLObject {
+      dc!: int;
+      publicKey!: bytes;
+
+      constructor(params: { dc: int; publicKey: bytes }) {
+        super();
+        this.classType = 'types';
+        this.className = 'wallet.HolderDc';
+        this.constructorId = 0xf9d612ef;
+        this.subclassOfId = 0xf97e469f;
+        this._slots = ['dc', 'publicKey'];
+        this.dc = params.dc;
+        this.publicKey = params.publicKey;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.HolderDc> {
+        // no flags
+        let dc = await Primitive.Int.read(_data);
+        let publicKey = await Primitive.Bytes.read(_data);
+        return new Raw.wallet.HolderDc({ dc: dc, publicKey: publicKey });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.dc !== undefined) {
+          b.write(Primitive.Int.write(this.dc) as unknown as Buffer);
+        }
+        if (this.publicKey !== undefined) {
+          b.write(Primitive.Bytes.write(this.publicKey) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class ProofChallenge extends TLObject {
+      payload!: string;
+      expires!: int;
+      domain!: string;
+
+      constructor(params: { payload: string; expires: int; domain: string }) {
+        super();
+        this.classType = 'types';
+        this.className = 'wallet.ProofChallenge';
+        this.constructorId = 0x99e41707;
+        this.subclassOfId = 0xd8d15305;
+        this._slots = ['payload', 'expires', 'domain'];
+        this.payload = params.payload;
+        this.expires = params.expires;
+        this.domain = params.domain;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.ProofChallenge> {
+        // no flags
+        let payload = await Primitive.String.read(_data);
+        let expires = await Primitive.Int.read(_data);
+        let domain = await Primitive.String.read(_data);
+        return new Raw.wallet.ProofChallenge({
+          payload: payload,
+          expires: expires,
+          domain: domain,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.payload !== undefined) {
+          b.write(Primitive.String.write(this.payload) as unknown as Buffer);
+        }
+        if (this.expires !== undefined) {
+          b.write(Primitive.Int.write(this.expires) as unknown as Buffer);
+        }
+        if (this.domain !== undefined) {
+          b.write(Primitive.String.write(this.domain) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class TonConnectChallenge extends TLObject {
+      challenge!: bytes;
+      eventId!: long;
+
+      constructor(params: { challenge: bytes; eventId: long }) {
+        super();
+        this.classType = 'types';
+        this.className = 'wallet.TonConnectChallenge';
+        this.constructorId = 0x4bc89693;
+        this.subclassOfId = 0x6fc97efe;
+        this._slots = ['challenge', 'eventId'];
+        this.challenge = params.challenge;
+        this.eventId = params.eventId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.TonConnectChallenge> {
+        // no flags
+        let challenge = await Primitive.Bytes.read(_data);
+        let eventId = await Primitive.Long.read(_data);
+        return new Raw.wallet.TonConnectChallenge({ challenge: challenge, eventId: eventId });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.challenge !== undefined) {
+          b.write(Primitive.Bytes.write(this.challenge) as unknown as Buffer);
+        }
+        if (this.eventId !== undefined) {
+          b.write(Primitive.Long.write(this.eventId) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class TonConnectPending extends TLObject {
+      session!: Raw.TypeTonConnectSession;
+      requests!: Vector<Raw.TypeTonConnectRequest>;
+
+      constructor(params: {
+        session: Raw.TypeTonConnectSession;
+        requests: Vector<Raw.TypeTonConnectRequest>;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'wallet.TonConnectPending';
+        this.constructorId = 0x85c0f124;
+        this.subclassOfId = 0x81ebfc36;
+        this._slots = ['session', 'requests'];
+        this.session = params.session;
+        this.requests = params.requests;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.TonConnectPending> {
+        // no flags
+        let session = await TLObject.read(_data);
+        let requests = await TLObject.read(_data);
+        return new Raw.wallet.TonConnectPending({ session: session, requests: requests });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.session !== undefined) {
+          b.write(this.session.write() as unknown as Buffer);
+        }
+        if (this.requests) {
+          b.write(Primitive.Vector.write(this.requests) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class TonConnectSessions extends TLObject {
+      sessions!: Vector<Raw.TypeTonConnectSession>;
+
+      constructor(params: { sessions: Vector<Raw.TypeTonConnectSession> }) {
+        super();
+        this.classType = 'types';
+        this.className = 'wallet.TonConnectSessions';
+        this.constructorId = 0xe1f6896;
+        this.subclassOfId = 0xe7323d24;
+        this._slots = ['sessions'];
+        this.sessions = params.sessions;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.TonConnectSessions> {
+        // no flags
+        let sessions = await TLObject.read(_data);
+        return new Raw.wallet.TonConnectSessions({ sessions: sessions });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.sessions) {
+          b.write(Primitive.Vector.write(this.sessions) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class ExistingBalance extends TLObject {
+      hasBalance?: boolean;
+      url!: string;
+
+      constructor(params: { hasBalance?: boolean; url: string }) {
+        super();
+        this.classType = 'types';
+        this.className = 'wallet.ExistingBalance';
+        this.constructorId = 0xbde90a8d;
+        this.subclassOfId = 0xa739fa56;
+        this._slots = ['hasBalance', 'url'];
+        this.hasBalance = params.hasBalance;
+        this.url = params.url;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.ExistingBalance> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let hasBalance = flags & (1 << 0) ? true : false;
+        let url = await Primitive.String.read(_data);
+        return new Raw.wallet.ExistingBalance({ hasBalance: hasBalance, url: url });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.hasBalance ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.url !== undefined) {
+          b.write(Primitive.String.write(this.url) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class NftAttribute extends TLObject {
+      traitType!: string;
+      value!: string;
+
+      constructor(params: { traitType: string; value: string }) {
+        super();
+        this.classType = 'types';
+        this.className = 'wallet.NftAttribute';
+        this.constructorId = 0x4c1ef10e;
+        this.subclassOfId = 0x530e1841;
+        this._slots = ['traitType', 'value'];
+        this.traitType = params.traitType;
+        this.value = params.value;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.NftAttribute> {
+        // no flags
+        let traitType = await Primitive.String.read(_data);
+        let value = await Primitive.String.read(_data);
+        return new Raw.wallet.NftAttribute({ traitType: traitType, value: value });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.traitType !== undefined) {
+          b.write(Primitive.String.write(this.traitType) as unknown as Buffer);
+        }
+        if (this.value !== undefined) {
+          b.write(Primitive.String.write(this.value) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class NftItem extends TLObject {
+      collectionAddress?: string;
+      address!: string;
+      ownerAddress!: string;
+      index!: string;
+      name?: string;
+      description?: string;
+      image?: Raw.TypeWebDocument;
+      imageSmall?: Raw.TypeWebDocument;
+      contentUrl?: Raw.TypeWebDocument;
+      lottie?: Raw.TypeWebDocument;
+      attributes?: Vector<Raw.wallet.TypeNftAttribute>;
+      extra?: Raw.TypeDataJSON;
+
+      constructor(params: {
+        collectionAddress?: string;
+        address: string;
+        ownerAddress: string;
+        index: string;
+        name?: string;
+        description?: string;
+        image?: Raw.TypeWebDocument;
+        imageSmall?: Raw.TypeWebDocument;
+        contentUrl?: Raw.TypeWebDocument;
+        lottie?: Raw.TypeWebDocument;
+        attributes?: Vector<Raw.wallet.TypeNftAttribute>;
+        extra?: Raw.TypeDataJSON;
+      }) {
+        super();
+        this.classType = 'types';
+        this.className = 'wallet.NftItem';
+        this.constructorId = 0x3441fd1c;
+        this.subclassOfId = 0xd4319a36;
+        this._slots = [
+          'collectionAddress',
+          'address',
+          'ownerAddress',
+          'index',
+          'name',
+          'description',
+          'image',
+          'imageSmall',
+          'contentUrl',
+          'lottie',
+          'attributes',
+          'extra',
+        ];
+        this.collectionAddress = params.collectionAddress;
+        this.address = params.address;
+        this.ownerAddress = params.ownerAddress;
+        this.index = params.index;
+        this.name = params.name;
+        this.description = params.description;
+        this.image = params.image;
+        this.imageSmall = params.imageSmall;
+        this.contentUrl = params.contentUrl;
+        this.lottie = params.lottie;
+        this.attributes = params.attributes;
+        this.extra = params.extra;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.NftItem> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let collectionAddress = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+        let address = await Primitive.String.read(_data);
+        let ownerAddress = await Primitive.String.read(_data);
+        let index = await Primitive.String.read(_data);
+        let name = flags & (1 << 1) ? await Primitive.String.read(_data) : undefined;
+        let description = flags & (1 << 2) ? await Primitive.String.read(_data) : undefined;
+        let image = flags & (1 << 3) ? await TLObject.read(_data) : undefined;
+        let imageSmall = flags & (1 << 4) ? await TLObject.read(_data) : undefined;
+        let contentUrl = flags & (1 << 5) ? await TLObject.read(_data) : undefined;
+        let lottie = flags & (1 << 6) ? await TLObject.read(_data) : undefined;
+        let attributes = flags & (1 << 7) ? await TLObject.read(_data) : [];
+        let extra = flags & (1 << 8) ? await TLObject.read(_data) : undefined;
+        return new Raw.wallet.NftItem({
+          collectionAddress: collectionAddress,
+          address: address,
+          ownerAddress: ownerAddress,
+          index: index,
+          name: name,
+          description: description,
+          image: image,
+          imageSmall: imageSmall,
+          contentUrl: contentUrl,
+          lottie: lottie,
+          attributes: attributes,
+          extra: extra,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.collectionAddress !== undefined ? 1 << 0 : 0;
+        flags |= this.name !== undefined ? 1 << 1 : 0;
+        flags |= this.description !== undefined ? 1 << 2 : 0;
+        flags |= this.image !== undefined ? 1 << 3 : 0;
+        flags |= this.imageSmall !== undefined ? 1 << 4 : 0;
+        flags |= this.contentUrl !== undefined ? 1 << 5 : 0;
+        flags |= this.lottie !== undefined ? 1 << 6 : 0;
+        flags |= this.attributes ? 1 << 7 : 0;
+        flags |= this.extra !== undefined ? 1 << 8 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.collectionAddress !== undefined) {
+          b.write(Primitive.String.write(this.collectionAddress) as unknown as Buffer);
+        }
+        if (this.address !== undefined) {
+          b.write(Primitive.String.write(this.address) as unknown as Buffer);
+        }
+        if (this.ownerAddress !== undefined) {
+          b.write(Primitive.String.write(this.ownerAddress) as unknown as Buffer);
+        }
+        if (this.index !== undefined) {
+          b.write(Primitive.String.write(this.index) as unknown as Buffer);
+        }
+        if (this.name !== undefined) {
+          b.write(Primitive.String.write(this.name) as unknown as Buffer);
+        }
+        if (this.description !== undefined) {
+          b.write(Primitive.String.write(this.description) as unknown as Buffer);
+        }
+        if (this.image !== undefined) {
+          b.write(this.image.write() as unknown as Buffer);
+        }
+        if (this.imageSmall !== undefined) {
+          b.write(this.imageSmall.write() as unknown as Buffer);
+        }
+        if (this.contentUrl !== undefined) {
+          b.write(this.contentUrl.write() as unknown as Buffer);
+        }
+        if (this.lottie !== undefined) {
+          b.write(this.lottie.write() as unknown as Buffer);
+        }
+        if (this.attributes) {
+          b.write(Primitive.Vector.write(this.attributes) as unknown as Buffer);
+        }
+        if (this.extra !== undefined) {
+          b.write(this.extra.write() as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class NftItems extends TLObject {
+      items!: Vector<Raw.wallet.TypeNftItem>;
+      nextOffset?: string;
+
+      constructor(params: { items: Vector<Raw.wallet.TypeNftItem>; nextOffset?: string }) {
+        super();
+        this.classType = 'types';
+        this.className = 'wallet.NftItems';
+        this.constructorId = 0x794d486f;
+        this.subclassOfId = 0xd4606b08;
+        this._slots = ['items', 'nextOffset'];
+        this.items = params.items;
+        this.nextOffset = params.nextOffset;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.NftItems> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let items = await TLObject.read(_data);
+        let nextOffset = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+        return new Raw.wallet.NftItems({ items: items, nextOffset: nextOffset });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.nextOffset !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.items) {
+          b.write(Primitive.Vector.write(this.items) as unknown as Buffer);
+        }
+        if (this.nextOffset !== undefined) {
+          b.write(Primitive.String.write(this.nextOffset) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetState extends TLObject {
+      __response__!: Raw.TypeWalletState;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.GetState';
+        this.constructorId = 0xab83b33a;
+        this.subclassOfId = 0xd479f736;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.GetState> {
+        // no flags
+        return new Raw.wallet.GetState();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetUserAddresses extends TLObject {
+      __response__!: Raw.wallet.TypeUserAddresses;
+      force?: boolean;
+      id!: Vector<Raw.TypeInputUser>;
+      addresses!: Vector<string>;
+
+      constructor(params: {
+        force?: boolean;
+        id: Vector<Raw.TypeInputUser>;
+        addresses: Vector<string>;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.GetUserAddresses';
+        this.constructorId = 0x5275dfdd;
+        this.subclassOfId = 0xd6496be3;
+        this._slots = ['force', 'id', 'addresses'];
+        this.force = params.force;
+        this.id = params.id;
+        this.addresses = params.addresses;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.GetUserAddresses> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let force = flags & (1 << 0) ? true : false;
+        let id = await TLObject.read(_data);
+        let addresses = await TLObject.read(_data, Primitive.String);
+        return new Raw.wallet.GetUserAddresses({ force: force, id: id, addresses: addresses });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.force ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.id) {
+          b.write(Primitive.Vector.write(this.id) as unknown as Buffer);
+        }
+        if (this.addresses) {
+          b.write(Primitive.Vector.write(this.addresses, Primitive.String) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetTransactions extends TLObject {
+      __response__!: Raw.wallet.TypeTransactions;
+      inbound?: boolean;
+      outbound?: boolean;
+      offset!: string;
+      limit!: int;
+
+      constructor(params: { inbound?: boolean; outbound?: boolean; offset: string; limit: int }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.GetTransactions';
+        this.constructorId = 0xa8830a83;
+        this.subclassOfId = 0xda517b1b;
+        this._slots = ['inbound', 'outbound', 'offset', 'limit'];
+        this.inbound = params.inbound;
+        this.outbound = params.outbound;
+        this.offset = params.offset;
+        this.limit = params.limit;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.GetTransactions> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let inbound = flags & (1 << 0) ? true : false;
+        let outbound = flags & (1 << 1) ? true : false;
+        let offset = await Primitive.String.read(_data);
+        let limit = await Primitive.Int.read(_data);
+        return new Raw.wallet.GetTransactions({
+          inbound: inbound,
+          outbound: outbound,
+          offset: offset,
+          limit: limit,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.inbound ? 1 << 0 : 0;
+        flags |= this.outbound ? 1 << 1 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.offset !== undefined) {
+          b.write(Primitive.String.write(this.offset) as unknown as Buffer);
+        }
+        if (this.limit !== undefined) {
+          b.write(Primitive.Int.write(this.limit) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetTransactionsByIDs extends TLObject {
+      __response__!: Raw.wallet.TypeTransactions;
+      id!: Vector<string>;
+
+      constructor(params: { id: Vector<string> }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.GetTransactionsByIDs';
+        this.constructorId = 0x811ceab6;
+        this.subclassOfId = 0xda517b1b;
+        this._slots = ['id'];
+        this.id = params.id;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.GetTransactionsByIDs> {
+        // no flags
+        let id = await TLObject.read(_data, Primitive.String);
+        return new Raw.wallet.GetTransactionsByIDs({ id: id });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.id) {
+          b.write(Primitive.Vector.write(this.id, Primitive.String) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetTransactionsByMsgHash extends TLObject {
+      __response__!: Raw.wallet.TypeTransactions;
+      msgHash!: Vector<string>;
+
+      constructor(params: { msgHash: Vector<string> }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.GetTransactionsByMsgHash';
+        this.constructorId = 0xa6bb795d;
+        this.subclassOfId = 0xda517b1b;
+        this._slots = ['msgHash'];
+        this.msgHash = params.msgHash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.GetTransactionsByMsgHash> {
+        // no flags
+        let msgHash = await TLObject.read(_data, Primitive.String);
+        return new Raw.wallet.GetTransactionsByMsgHash({ msgHash: msgHash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.msgHash) {
+          b.write(Primitive.Vector.write(this.msgHash, Primitive.String) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class ExportSecretPhrase extends TLObject {
+      __response__!: Raw.wallet.TypeSecretPhraseParts;
+      password?: Raw.TypeInputCheckPasswordSRP;
+
+      constructor(params: { password?: Raw.TypeInputCheckPasswordSRP }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.ExportSecretPhrase';
+        this.constructorId = 0x9077c9ac;
+        this.subclassOfId = 0x2e71bb10;
+        this._slots = ['password'];
+        this.password = params.password;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.ExportSecretPhrase> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let password = flags & (1 << 0) ? await TLObject.read(_data) : undefined;
+        return new Raw.wallet.ExportSecretPhrase({ password: password });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.password !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.password !== undefined) {
+          b.write(this.password.write() as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class FetchEncryptedSecretPhrasePart extends TLObject {
+      __response__!: Raw.wallet.TypeEncryptedSecretPhrasePart;
+      token!: string;
+      publicKey!: bytes;
+
+      constructor(params: { token: string; publicKey: bytes }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.FetchEncryptedSecretPhrasePart';
+        this.constructorId = 0xf53925cf;
+        this.subclassOfId = 0xed624c52;
+        this._slots = ['token', 'publicKey'];
+        this.token = params.token;
+        this.publicKey = params.publicKey;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.FetchEncryptedSecretPhrasePart> {
+        // no flags
+        let token = await Primitive.String.read(_data);
+        let publicKey = await Primitive.Bytes.read(_data);
+        return new Raw.wallet.FetchEncryptedSecretPhrasePart({
+          token: token,
+          publicKey: publicKey,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.token !== undefined) {
+          b.write(Primitive.String.write(this.token) as unknown as Buffer);
+        }
+        if (this.publicKey !== undefined) {
+          b.write(Primitive.Bytes.write(this.publicKey) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class ReplaceWallet extends TLObject {
+      __response__!: Raw.TypeWalletState;
+      wallet!: Raw.TypeInputWalletReplacement;
+      password?: Raw.TypeInputCheckPasswordSRP;
+
+      constructor(params: {
+        wallet: Raw.TypeInputWalletReplacement;
+        password?: Raw.TypeInputCheckPasswordSRP;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.ReplaceWallet';
+        this.constructorId = 0xd8c72eec;
+        this.subclassOfId = 0xd479f736;
+        this._slots = ['wallet', 'password'];
+        this.wallet = params.wallet;
+        this.password = params.password;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.ReplaceWallet> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let wallet = await TLObject.read(_data);
+        let password = flags & (1 << 0) ? await TLObject.read(_data) : undefined;
+        return new Raw.wallet.ReplaceWallet({ wallet: wallet, password: password });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.password !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.wallet !== undefined) {
+          b.write(this.wallet.write() as unknown as Buffer);
+        }
+        if (this.password !== undefined) {
+          b.write(this.password.write() as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class DisableBackup extends TLObject {
+      __response__!: Raw.TypeWalletState;
+      password?: Raw.TypeInputCheckPasswordSRP;
+      newPublicKey?: bytes;
+      proof?: Raw.TypeWalletOwnershipProof;
+
+      constructor(params: {
+        password?: Raw.TypeInputCheckPasswordSRP;
+        newPublicKey?: bytes;
+        proof?: Raw.TypeWalletOwnershipProof;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.DisableBackup';
+        this.constructorId = 0xb0bf0da;
+        this.subclassOfId = 0xd479f736;
+        this._slots = ['password', 'newPublicKey', 'proof'];
+        this.password = params.password;
+        this.newPublicKey = params.newPublicKey;
+        this.proof = params.proof;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.DisableBackup> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let password = flags & (1 << 0) ? await TLObject.read(_data) : undefined;
+        let newPublicKey = flags & (1 << 1) ? await Primitive.Bytes.read(_data) : undefined;
+        let proof = flags & (1 << 2) ? await TLObject.read(_data) : undefined;
+        return new Raw.wallet.DisableBackup({
+          password: password,
+          newPublicKey: newPublicKey,
+          proof: proof,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.password !== undefined ? 1 << 0 : 0;
+        flags |= this.newPublicKey !== undefined ? 1 << 1 : 0;
+        flags |= this.proof !== undefined ? 1 << 2 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.password !== undefined) {
+          b.write(this.password.write() as unknown as Buffer);
+        }
+        if (this.newPublicKey !== undefined) {
+          b.write(Primitive.Bytes.write(this.newPublicKey) as unknown as Buffer);
+        }
+        if (this.proof !== undefined) {
+          b.write(this.proof.write() as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetBackupHolderDcs extends TLObject {
+      __response__!: Vector<Raw.wallet.TypeHolderDc>;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.GetBackupHolderDcs';
+        this.constructorId = 0xd179d494;
+        this.subclassOfId = 0xdc46ac22;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.GetBackupHolderDcs> {
+        // no flags
+        return new Raw.wallet.GetBackupHolderDcs();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class EnableBackup extends TLObject {
+      __response__!: Raw.TypeWalletState;
+      parts!: Vector<bytes>;
+      newPublicKey?: bytes;
+      proof?: Raw.TypeWalletOwnershipProof;
+
+      constructor(params: {
+        parts: Vector<bytes>;
+        newPublicKey?: bytes;
+        proof?: Raw.TypeWalletOwnershipProof;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.EnableBackup';
+        this.constructorId = 0x4500c525;
+        this.subclassOfId = 0xd479f736;
+        this._slots = ['parts', 'newPublicKey', 'proof'];
+        this.parts = params.parts;
+        this.newPublicKey = params.newPublicKey;
+        this.proof = params.proof;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.EnableBackup> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let parts = await TLObject.read(_data, Primitive.Bytes);
+        let newPublicKey = flags & (1 << 1) ? await Primitive.Bytes.read(_data) : undefined;
+        let proof = flags & (1 << 2) ? await TLObject.read(_data) : undefined;
+        return new Raw.wallet.EnableBackup({
+          parts: parts,
+          newPublicKey: newPublicKey,
+          proof: proof,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.newPublicKey !== undefined ? 1 << 1 : 0;
+        flags |= this.proof !== undefined ? 1 << 2 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.parts) {
+          b.write(Primitive.Vector.write(this.parts, Primitive.Bytes) as unknown as Buffer);
+        }
+        if (this.newPublicKey !== undefined) {
+          b.write(Primitive.Bytes.write(this.newPublicKey) as unknown as Buffer);
+        }
+        if (this.proof !== undefined) {
+          b.write(this.proof.write() as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetProofChallenge extends TLObject {
+      __response__!: Raw.wallet.TypeProofChallenge;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.GetProofChallenge';
+        this.constructorId = 0x2025e697;
+        this.subclassOfId = 0xd8d15305;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.GetProofChallenge> {
+        // no flags
+        return new Raw.wallet.GetProofChallenge();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class SendTransfer extends TLObject {
+      __response__!: Raw.TypeUpdates;
+      dataNormal!: bytes;
+      dataGasless?: bytes;
+      userId!: Raw.TypeInputUser;
+      randomId!: long;
+
+      constructor(params: {
+        dataNormal: bytes;
+        dataGasless?: bytes;
+        userId: Raw.TypeInputUser;
+        randomId: long;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.SendTransfer';
+        this.constructorId = 0xd9e5d9e2;
+        this.subclassOfId = 0x8af52aac;
+        this._slots = ['dataNormal', 'dataGasless', 'userId', 'randomId'];
+        this.dataNormal = params.dataNormal;
+        this.dataGasless = params.dataGasless;
+        this.userId = params.userId;
+        this.randomId = params.randomId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.SendTransfer> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let dataNormal = await Primitive.Bytes.read(_data);
+        let dataGasless = flags & (1 << 0) ? await Primitive.Bytes.read(_data) : undefined;
+        let userId = await TLObject.read(_data);
+        let randomId = await Primitive.Long.read(_data);
+        return new Raw.wallet.SendTransfer({
+          dataNormal: dataNormal,
+          dataGasless: dataGasless,
+          userId: userId,
+          randomId: randomId,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.dataGasless !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.dataNormal !== undefined) {
+          b.write(Primitive.Bytes.write(this.dataNormal) as unknown as Buffer);
+        }
+        if (this.dataGasless !== undefined) {
+          b.write(Primitive.Bytes.write(this.dataGasless) as unknown as Buffer);
+        }
+        if (this.userId !== undefined) {
+          b.write(this.userId.write() as unknown as Buffer);
+        }
+        if (this.randomId !== undefined) {
+          b.write(Primitive.Long.write(this.randomId) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetGaslessInfo extends TLObject {
+      __response__!: Raw.TypeUpdates;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.GetGaslessInfo';
+        this.constructorId = 0x742df0a1;
+        this.subclassOfId = 0x8af52aac;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.GetGaslessInfo> {
+        // no flags
+        return new Raw.wallet.GetGaslessInfo();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetExistingWaltBalance extends TLObject {
+      __response__!: Raw.wallet.TypeExistingBalance;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.GetExistingWaltBalance';
+        this.constructorId = 0x691f4360;
+        this.subclassOfId = 0xa739fa56;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.GetExistingWaltBalance> {
+        // no flags
+        return new Raw.wallet.GetExistingWaltBalance();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetNfts extends TLObject {
+      __response__!: Raw.wallet.TypeNftItems;
+      offset!: string;
+      limit!: int;
+
+      constructor(params: { offset: string; limit: int }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.GetNfts';
+        this.constructorId = 0x8c12f3a4;
+        this.subclassOfId = 0xd4606b08;
+        this._slots = ['offset', 'limit'];
+        this.offset = params.offset;
+        this.limit = params.limit;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.GetNfts> {
+        // no flags
+        let offset = await Primitive.String.read(_data);
+        let limit = await Primitive.Int.read(_data);
+        return new Raw.wallet.GetNfts({ offset: offset, limit: limit });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.offset !== undefined) {
+          b.write(Primitive.String.write(this.offset) as unknown as Buffer);
+        }
+        if (this.limit !== undefined) {
+          b.write(Primitive.Int.write(this.limit) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class TonConnectCreateSession extends TLObject {
+      __response__!: Raw.TypeTonConnectSession;
+      dappClientId!: string;
+      manifestUrl!: string;
+
+      constructor(params: { dappClientId: string; manifestUrl: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.TonConnectCreateSession';
+        this.constructorId = 0xcc931046;
+        this.subclassOfId = 0xc7239cb0;
+        this._slots = ['dappClientId', 'manifestUrl'];
+        this.dappClientId = params.dappClientId;
+        this.manifestUrl = params.manifestUrl;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.TonConnectCreateSession> {
+        // no flags
+        let dappClientId = await Primitive.String.read(_data);
+        let manifestUrl = await Primitive.String.read(_data);
+        return new Raw.wallet.TonConnectCreateSession({
+          dappClientId: dappClientId,
+          manifestUrl: manifestUrl,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.dappClientId !== undefined) {
+          b.write(Primitive.String.write(this.dappClientId) as unknown as Buffer);
+        }
+        if (this.manifestUrl !== undefined) {
+          b.write(Primitive.String.write(this.manifestUrl) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class TonConnectRegisterKey extends TLObject {
+      __response__!: Raw.wallet.TypeTonConnectChallenge;
+      sessionId!: long;
+      clientId!: string;
+
+      constructor(params: { sessionId: long; clientId: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.TonConnectRegisterKey';
+        this.constructorId = 0x338bcf1c;
+        this.subclassOfId = 0x6fc97efe;
+        this._slots = ['sessionId', 'clientId'];
+        this.sessionId = params.sessionId;
+        this.clientId = params.clientId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.TonConnectRegisterKey> {
+        // no flags
+        let sessionId = await Primitive.Long.read(_data);
+        let clientId = await Primitive.String.read(_data);
+        return new Raw.wallet.TonConnectRegisterKey({ sessionId: sessionId, clientId: clientId });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.sessionId !== undefined) {
+          b.write(Primitive.Long.write(this.sessionId) as unknown as Buffer);
+        }
+        if (this.clientId !== undefined) {
+          b.write(Primitive.String.write(this.clientId) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class TonConnectSubmitConnectResult extends TLObject {
+      __response__!: Bool;
+      error?: boolean;
+      sessionId!: long;
+      challengeAnswer!: bytes;
+      body!: bytes;
+      traceId?: string;
+
+      constructor(params: {
+        error?: boolean;
+        sessionId: long;
+        challengeAnswer: bytes;
+        body: bytes;
+        traceId?: string;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.TonConnectSubmitConnectResult';
+        this.constructorId = 0xc2c00779;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['error', 'sessionId', 'challengeAnswer', 'body', 'traceId'];
+        this.error = params.error;
+        this.sessionId = params.sessionId;
+        this.challengeAnswer = params.challengeAnswer;
+        this.body = params.body;
+        this.traceId = params.traceId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.TonConnectSubmitConnectResult> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let error = flags & (1 << 0) ? true : false;
+        let sessionId = await Primitive.Long.read(_data);
+        let challengeAnswer = await Primitive.Bytes.read(_data);
+        let body = await Primitive.Bytes.read(_data);
+        let traceId = flags & (1 << 1) ? await Primitive.String.read(_data) : undefined;
+        return new Raw.wallet.TonConnectSubmitConnectResult({
+          error: error,
+          sessionId: sessionId,
+          challengeAnswer: challengeAnswer,
+          body: body,
+          traceId: traceId,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.error ? 1 << 0 : 0;
+        flags |= this.traceId !== undefined ? 1 << 1 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.sessionId !== undefined) {
+          b.write(Primitive.Long.write(this.sessionId) as unknown as Buffer);
+        }
+        if (this.challengeAnswer !== undefined) {
+          b.write(Primitive.Bytes.write(this.challengeAnswer) as unknown as Buffer);
+        }
+        if (this.body !== undefined) {
+          b.write(Primitive.Bytes.write(this.body) as unknown as Buffer);
+        }
+        if (this.traceId !== undefined) {
+          b.write(Primitive.String.write(this.traceId) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class TonConnectGetPending extends TLObject {
+      __response__!: Raw.wallet.TypeTonConnectPending;
+      dappClientId?: string;
+      sessionId?: long;
+
+      constructor(params: { dappClientId?: string; sessionId?: long }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.TonConnectGetPending';
+        this.constructorId = 0x11aee065;
+        this.subclassOfId = 0x81ebfc36;
+        this._slots = ['dappClientId', 'sessionId'];
+        this.dappClientId = params.dappClientId;
+        this.sessionId = params.sessionId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.TonConnectGetPending> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let dappClientId = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+        let sessionId = flags & (1 << 1) ? await Primitive.Long.read(_data) : undefined;
+        return new Raw.wallet.TonConnectGetPending({
+          dappClientId: dappClientId,
+          sessionId: sessionId,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.dappClientId !== undefined ? 1 << 0 : 0;
+        flags |= this.sessionId !== undefined ? 1 << 1 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.dappClientId !== undefined) {
+          b.write(Primitive.String.write(this.dappClientId) as unknown as Buffer);
+        }
+        if (this.sessionId !== undefined) {
+          b.write(Primitive.Long.write(this.sessionId) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class TonConnectClaimRequest extends TLObject {
+      __response__!: Bool;
+      declined?: boolean;
+      sessionId!: long;
+      msgId!: int;
+      appRequestId!: string;
+      challengeAnswer?: bytes;
+
+      constructor(params: {
+        declined?: boolean;
+        sessionId: long;
+        msgId: int;
+        appRequestId: string;
+        challengeAnswer?: bytes;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.TonConnectClaimRequest';
+        this.constructorId = 0x66b57b41;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['declined', 'sessionId', 'msgId', 'appRequestId', 'challengeAnswer'];
+        this.declined = params.declined;
+        this.sessionId = params.sessionId;
+        this.msgId = params.msgId;
+        this.appRequestId = params.appRequestId;
+        this.challengeAnswer = params.challengeAnswer;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.TonConnectClaimRequest> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let declined = flags & (1 << 1) ? true : false;
+        let sessionId = await Primitive.Long.read(_data);
+        let msgId = await Primitive.Int.read(_data);
+        let appRequestId = await Primitive.String.read(_data);
+        let challengeAnswer = flags & (1 << 0) ? await Primitive.Bytes.read(_data) : undefined;
+        return new Raw.wallet.TonConnectClaimRequest({
+          declined: declined,
+          sessionId: sessionId,
+          msgId: msgId,
+          appRequestId: appRequestId,
+          challengeAnswer: challengeAnswer,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.declined ? 1 << 1 : 0;
+        flags |= this.challengeAnswer !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.sessionId !== undefined) {
+          b.write(Primitive.Long.write(this.sessionId) as unknown as Buffer);
+        }
+        if (this.msgId !== undefined) {
+          b.write(Primitive.Int.write(this.msgId) as unknown as Buffer);
+        }
+        if (this.appRequestId !== undefined) {
+          b.write(Primitive.String.write(this.appRequestId) as unknown as Buffer);
+        }
+        if (this.challengeAnswer !== undefined) {
+          b.write(Primitive.Bytes.write(this.challengeAnswer) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class TonConnectSubmitResponse extends TLObject {
+      __response__!: Bool;
+      sessionId!: long;
+      msgId!: int;
+      body!: bytes;
+      traceId?: string;
+
+      constructor(params: { sessionId: long; msgId: int; body: bytes; traceId?: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.TonConnectSubmitResponse';
+        this.constructorId = 0xfac67d3c;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['sessionId', 'msgId', 'body', 'traceId'];
+        this.sessionId = params.sessionId;
+        this.msgId = params.msgId;
+        this.body = params.body;
+        this.traceId = params.traceId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.TonConnectSubmitResponse> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let sessionId = await Primitive.Long.read(_data);
+        let msgId = await Primitive.Int.read(_data);
+        let body = await Primitive.Bytes.read(_data);
+        let traceId = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+        return new Raw.wallet.TonConnectSubmitResponse({
+          sessionId: sessionId,
+          msgId: msgId,
+          body: body,
+          traceId: traceId,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.traceId !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.sessionId !== undefined) {
+          b.write(Primitive.Long.write(this.sessionId) as unknown as Buffer);
+        }
+        if (this.msgId !== undefined) {
+          b.write(Primitive.Int.write(this.msgId) as unknown as Buffer);
+        }
+        if (this.body !== undefined) {
+          b.write(Primitive.Bytes.write(this.body) as unknown as Buffer);
+        }
+        if (this.traceId !== undefined) {
+          b.write(Primitive.String.write(this.traceId) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class TonConnectNextEventId extends TLObject {
+      __response__!: Raw.TypeTonConnectNextEventId;
+      sessionId!: long;
+
+      constructor(params: { sessionId: long }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.TonConnectNextEventId';
+        this.constructorId = 0x775d7244;
+        this.subclassOfId = 0x2615ce73;
+        this._slots = ['sessionId'];
+        this.sessionId = params.sessionId;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.TonConnectNextEventId> {
+        // no flags
+        let sessionId = await Primitive.Long.read(_data);
+        return new Raw.wallet.TonConnectNextEventId({ sessionId: sessionId });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.sessionId !== undefined) {
+          b.write(Primitive.Long.write(this.sessionId) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class TonConnectCloseSession extends TLObject {
+      __response__!: Bool;
+      sessionId!: long;
+      body?: bytes;
+
+      constructor(params: { sessionId: long; body?: bytes }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.TonConnectCloseSession';
+        this.constructorId = 0xd63f61ce;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['sessionId', 'body'];
+        this.sessionId = params.sessionId;
+        this.body = params.body;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.TonConnectCloseSession> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let sessionId = await Primitive.Long.read(_data);
+        let body = flags & (1 << 0) ? await Primitive.Bytes.read(_data) : undefined;
+        return new Raw.wallet.TonConnectCloseSession({ sessionId: sessionId, body: body });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.body !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.sessionId !== undefined) {
+          b.write(Primitive.Long.write(this.sessionId) as unknown as Buffer);
+        }
+        if (this.body !== undefined) {
+          b.write(Primitive.Bytes.write(this.body) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class TonConnectGetSessions extends TLObject {
+      __response__!: Raw.wallet.TypeTonConnectSessions;
+
+      constructor() {
+        super();
+        this.classType = 'functions';
+        this.className = 'wallet.TonConnectGetSessions';
+        this.constructorId = 0xa7ffb56e;
+        this.subclassOfId = 0xe7323d24;
+        this._slots = [];
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.wallet.TonConnectGetSessions> {
+        // no flags
+        return new Raw.wallet.TonConnectGetSessions();
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
     }
