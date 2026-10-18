@@ -36,7 +36,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 230;
+  export const Layer: number = 231;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -1044,6 +1044,7 @@ export namespace Raw {
     | Raw.InputChatTheme
     | Raw.InputChatThemeUniqueGift;
   export type TypeDialogFilterSuggested = Raw.DialogFilterSuggested;
+  export type TypeInputTonConnectOauthSession = Raw.InputTonConnectOauthSession;
   export type TypeUrlAuthResult =
     | Raw.UrlAuthResultRequest
     | Raw.UrlAuthResultAccepted
@@ -56119,6 +56120,7 @@ export namespace Raw {
     requestPhoneNumber?: boolean;
     matchCodesFirst?: boolean;
     isApp?: boolean;
+    requestWallet?: boolean;
     bot!: Raw.TypeUser;
     domain!: string;
     browser?: string;
@@ -56128,12 +56130,15 @@ export namespace Raw {
     matchCodes?: Vector<string>;
     userIdHint?: long;
     verifiedAppName?: string;
+    tcSessionId?: long;
+    tcClientId?: string;
 
     constructor(params: {
       requestWriteAccess?: boolean;
       requestPhoneNumber?: boolean;
       matchCodesFirst?: boolean;
       isApp?: boolean;
+      requestWallet?: boolean;
       bot: Raw.TypeUser;
       domain: string;
       browser?: string;
@@ -56143,17 +56148,20 @@ export namespace Raw {
       matchCodes?: Vector<string>;
       userIdHint?: long;
       verifiedAppName?: string;
+      tcSessionId?: long;
+      tcClientId?: string;
     }) {
       super();
       this.classType = 'types';
       this.className = 'UrlAuthResultRequest';
-      this.constructorId = 0x3cd623ec;
+      this.constructorId = 0xbdca6167;
       this.subclassOfId = 0x7765cb1e;
       this._slots = [
         'requestWriteAccess',
         'requestPhoneNumber',
         'matchCodesFirst',
         'isApp',
+        'requestWallet',
         'bot',
         'domain',
         'browser',
@@ -56163,11 +56171,14 @@ export namespace Raw {
         'matchCodes',
         'userIdHint',
         'verifiedAppName',
+        'tcSessionId',
+        'tcClientId',
       ];
       this.requestWriteAccess = params.requestWriteAccess;
       this.requestPhoneNumber = params.requestPhoneNumber;
       this.matchCodesFirst = params.matchCodesFirst;
       this.isApp = params.isApp;
+      this.requestWallet = params.requestWallet;
       this.bot = params.bot;
       this.domain = params.domain;
       this.browser = params.browser;
@@ -56177,6 +56188,8 @@ export namespace Raw {
       this.matchCodes = params.matchCodes;
       this.userIdHint = params.userIdHint;
       this.verifiedAppName = params.verifiedAppName;
+      this.tcSessionId = params.tcSessionId;
+      this.tcClientId = params.tcClientId;
     }
     /**
      * Generate the TLObject from buffer.
@@ -56192,6 +56205,7 @@ export namespace Raw {
       let requestPhoneNumber = flags & (1 << 1) ? true : false;
       let matchCodesFirst = flags & (1 << 5) ? true : false;
       let isApp = flags & (1 << 6) ? true : false;
+      let requestWallet = flags & (1 << 8) ? true : false;
       let bot = await TLObject.read(_data);
       let domain = await Primitive.String.read(_data);
       let browser = flags & (1 << 2) ? await Primitive.String.read(_data) : undefined;
@@ -56201,11 +56215,14 @@ export namespace Raw {
       let matchCodes = flags & (1 << 3) ? await TLObject.read(_data, Primitive.String) : [];
       let userIdHint = flags & (1 << 4) ? await Primitive.Long.read(_data) : undefined;
       let verifiedAppName = flags & (1 << 7) ? await Primitive.String.read(_data) : undefined;
+      let tcSessionId = flags & (1 << 9) ? await Primitive.Long.read(_data) : undefined;
+      let tcClientId = flags & (1 << 10) ? await Primitive.String.read(_data) : undefined;
       return new Raw.UrlAuthResultRequest({
         requestWriteAccess: requestWriteAccess,
         requestPhoneNumber: requestPhoneNumber,
         matchCodesFirst: matchCodesFirst,
         isApp: isApp,
+        requestWallet: requestWallet,
         bot: bot,
         domain: domain,
         browser: browser,
@@ -56215,6 +56232,8 @@ export namespace Raw {
         matchCodes: matchCodes,
         userIdHint: userIdHint,
         verifiedAppName: verifiedAppName,
+        tcSessionId: tcSessionId,
+        tcClientId: tcClientId,
       });
     }
     /**
@@ -56230,6 +56249,7 @@ export namespace Raw {
       flags |= this.requestPhoneNumber ? 1 << 1 : 0;
       flags |= this.matchCodesFirst ? 1 << 5 : 0;
       flags |= this.isApp ? 1 << 6 : 0;
+      flags |= this.requestWallet ? 1 << 8 : 0;
       flags |= this.browser !== undefined ? 1 << 2 : 0;
       flags |= this.platform !== undefined ? 1 << 2 : 0;
       flags |= this.ip !== undefined ? 1 << 2 : 0;
@@ -56237,6 +56257,8 @@ export namespace Raw {
       flags |= this.matchCodes ? 1 << 3 : 0;
       flags |= this.userIdHint !== undefined ? 1 << 4 : 0;
       flags |= this.verifiedAppName !== undefined ? 1 << 7 : 0;
+      flags |= this.tcSessionId !== undefined ? 1 << 9 : 0;
+      flags |= this.tcClientId !== undefined ? 1 << 10 : 0;
       b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
       if (this.bot !== undefined) {
@@ -56265,6 +56287,12 @@ export namespace Raw {
       }
       if (this.verifiedAppName !== undefined) {
         b.write(Primitive.String.write(this.verifiedAppName) as unknown as Buffer);
+      }
+      if (this.tcSessionId !== undefined) {
+        b.write(Primitive.Long.write(this.tcSessionId) as unknown as Buffer);
+      }
+      if (this.tcClientId !== undefined) {
+        b.write(Primitive.String.write(this.tcClientId) as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -81182,6 +81210,71 @@ export namespace Raw {
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
   }
+  export class InputTonConnectOauthSession extends TLObject {
+    sessionId!: long;
+    challengeAnswer!: bytes;
+    body!: bytes;
+    proof!: Raw.TypeWalletOwnershipProof;
+
+    constructor(params: {
+      sessionId: long;
+      challengeAnswer: bytes;
+      body: bytes;
+      proof: Raw.TypeWalletOwnershipProof;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputTonConnectOauthSession';
+      this.constructorId = 0x629f66ce;
+      this.subclassOfId = 0xc919557e;
+      this._slots = ['sessionId', 'challengeAnswer', 'body', 'proof'];
+      this.sessionId = params.sessionId;
+      this.challengeAnswer = params.challengeAnswer;
+      this.body = params.body;
+      this.proof = params.proof;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.InputTonConnectOauthSession> {
+      // no flags
+      let sessionId = await Primitive.Long.read(_data);
+      let challengeAnswer = await Primitive.Bytes.read(_data);
+      let body = await Primitive.Bytes.read(_data);
+      let proof = await TLObject.read(_data);
+      return new Raw.InputTonConnectOauthSession({
+        sessionId: sessionId,
+        challengeAnswer: challengeAnswer,
+        body: body,
+        proof: proof,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.sessionId !== undefined) {
+        b.write(Primitive.Long.write(this.sessionId) as unknown as Buffer);
+      }
+      if (this.challengeAnswer !== undefined) {
+        b.write(Primitive.Bytes.write(this.challengeAnswer) as unknown as Buffer);
+      }
+      if (this.body !== undefined) {
+        b.write(Primitive.Bytes.write(this.body) as unknown as Buffer);
+      }
+      if (this.proof !== undefined) {
+        b.write(this.proof.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
   export class InvokeAfterMsg extends TLObject {
     __response__!: X;
     msgId!: long;
@@ -104688,6 +104781,7 @@ export namespace Raw {
       buttonId?: int;
       url?: string;
       matchCode?: string;
+      tonconnectSession?: Raw.TypeInputTonConnectOauthSession;
 
       constructor(params: {
         writeAllowed?: boolean;
@@ -104697,11 +104791,12 @@ export namespace Raw {
         buttonId?: int;
         url?: string;
         matchCode?: string;
+        tonconnectSession?: Raw.TypeInputTonConnectOauthSession;
       }) {
         super();
         this.classType = 'functions';
         this.className = 'messages.AcceptUrlAuth';
-        this.constructorId = 0x67a3f0de;
+        this.constructorId = 0x18dd4e92;
         this.subclassOfId = 0x7765cb1e;
         this._slots = [
           'writeAllowed',
@@ -104711,6 +104806,7 @@ export namespace Raw {
           'buttonId',
           'url',
           'matchCode',
+          'tonconnectSession',
         ];
         this.writeAllowed = params.writeAllowed;
         this.sharePhoneNumber = params.sharePhoneNumber;
@@ -104719,6 +104815,7 @@ export namespace Raw {
         this.buttonId = params.buttonId;
         this.url = params.url;
         this.matchCode = params.matchCode;
+        this.tonconnectSession = params.tonconnectSession;
       }
       /**
        * Generate the TLObject from buffer.
@@ -104737,6 +104834,7 @@ export namespace Raw {
         let buttonId = flags & (1 << 1) ? await Primitive.Int.read(_data) : undefined;
         let url = flags & (1 << 2) ? await Primitive.String.read(_data) : undefined;
         let matchCode = flags & (1 << 4) ? await Primitive.String.read(_data) : undefined;
+        let tonconnectSession = flags & (1 << 5) ? await TLObject.read(_data) : undefined;
         return new Raw.messages.AcceptUrlAuth({
           writeAllowed: writeAllowed,
           sharePhoneNumber: sharePhoneNumber,
@@ -104745,6 +104843,7 @@ export namespace Raw {
           buttonId: buttonId,
           url: url,
           matchCode: matchCode,
+          tonconnectSession: tonconnectSession,
         });
       }
       /**
@@ -104763,6 +104862,7 @@ export namespace Raw {
         flags |= this.buttonId !== undefined ? 1 << 1 : 0;
         flags |= this.url !== undefined ? 1 << 2 : 0;
         flags |= this.matchCode !== undefined ? 1 << 4 : 0;
+        flags |= this.tonconnectSession !== undefined ? 1 << 5 : 0;
         b.write(Primitive.Int.write(flags) as unknown as Buffer);
 
         if (this.peer !== undefined) {
@@ -104779,6 +104879,9 @@ export namespace Raw {
         }
         if (this.matchCode !== undefined) {
           b.write(Primitive.String.write(this.matchCode) as unknown as Buffer);
+        }
+        if (this.tonconnectSession !== undefined) {
+          b.write(this.tonconnectSession.write() as unknown as Buffer);
         }
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
