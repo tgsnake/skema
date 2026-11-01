@@ -5,7 +5,7 @@ on:
     - cron: '0 0 1 * *'
 jobs:
   sync-tl:
-    name: Setup NodeJS and Deno
+    name: Setup NodeJS
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -16,7 +16,6 @@ jobs:
         run: |
           yarn config set enableImmutableInstalls false
           yarn install
-          yarn add --dev cheerio
           node ./generator/sync-error/index.js
           yarn build:error
           yarn build
