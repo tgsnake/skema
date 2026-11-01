@@ -10,29 +10,29 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import * as cheerio from 'cheerio';
+// import * as cheerio from 'cheerio';
 
-const reHref = /^\/file\/\d+\/\d+\/[^/]+?(?<extension>\.json+)\/(?<hash>[a-fA-F0-9]+)$/;
+// const reHref = /^\/file\/\d+\/\d+\/[^/]+?(?<extension>\.json+)\/(?<hash>[a-fA-F0-9]+)$/;
 const base = 'https://corefork.telegram.org';
-async function getHref() {
-  const html = await fetch(`${base}/api/errors`, { method: 'GET', mode: 'cors' }).then((res) =>
-    res.text(),
-  );
-  const $ = cheerio.load(html);
-  let href = '';
-  $('p').each((i, el) => {
-    const aTag = $(el).find('a');
-    if (aTag) {
-      const _href = $(aTag).attr('href');
-      if (reHref.test(_href)) {
-        return (href = _href);
-      }
-    }
-  });
-  return href;
-}
+// async function getHref() {
+//   const html = await fetch(`${base}/api/errors`, { method: 'GET', mode: 'cors' }).then((res) =>
+//     res.text(),
+//   );
+//   const $ = cheerio.load(html);
+//   let href = '';
+//   $('p').each((i, el) => {
+//     const aTag = $(el).find('a');
+//     if (aTag) {
+//       const _href = $(aTag).attr('href');
+//       if (reHref.test(_href)) {
+//         return (href = _href);
+//       }
+//     }
+//   });
+//   return href;
+// }
 async function getGroupedJson() {
-  const link = await getHref();
+  const link = '/api/errors.json';
   const json = await fetch(`${base}${link}`, { method: 'GET', mode: 'cors' }).then((res) =>
     res.json(),
   );
@@ -45,7 +45,6 @@ async function getGroupedJson() {
         desc: (json.descriptions[name] || '')
           .replace(/\%[aA-zZ]/gm, '{value}')
           .trim()
-          .replace(/madelineproto/gim, 'tgsnake')
           .replace(
             /\[([^\[\]]*)\]\((.*?)\)/gm,
             (match, text, href) =>

@@ -16,7 +16,7 @@ import bigInt from 'big-integer';
 
 // Other platform compatibility
 // After this line, we will provide some compatibility for Deno, Bun, and Browser so that the same code can run in both environments without modification.
-const isDeno = 'Deno' in globalThis;
+const isDeno = 'Deno' in globalThis; // Further Notes: Reffering to Cloudflare acquired Deno and it will end development of the Deno runtime, the Deno platform may will be deprecated in the future, but we will still provide compatibility for it for now. We will see what happens in the future, but for now, we will still provide compatibility for Deno.
 const isBun = 'Bun' in globalThis;
 const isBrowser = !isDeno && !isBun && typeof window !== 'undefined'; // browser compatibility
 
