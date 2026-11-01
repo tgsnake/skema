@@ -1033,11 +1033,9 @@ export namespace Raw {
     | Raw.InputStickerSetThumb
     | Raw.InputGroupCallStream;
   export type TypeChannelMessagesFilter =
-    | Raw.ChannelMessagesFilterEmpty
-    | Raw.ChannelMessagesFilter;
+    Raw.ChannelMessagesFilterEmpty | Raw.ChannelMessagesFilter;
   export type TypeShareThemeBackdrops =
-    | Raw.ShareThemeBackdropsNotModified
-    | Raw.ShareThemeBackdrops;
+    Raw.ShareThemeBackdropsNotModified | Raw.ShareThemeBackdrops;
   export type TypeInputMessageReadMetric = Raw.InputMessageReadMetric;
   export type TypeInputAiComposeTone =
     | Raw.InputAiComposeToneDefault
@@ -1053,27 +1051,20 @@ export namespace Raw {
   export type TypeAttachMenuBots = Raw.AttachMenuBotsNotModified | Raw.AttachMenuBots;
   export type TypeReadParticipantDate = Raw.ReadParticipantDate;
   export type TypeInputChatTheme =
-    | Raw.InputChatThemeEmpty
-    | Raw.InputChatTheme
-    | Raw.InputChatThemeUniqueGift;
+    Raw.InputChatThemeEmpty | Raw.InputChatTheme | Raw.InputChatThemeUniqueGift;
   export type TypeDialogFilterSuggested = Raw.DialogFilterSuggested;
   export type TypeInputTonConnectOauthSession = Raw.InputTonConnectOauthSession;
   export type TypeUrlAuthResult =
-    | Raw.UrlAuthResultRequest
-    | Raw.UrlAuthResultAccepted
-    | Raw.UrlAuthResultDefault;
+    Raw.UrlAuthResultRequest | Raw.UrlAuthResultAccepted | Raw.UrlAuthResultDefault;
   export type TypeEmojiURL = Raw.EmojiURL;
   export type TypeEmojiLanguage = Raw.EmojiLanguage;
   export type TypeEmojiKeywordsDifference = Raw.EmojiKeywordsDifference;
   export type TypeChatOnlines = Raw.ChatOnlines;
   export type TypeInputSingleMedia = Raw.InputSingleMedia;
   export type TypeInputStickeredMedia =
-    | Raw.InputStickeredMediaPhoto
-    | Raw.InputStickeredMediaDocument;
+    Raw.InputStickeredMediaPhoto | Raw.InputStickeredMediaDocument;
   export type TypeInputDialogPeer =
-    | Raw.InputDialogPeer
-    | Raw.InputDialogPeerFolder
-    | Raw.InputDialogPeerCommunity;
+    Raw.InputDialogPeer | Raw.InputDialogPeerFolder | Raw.InputDialogPeerCommunity;
   export type TypeInputBotInlineResult =
     | Raw.InputBotInlineResult
     | Raw.InputBotInlineResultPhoto
@@ -1086,16 +1077,11 @@ export namespace Raw {
     | Raw.InputEncryptedFileBigUploaded;
   export type TypeInputEncryptedChat = Raw.InputEncryptedChat;
   export type TypeInputChatPhoto =
-    | Raw.InputChatPhotoEmpty
-    | Raw.InputChatUploadedPhoto
-    | Raw.InputChatPhoto;
+    Raw.InputChatPhotoEmpty | Raw.InputChatUploadedPhoto | Raw.InputChatPhoto;
   export type TypeReportResult =
-    | Raw.ReportResultChooseOption
-    | Raw.ReportResultAddComment
-    | Raw.ReportResultReported;
+    Raw.ReportResultChooseOption | Raw.ReportResultAddComment | Raw.ReportResultReported;
   export type TypeInputQuickReplyShortcut =
-    | Raw.InputQuickReplyShortcut
-    | Raw.InputQuickReplyShortcutId;
+    Raw.InputQuickReplyShortcut | Raw.InputQuickReplyShortcutId;
   export type TypeReceivedNotifyMessage = Raw.ReceivedNotifyMessage;
   export type TypeInputMessage =
     | Raw.InputMessageID
@@ -1178,9 +1164,7 @@ export namespace Raw {
   export type TypeInputPasskeyCredential = Raw.InputPasskeyCredentialPublicKey;
   export type TypeInputCheckPasswordSRP = Raw.InputCheckPasswordEmpty | Raw.InputCheckPasswordSRP;
   export type TypeEmailVerification =
-    | Raw.EmailVerificationCode
-    | Raw.EmailVerificationGoogle
-    | Raw.EmailVerificationApple;
+    Raw.EmailVerificationCode | Raw.EmailVerificationGoogle | Raw.EmailVerificationApple;
   export type TypeCodeSettings = Raw.CodeSettings;
   export type TypeInputClientProxy = Raw.InputClientProxy;
   export type TypeShareThemeBackdropOption = Raw.ShareThemeBackdropOption;
@@ -1208,23 +1192,19 @@ export namespace Raw {
   export type TypeAiComposeTone = Raw.AiComposeTone | Raw.AiComposeToneDefault;
   export type TypeAiComposeToneExample = Raw.AiComposeToneExample;
   export type TypeInputPasskeyResponse =
-    | Raw.InputPasskeyResponseRegister
-    | Raw.InputPasskeyResponseLogin;
+    Raw.InputPasskeyResponseRegister | Raw.InputPasskeyResponseLogin;
   export type TypePasskey = Raw.Passkey;
   export type TypeStarGiftActiveAuctionState = Raw.StarGiftActiveAuctionState;
   export type TypeStarGiftAuctionAcquiredGift = Raw.StarGiftAuctionAcquiredGift;
   export type TypeStarGiftAuctionRound =
-    | Raw.StarGiftAuctionRound
-    | Raw.StarGiftAuctionRoundExtendable;
+    Raw.StarGiftAuctionRound | Raw.StarGiftAuctionRoundExtendable;
   export type TypeAuctionBidLevel = Raw.AuctionBidLevel;
   export type TypeGroupCallDonor = Raw.GroupCallDonor;
   export type TypeStoryAlbum = Raw.StoryAlbum;
   export type TypeStarGiftCollection = Raw.StarGiftCollection;
   export type TypeStarGiftAttributeCounter = Raw.StarGiftAttributeCounter;
   export type TypeStarGiftAttributeId =
-    | Raw.StarGiftAttributeIdModel
-    | Raw.StarGiftAttributeIdPattern
-    | Raw.StarGiftAttributeIdBackdrop;
+    Raw.StarGiftAttributeIdModel | Raw.StarGiftAttributeIdPattern | Raw.StarGiftAttributeIdBackdrop;
   export type TypeSponsoredPeer = Raw.SponsoredPeer;
   export type TypeSavedStarGift = Raw.SavedStarGift;
   export type TypeStarGiftUpgradePrice = Raw.StarGiftUpgradePrice;
@@ -1258,8 +1238,7 @@ export namespace Raw {
     | Raw.StarsTransactionPeerAPI;
   export type TypeAvailableEffect = Raw.AvailableEffect;
   export type TypeReactionNotificationsFrom =
-    | Raw.ReactionNotificationsFromContacts
-    | Raw.ReactionNotificationsFromAll;
+    Raw.ReactionNotificationsFromContacts | Raw.ReactionNotificationsFromAll;
   export type TypeSponsoredMessageReportOption = Raw.SponsoredMessageReportOption;
   export type TypeBusinessChatLink = Raw.BusinessChatLink;
   export type TypeMissingInvitee = Raw.MissingInvitee;
@@ -1278,18 +1257,14 @@ export namespace Raw {
   export type TypeSavedReactionTag = Raw.SavedReactionTag;
   export type TypeSavedDialog = Raw.SavedDialog | Raw.MonoForumDialog;
   export type TypeStoryReaction =
-    | Raw.StoryReaction
-    | Raw.StoryReactionPublicForward
-    | Raw.StoryReactionPublicRepost;
+    Raw.StoryReaction | Raw.StoryReactionPublicForward | Raw.StoryReactionPublicRepost;
   export type TypePublicForward = Raw.PublicForwardMessage | Raw.PublicForwardStory;
   export type TypePrepaidGiveaway = Raw.PrepaidGiveaway | Raw.PrepaidStarsGiveaway;
   export type TypeMyBoost = Raw.MyBoost;
   export type TypeGeoPointAddress = Raw.GeoPointAddress;
   export type TypeMediaAreaCoordinates = Raw.MediaAreaCoordinates;
   export type TypeStoryView =
-    | Raw.StoryView
-    | Raw.StoryViewPublicForward
-    | Raw.StoryViewPublicRepost;
+    Raw.StoryView | Raw.StoryViewPublicForward | Raw.StoryViewPublicRepost;
   export type TypeStoryViews = Raw.StoryViews;
   export type TypeMediaArea =
     | Raw.MediaAreaVenue
@@ -1308,9 +1283,7 @@ export namespace Raw {
   export type TypeEmojiGroup = Raw.EmojiGroup | Raw.EmojiGroupGreeting | Raw.EmojiGroupPremium;
   export type TypePremiumSubscriptionOption = Raw.PremiumSubscriptionOption;
   export type TypeInputSavedStarGift =
-    | Raw.InputSavedStarGiftUser
-    | Raw.InputSavedStarGiftChat
-    | Raw.InputSavedStarGiftSlug;
+    Raw.InputSavedStarGiftUser | Raw.InputSavedStarGiftChat | Raw.InputSavedStarGiftSlug;
   export type TypePremiumGiftCodeOption = Raw.PremiumGiftCodeOption;
   export type TypeInputStorePaymentPurpose =
     | Raw.InputStorePaymentPremiumSubscription
@@ -1349,21 +1322,16 @@ export namespace Raw {
   export type TypeStatsGroupTopPoster = Raw.StatsGroupTopPoster;
   export type TypePendingSuggestion = Raw.PendingSuggestion;
   export type TypePostInteractionCounters =
-    | Raw.PostInteractionCountersMessage
-    | Raw.PostInteractionCountersStory;
+    Raw.PostInteractionCountersMessage | Raw.PostInteractionCountersStory;
   export type TypeStatsGraph = Raw.StatsGraphAsync | Raw.StatsGraphError | Raw.StatsGraph;
   export type TypeStatsPercentValue = Raw.StatsPercentValue;
   export type TypeStatsAbsValueAndPrev = Raw.StatsAbsValueAndPrev;
   export type TypeStatsDateRangeDays = Raw.StatsDateRangeDays;
   export type TypeBankCardOpenUrl = Raw.BankCardOpenUrl;
   export type TypeMessagePeerVote =
-    | Raw.MessagePeerVote
-    | Raw.MessagePeerVoteInputOption
-    | Raw.MessagePeerVoteMultiple;
+    Raw.MessagePeerVote | Raw.MessagePeerVoteInputOption | Raw.MessagePeerVoteMultiple;
   export type TypeInputWallPaper =
-    | Raw.InputWallPaper
-    | Raw.InputWallPaperSlug
-    | Raw.InputWallPaperNoFile;
+    Raw.InputWallPaper | Raw.InputWallPaperSlug | Raw.InputWallPaperNoFile;
   export type TypeBaseTheme =
     | Raw.BaseThemeClassic
     | Raw.BaseThemeDay
@@ -1396,12 +1364,7 @@ export namespace Raw {
   export type TypePageTableCell = Raw.PageTableCell;
   export type TypeJSONObjectValue = Raw.JsonObjectValue;
   export type TypeJSONValue =
-    | Raw.JsonNull
-    | Raw.JsonBool
-    | Raw.JsonNumber
-    | Raw.JsonString
-    | Raw.JsonArray
-    | Raw.JsonObject;
+    Raw.JsonNull | Raw.JsonBool | Raw.JsonNumber | Raw.JsonString | Raw.JsonArray | Raw.JsonObject;
   export type TypeSecureValueError =
     | Raw.SecureValueErrorData
     | Raw.SecureValueErrorFrontSide
@@ -1480,9 +1443,7 @@ export namespace Raw {
     | Raw.ChannelAdminLogEventActionToggleAutotranslation
     | Raw.ChannelAdminLogEventActionParticipantEditRank;
   export type TypeLangPackString =
-    | Raw.LangPackString
-    | Raw.LangPackStringPluralized
-    | Raw.LangPackStringDeleted;
+    Raw.LangPackString | Raw.LangPackStringPluralized | Raw.LangPackStringDeleted;
   export type TypeCdnPublicKey = Raw.CdnPublicKey;
   export type TypePhoneConnection = Raw.PhoneConnection | Raw.PhoneConnectionWebrtc;
   export type TypePhoneCallProtocol = Raw.PhoneCallProtocol;
@@ -1677,14 +1638,9 @@ export namespace Raw {
   export type TypePage = Raw.Page;
   export type TypeMaskCoords = Raw.MaskCoords;
   export type TypeInputUser =
-    | Raw.InputUserEmpty
-    | Raw.InputUserSelf
-    | Raw.InputUser
-    | Raw.InputUserFromMessage;
+    Raw.InputUserEmpty | Raw.InputUserSelf | Raw.InputUser | Raw.InputUserFromMessage;
   export type TypeInputRichMessage =
-    | Raw.InputRichMessage
-    | Raw.InputRichMessageHTML
-    | Raw.InputRichMessageMarkdown;
+    Raw.InputRichMessage | Raw.InputRichMessageHTML | Raw.InputRichMessageMarkdown;
   export type TypeEncryptedFile = Raw.EncryptedFileEmpty | Raw.EncryptedFile;
   export type TypeFileHash = Raw.FileHash;
   export type TypeUpdate =
@@ -1876,24 +1832,17 @@ export namespace Raw {
     | Raw.StarGiftAuctionStateFinished;
   export type TypeGroupCallMessage = Raw.GroupCallMessage;
   export type TypePaidReactionPrivacy =
-    | Raw.PaidReactionPrivacyDefault
-    | Raw.PaidReactionPrivacyAnonymous
-    | Raw.PaidReactionPrivacyPeer;
+    Raw.PaidReactionPrivacyDefault | Raw.PaidReactionPrivacyAnonymous | Raw.PaidReactionPrivacyPeer;
   export type TypeStarsRevenueStatus = Raw.StarsRevenueStatus;
   export type TypeBotBusinessConnection = Raw.BotBusinessConnection;
   export type TypeQuickReply = Raw.QuickReply;
   export type TypeReactionCount = Raw.ReactionCount;
   export type TypeBoost = Raw.Boost;
   export type TypeReaction =
-    | Raw.ReactionEmpty
-    | Raw.ReactionEmoji
-    | Raw.ReactionCustomEmoji
-    | Raw.ReactionPaid;
+    Raw.ReactionEmpty | Raw.ReactionEmoji | Raw.ReactionCustomEmoji | Raw.ReactionPaid;
   export type TypeStoriesStealthMode = Raw.StoriesStealthMode;
   export type TypeBotMenuButton =
-    | Raw.BotMenuButtonDefault
-    | Raw.BotMenuButtonCommands
-    | Raw.BotMenuButton;
+    Raw.BotMenuButtonDefault | Raw.BotMenuButtonCommands | Raw.BotMenuButton;
   export type TypeBotCommand = Raw.BotCommand;
   export type TypeChannelParticipant =
     | Raw.ChannelParticipant
@@ -1905,9 +1854,7 @@ export namespace Raw {
   export type TypeGroupCall = Raw.GroupCallDiscarded | Raw.GroupCall;
   export type TypeGroupCallParticipant = Raw.GroupCallParticipant;
   export type TypeDialogFilter =
-    | Raw.DialogFilter
-    | Raw.DialogFilterDefault
-    | Raw.DialogFilterChatlist;
+    Raw.DialogFilter | Raw.DialogFilterDefault | Raw.DialogFilterChatlist;
   export type TypeTheme = Raw.Theme;
   export type TypePeerLocated = Raw.PeerLocated | Raw.PeerSelfLocated;
   export type TypeFolderPeer = Raw.FolderPeer;
@@ -1922,8 +1869,7 @@ export namespace Raw {
   export type TypePostAddress = Raw.PostAddress;
   export type TypeDialogPeer = Raw.DialogPeer | Raw.DialogPeerFolder | Raw.DialogPeerCommunity;
   export type TypeInputBotInlineMessageID =
-    | Raw.InputBotInlineMessageID
-    | Raw.InputBotInlineMessageID64;
+    Raw.InputBotInlineMessageID | Raw.InputBotInlineMessageID64;
   export type TypeInlineQueryPeerType =
     | Raw.InlineQueryPeerTypeSameBotPM
     | Raw.InlineQueryPeerTypePM
@@ -2052,9 +1998,7 @@ export namespace Raw {
   export type TypeStarsAmount = Raw.StarsAmount | Raw.StarsTonAmount;
   export type TypeStarGift = Raw.StarGift | Raw.StarGiftUnique;
   export type TypeRequestedPeer =
-    | Raw.RequestedPeerUser
-    | Raw.RequestedPeerChat
-    | Raw.RequestedPeerChannel;
+    Raw.RequestedPeerUser | Raw.RequestedPeerChat | Raw.RequestedPeerChannel;
   export type TypeChatTheme = Raw.ChatTheme | Raw.ChatThemeUniqueGift;
   export type TypeSecureValueType =
     | Raw.SecureValueTypePersonalDetails
@@ -2088,10 +2032,7 @@ export namespace Raw {
   export type TypeWebDocument = Raw.WebDocument | Raw.WebDocumentNoProxy;
   export type TypeGame = Raw.Game;
   export type TypeWebPage =
-    | Raw.WebPageEmpty
-    | Raw.WebPagePending
-    | Raw.WebPage
-    | Raw.WebPageNotModified;
+    Raw.WebPageEmpty | Raw.WebPagePending | Raw.WebPage | Raw.WebPageNotModified;
   export type TypeGeoPoint = Raw.GeoPointEmpty | Raw.GeoPoint;
   export type TypeDocument = Raw.DocumentEmpty | Raw.Document;
   export type TypeMessageAction =
@@ -2200,9 +2141,7 @@ export namespace Raw {
   export type TypeMessageReplyHeader = Raw.MessageReplyHeader | Raw.MessageReplyStoryHeader;
   export type TypeMessageFwdHeader = Raw.MessageFwdHeader;
   export type TypeChatParticipant =
-    | Raw.ChatParticipant
-    | Raw.ChatParticipantCreator
-    | Raw.ChatParticipantAdmin;
+    Raw.ChatParticipant | Raw.ChatParticipantCreator | Raw.ChatParticipantAdmin;
   export type TypeCommunityPeer = Raw.CommunityPeer;
   export type TypeShareTheme =
     | Raw.ShareThemeDefault
@@ -2224,9 +2163,7 @@ export namespace Raw {
   export type TypeChannelLocation = Raw.ChannelLocationEmpty | Raw.ChannelLocation;
   export type TypeStickerSet = Raw.StickerSet;
   export type TypeChatReactions =
-    | Raw.ChatReactionsNone
-    | Raw.ChatReactionsAll
-    | Raw.ChatReactionsSome;
+    Raw.ChatReactionsNone | Raw.ChatReactionsAll | Raw.ChatReactionsSome;
   export type TypePeer = Raw.PeerUser | Raw.PeerChat | Raw.PeerChannel;
   export type TypeBotInfo = Raw.BotInfo;
   export type TypeExportedChatInvite = Raw.ChatInviteExported | Raw.ChatInvitePublicJoinRequests;
@@ -2236,14 +2173,10 @@ export namespace Raw {
   export type TypeChatBannedRights = Raw.ChatBannedRights;
   export type TypeChatAdminRights = Raw.ChatAdminRights;
   export type TypeInputChannel =
-    | Raw.InputChannelEmpty
-    | Raw.InputChannel
-    | Raw.InputChannelFromMessage;
+    Raw.InputChannelEmpty | Raw.InputChannel | Raw.InputChannelFromMessage;
   export type TypeChatPhoto = Raw.ChatPhotoEmpty | Raw.ChatPhoto;
   export type TypePeerColor =
-    | Raw.PeerColor
-    | Raw.PeerColorCollectible
-    | Raw.InputPeerColorCollectible;
+    Raw.PeerColor | Raw.PeerColorCollectible | Raw.InputPeerColorCollectible;
   export type TypeRecentStory = Raw.RecentStory;
   export type TypeUsername = Raw.Username;
   export type TypeEmojiStatus =
@@ -2261,9 +2194,7 @@ export namespace Raw {
     | Raw.UserStatusLastMonth;
   export type TypeUserProfilePhoto = Raw.UserProfilePhotoEmpty | Raw.UserProfilePhoto;
   export type TypeInputGroupCall =
-    | Raw.InputGroupCall
-    | Raw.InputGroupCallSlug
-    | Raw.InputGroupCallInviteMessage;
+    Raw.InputGroupCall | Raw.InputGroupCallSlug | Raw.InputGroupCallInviteMessage;
   export type TypeInputStickerSet =
     | Raw.InputStickerSetEmpty
     | Raw.InputStickerSetID
@@ -2365,16 +2296,12 @@ export namespace Raw {
   export type TypePong = Raw.Pong;
   export type TypeFutureSalts = Raw.FutureSalts;
   export type TypeRpcDropAnswer =
-    | Raw.RpcAnswerUnknown
-    | Raw.RpcAnswerDroppedRunning
-    | Raw.RpcAnswerDropped;
+    Raw.RpcAnswerUnknown | Raw.RpcAnswerDroppedRunning | Raw.RpcAnswerDropped;
   export type TypeAccessPointRule = Raw.AccessPointRule;
   export type TypeIpPort = Raw.IpPort | Raw.IpPortSecret;
   export type TypeFutureSalt = Raw.FutureSalt;
   export type TypeDestroyAuthKeyRes =
-    | Raw.DestroyAuthKeyOk
-    | Raw.DestroyAuthKeyNone
-    | Raw.DestroyAuthKeyFail;
+    Raw.DestroyAuthKeyOk | Raw.DestroyAuthKeyNone | Raw.DestroyAuthKeyFail;
   export type TypeSetClientDhParamsAnswer = Raw.DhGenOk | Raw.DhGenRetry | Raw.DhGenFail;
   export type TypeServerDhParams = Raw.ServerDhParamsFail | Raw.ServerDhParamsOk;
   export type TypeResPQ = Raw.ResPQ;
@@ -85599,8 +85526,7 @@ export namespace Raw {
     export type TypeAppConfig = Raw.help.AppConfigNotModified | Raw.help.AppConfig;
     export type TypeDeepLinkInfo = Raw.help.DeepLinkInfoEmpty | Raw.help.DeepLinkInfo;
     export type TypeTermsOfServiceUpdate =
-      | Raw.help.TermsOfServiceUpdateEmpty
-      | Raw.help.TermsOfServiceUpdate;
+      Raw.help.TermsOfServiceUpdateEmpty | Raw.help.TermsOfServiceUpdate;
     export type TypeRecentMeUrls = Raw.help.RecentMeUrls;
     export type TypeSupport = Raw.help.Support;
     export type TypeInviteText = Raw.help.InviteText;
@@ -88519,16 +88445,12 @@ export namespace Raw {
     export type TypeFirebasePnvIntent = Raw.auth.FirebasePnvIntent;
     export type TypePasskeyLoginOptions = Raw.auth.PasskeyLoginOptions;
     export type TypeLoginToken =
-      | Raw.auth.LoginToken
-      | Raw.auth.LoginTokenMigrateTo
-      | Raw.auth.LoginTokenSuccess;
+      Raw.auth.LoginToken | Raw.auth.LoginTokenMigrateTo | Raw.auth.LoginTokenSuccess;
     export type TypePasswordRecovery = Raw.auth.PasswordRecovery;
     export type TypeExportedAuthorization = Raw.auth.ExportedAuthorization;
     export type TypeLoggedOut = Raw.auth.LoggedOut;
     export type TypeSentCode =
-      | Raw.auth.SentCode
-      | Raw.auth.SentCodeSuccess
-      | Raw.auth.SentCodePaymentRequired;
+      Raw.auth.SentCode | Raw.auth.SentCodeSuccess | Raw.auth.SentCodePaymentRequired;
     export type TypeAuthorization = Raw.auth.Authorization | Raw.auth.AuthorizationSignUpRequired;
     export type TypeCodeType =
       | Raw.auth.CodeTypeSms
@@ -91436,9 +91358,7 @@ export namespace Raw {
     export type TypeSponsoredPeers = Raw.contacts.SponsoredPeersEmpty | Raw.contacts.SponsoredPeers;
     export type TypeContactBirthdays = Raw.contacts.ContactBirthdays;
     export type TypeTopPeers =
-      | Raw.contacts.TopPeersNotModified
-      | Raw.contacts.TopPeers
-      | Raw.contacts.TopPeersDisabled;
+      Raw.contacts.TopPeersNotModified | Raw.contacts.TopPeers | Raw.contacts.TopPeersDisabled;
     export type TypeResolvedPeer = Raw.contacts.ResolvedPeer;
     export type TypeFound = Raw.contacts.Found;
     export type TypeBlocked = Raw.contacts.Blocked | Raw.contacts.BlockedSlice;
@@ -93498,21 +93418,17 @@ export namespace Raw {
     export type TypeComposedMessageWithAI = Raw.messages.ComposedMessageWithAI;
     export type TypeForumTopics = Raw.messages.ForumTopics;
     export type TypeFoundStickers =
-      | Raw.messages.FoundStickersNotModified
-      | Raw.messages.FoundStickers;
+      Raw.messages.FoundStickersNotModified | Raw.messages.FoundStickers;
     export type TypePreparedInlineMessage = Raw.messages.PreparedInlineMessage;
     export type TypeBotPreparedInlineMessage = Raw.messages.BotPreparedInlineMessage;
     export type TypeSponsoredMessages =
-      | Raw.messages.SponsoredMessages
-      | Raw.messages.SponsoredMessagesEmpty;
+      Raw.messages.SponsoredMessages | Raw.messages.SponsoredMessagesEmpty;
     export type TypeAvailableEffects =
-      | Raw.messages.AvailableEffectsNotModified
-      | Raw.messages.AvailableEffects;
+      Raw.messages.AvailableEffectsNotModified | Raw.messages.AvailableEffects;
     export type TypeMyStickers = Raw.messages.MyStickers;
     export type TypeQuickReplies = Raw.messages.QuickReplies | Raw.messages.QuickRepliesNotModified;
     export type TypeSavedReactionTags =
-      | Raw.messages.SavedReactionTagsNotModified
-      | Raw.messages.SavedReactionTags;
+      Raw.messages.SavedReactionTagsNotModified | Raw.messages.SavedReactionTags;
     export type TypeSavedDialogs =
       | Raw.messages.SavedDialogs
       | Raw.messages.SavedDialogsSlice
@@ -93523,8 +93439,7 @@ export namespace Raw {
     export type TypeTranscribedAudio = Raw.messages.TranscribedAudio;
     export type TypeTranslatedText = Raw.messages.TranslateResult;
     export type TypeAvailableReactions =
-      | Raw.messages.AvailableReactionsNotModified
-      | Raw.messages.AvailableReactions;
+      Raw.messages.AvailableReactionsNotModified | Raw.messages.AvailableReactions;
     export type TypeMessageReactionsList = Raw.messages.MessageReactionsList;
     export type TypeSearchResultsPositions = Raw.messages.SearchResultsPositions;
     export type TypeSearchResultsCalendar = Raw.messages.SearchResultsCalendar;
@@ -93532,8 +93447,7 @@ export namespace Raw {
     export type TypeChatInviteImporters = Raw.messages.ChatInviteImporters;
     export type TypeChatAdminsWithInvites = Raw.messages.ChatAdminsWithInvites;
     export type TypeExportedChatInvite =
-      | Raw.messages.ExportedChatInvite
-      | Raw.messages.ExportedChatInviteReplaced;
+      Raw.messages.ExportedChatInvite | Raw.messages.ExportedChatInviteReplaced;
     export type TypeExportedChatInvites = Raw.messages.ExportedChatInvites;
     export type TypeHistoryImport = Raw.messages.HistoryImport;
     export type TypeHistoryImportParsed = Raw.messages.HistoryImportParsed;
@@ -93543,20 +93457,16 @@ export namespace Raw {
     export type TypeVotesList = Raw.messages.VotesList;
     export type TypeSearchCounter = Raw.messages.SearchCounter;
     export type TypeFoundStickerSets =
-      | Raw.messages.FoundStickerSetsNotModified
-      | Raw.messages.FoundStickerSets;
+      Raw.messages.FoundStickerSetsNotModified | Raw.messages.FoundStickerSets;
     export type TypeFavedStickers =
-      | Raw.messages.FavedStickersNotModified
-      | Raw.messages.FavedStickers;
+      Raw.messages.FavedStickersNotModified | Raw.messages.FavedStickers;
     export type TypeWebPage = Raw.messages.WebPage;
     export type TypeHighScores = Raw.messages.HighScores;
     export type TypeArchivedStickers = Raw.messages.ArchivedStickers;
     export type TypeRecentStickers =
-      | Raw.messages.RecentStickersNotModified
-      | Raw.messages.RecentStickers;
+      Raw.messages.RecentStickersNotModified | Raw.messages.RecentStickers;
     export type TypeFeaturedStickers =
-      | Raw.messages.FeaturedStickersNotModified
-      | Raw.messages.FeaturedStickers;
+      Raw.messages.FeaturedStickersNotModified | Raw.messages.FeaturedStickers;
     export type TypePeerDialogs = Raw.messages.PeerDialogs;
     export type TypeBotCallbackAnswer = Raw.messages.BotCallbackAnswer;
     export type TypeMessageEditData = Raw.messages.MessageEditData;
@@ -93564,17 +93474,14 @@ export namespace Raw {
     export type TypeSavedGifs = Raw.messages.SavedGifsNotModified | Raw.messages.SavedGifs;
     export type TypeMessageViews = Raw.messages.MessageViews;
     export type TypeStickerSetInstallResult =
-      | Raw.messages.StickerSetInstallResultSuccess
-      | Raw.messages.StickerSetInstallResultArchive;
+      Raw.messages.StickerSetInstallResultSuccess | Raw.messages.StickerSetInstallResultArchive;
     export type TypeChatInviteJoinResult =
-      | Raw.messages.ChatInviteJoinResultOk
-      | Raw.messages.ChatInviteJoinResultWebView;
+      Raw.messages.ChatInviteJoinResultOk | Raw.messages.ChatInviteJoinResultWebView;
     export type TypeWebPagePreview = Raw.messages.WebPagePreview;
     export type TypeAllStickers = Raw.messages.AllStickersNotModified | Raw.messages.AllStickers;
     export type TypeStickers = Raw.messages.StickersNotModified | Raw.messages.Stickers;
     export type TypeSentEncryptedMessage =
-      | Raw.messages.SentEncryptedMessage
-      | Raw.messages.SentEncryptedFile;
+      Raw.messages.SentEncryptedMessage | Raw.messages.SentEncryptedFile;
     export type TypeDhConfig = Raw.messages.DhConfigNotModified | Raw.messages.DhConfig;
     export type TypeInvitedUsers = Raw.messages.InvitedUsers;
     export type TypeChatFull = Raw.messages.ChatFull;
@@ -93583,17 +93490,14 @@ export namespace Raw {
     export type TypeAffectedHistory = Raw.messages.AffectedHistory;
     export type TypeAffectedMessages = Raw.messages.AffectedMessages;
     export type TypeDialogs =
-      | Raw.messages.Dialogs
-      | Raw.messages.DialogsSlice
-      | Raw.messages.DialogsNotModified;
+      Raw.messages.Dialogs | Raw.messages.DialogsSlice | Raw.messages.DialogsNotModified;
     export type TypeMessages =
       | Raw.messages.Messages
       | Raw.messages.MessagesSlice
       | Raw.messages.ChannelMessages
       | Raw.messages.MessagesNotModified;
     export type TypeEmojiGameInfo =
-      | Raw.messages.EmojiGameUnavailable
-      | Raw.messages.EmojiGameDiceInfo;
+      Raw.messages.EmojiGameUnavailable | Raw.messages.EmojiGameDiceInfo;
     export type TypeStickerSet = Raw.messages.StickerSet | Raw.messages.StickerSetNotModified;
     export type TypeEmojiGameOutcome = Raw.messages.EmojiGameOutcome;
     export class Dialogs extends TLObject {
@@ -116105,26 +116009,22 @@ export namespace Raw {
   }
   export namespace account {
     export type TypeWebBrowserSettings =
-      | Raw.account.WebBrowserSettingsNotModified
-      | Raw.account.WebBrowserSettings;
+      Raw.account.WebBrowserSettingsNotModified | Raw.account.WebBrowserSettings;
     export type TypePasskeys = Raw.account.Passkeys;
     export type TypePasskeyRegistrationOptions = Raw.account.PasskeyRegistrationOptions;
     export type TypeChatThemes = Raw.account.ChatThemesNotModified | Raw.account.ChatThemes;
     export type TypeSavedMusicIds =
-      | Raw.account.SavedMusicIdsNotModified
-      | Raw.account.SavedMusicIds;
+      Raw.account.SavedMusicIdsNotModified | Raw.account.SavedMusicIds;
     export type TypePaidMessagesRevenue = Raw.account.PaidMessagesRevenue;
     export type TypeResolvedBusinessChatLinks = Raw.account.ResolvedBusinessChatLinks;
     export type TypeBusinessChatLinks = Raw.account.BusinessChatLinks;
     export type TypeConnectedBots = Raw.account.ConnectedBots;
     export type TypeAutoSaveSettings = Raw.account.AutoSaveSettings;
     export type TypeEmojiStatuses =
-      | Raw.account.EmojiStatusesNotModified
-      | Raw.account.EmojiStatuses;
+      Raw.account.EmojiStatusesNotModified | Raw.account.EmojiStatuses;
     export type TypeSavedRingtone = Raw.account.SavedRingtone | Raw.account.SavedRingtoneConverted;
     export type TypeSavedRingtones =
-      | Raw.account.SavedRingtonesNotModified
-      | Raw.account.SavedRingtones;
+      Raw.account.SavedRingtonesNotModified | Raw.account.SavedRingtones;
     export type TypeResetPasswordResult =
       | Raw.account.ResetPasswordFailedWait
       | Raw.account.ResetPasswordRequestedWait
@@ -123765,8 +123665,7 @@ export namespace Raw {
     export type TypeAdminLogResults = Raw.channels.AdminLogResults;
     export type TypeChannelParticipant = Raw.channels.ChannelParticipant;
     export type TypeChannelParticipants =
-      | Raw.channels.ChannelParticipants
-      | Raw.channels.ChannelParticipantsNotModified;
+      Raw.channels.ChannelParticipants | Raw.channels.ChannelParticipantsNotModified;
     export type TypeSponsoredMessageReportResult =
       | Raw.channels.SponsoredMessageReportResultChooseOption
       | Raw.channels.SponsoredMessageReportResultAdsHidden
@@ -127087,17 +126986,14 @@ export namespace Raw {
     export type TypeCurrencyRates = Raw.payments.CurrencyRates;
     export type TypeStarGiftUpgradeAttributes = Raw.payments.StarGiftUpgradeAttributes;
     export type TypeStarGiftActiveAuctions =
-      | Raw.payments.StarGiftActiveAuctionsNotModified
-      | Raw.payments.StarGiftActiveAuctions;
+      Raw.payments.StarGiftActiveAuctionsNotModified | Raw.payments.StarGiftActiveAuctions;
     export type TypeStarGiftAuctionAcquiredGifts = Raw.payments.StarGiftAuctionAcquiredGifts;
     export type TypeStarGiftAuctionState = Raw.payments.StarGiftAuctionState;
     export type TypeCheckCanSendGiftResult =
-      | Raw.payments.CheckCanSendGiftResultOk
-      | Raw.payments.CheckCanSendGiftResultFail;
+      Raw.payments.CheckCanSendGiftResultOk | Raw.payments.CheckCanSendGiftResultFail;
     export type TypeUniqueStarGiftValueInfo = Raw.payments.UniqueStarGiftValueInfo;
     export type TypeStarGiftCollections =
-      | Raw.payments.StarGiftCollectionsNotModified
-      | Raw.payments.StarGiftCollections;
+      Raw.payments.StarGiftCollectionsNotModified | Raw.payments.StarGiftCollections;
     export type TypeResaleStarGifts = Raw.payments.ResaleStarGifts;
     export type TypeStarGiftWithdrawalUrl = Raw.payments.StarGiftWithdrawalUrl;
     export type TypeSavedStarGifts = Raw.payments.SavedStarGifts;
@@ -127116,14 +127012,11 @@ export namespace Raw {
     export type TypeBankCardData = Raw.payments.BankCardData;
     export type TypeSavedInfo = Raw.payments.SavedInfo;
     export type TypePaymentResult =
-      | Raw.payments.PaymentResult
-      | Raw.payments.PaymentVerificationNeeded;
+      Raw.payments.PaymentResult | Raw.payments.PaymentVerificationNeeded;
     export type TypeValidatedRequestedInfo = Raw.payments.ValidatedRequestedInfo;
     export type TypePaymentReceipt = Raw.payments.PaymentReceipt | Raw.payments.PaymentReceiptStars;
     export type TypePaymentForm =
-      | Raw.payments.PaymentForm
-      | Raw.payments.PaymentFormStars
-      | Raw.payments.PaymentFormStarGift;
+      Raw.payments.PaymentForm | Raw.payments.PaymentFormStars | Raw.payments.PaymentFormStarGift;
     export class PaymentForm extends TLObject {
       canSaveCredentials?: boolean;
       passwordMissing?: boolean;
@@ -138989,8 +138882,7 @@ export namespace Raw {
   export namespace chatlists {
     export type TypeChatlistUpdates = Raw.chatlists.ChatlistUpdates;
     export type TypeChatlistInvite =
-      | Raw.chatlists.ChatlistInviteAlready
-      | Raw.chatlists.ChatlistInvite;
+      Raw.chatlists.ChatlistInviteAlready | Raw.chatlists.ChatlistInvite;
     export type TypeExportedInvites = Raw.chatlists.ExportedInvites;
     export type TypeExportedChatlistInvite = Raw.chatlists.ExportedChatlistInvite;
     export class ExportedChatlistInvite extends TLObject {
@@ -146805,8 +146697,7 @@ export namespace Raw {
   }
   export namespace ephemeral {
     export type TypeWelcomeMessages =
-      | Raw.ephemeral.WelcomeMessagesNotModified
-      | Raw.ephemeral.WelcomeMessages;
+      Raw.ephemeral.WelcomeMessagesNotModified | Raw.ephemeral.WelcomeMessages;
     export class WelcomeMessagesNotModified extends TLObject {
       constructor() {
         super();
