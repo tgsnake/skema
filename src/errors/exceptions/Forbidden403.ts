@@ -21,7 +21,7 @@ export class Forbidden extends RPCError {
 }
 export class AccessDenied extends Forbidden {
   override id: string = 'ACCESS_DENIED';
-  override message: string = '';
+  override message: string = 'The account was deactivated, or is a bot/service account.';
 }
 export class AllowPaymentRequired extends Forbidden {
   override id: string = 'ALLOW_PAYMENT_REQUIRED_X';
@@ -45,7 +45,8 @@ export class BotForumCreateForbidden extends Forbidden {
 }
 export class BotGuardNotSupported extends Forbidden {
   override id: string = 'BOT_GUARD_NOT_SUPPORTED';
-  override message: string = '';
+  override message: string =
+    'This bot is not designated as a "join guard" bot. This method is only available to bots that mediate user joins to chats. .';
 }
 export class BotVerifierForbidden extends Forbidden {
   override id: string = 'BOT_VERIFIER_FORBIDDEN';
@@ -165,7 +166,7 @@ export class GroupcallChangeForbidden extends Forbidden {
 }
 export class GroupcallForbidden extends Forbidden {
   override id: string = 'GROUPCALL_FORBIDDEN';
-  override message: string = 'The group call has already ended.';
+  override message: string = 'The specified group call cannot be used in this context.';
 }
 export class InlineBotRequired extends Forbidden {
   override id: string = 'INLINE_BOT_REQUIRED';
@@ -246,7 +247,8 @@ export class UserDeleted extends Forbidden {
 }
 export class UserDisallowedStargifts extends Forbidden {
   override id: string = 'USER_DISALLOWED_STARGIFTS';
-  override message: string = '';
+  override message: string =
+    "The recipient user has configured restrictions on which categories of star gifts they're willing to accept (unique, limited, or unlimited): the sender attempted to get a payment form for a gift that falls into a category the recipient has blocked.";
 }
 export class UserInvalid extends Forbidden {
   override id: string = 'USER_INVALID';

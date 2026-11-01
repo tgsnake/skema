@@ -60,6 +60,11 @@ export class ChatForwardsRestricted extends NotAcceptable {
   override id: string = 'CHAT_FORWARDS_RESTRICTED';
   override message: string = "You can't forward messages from a protected chat.";
 }
+export class EditMessageTempRestricted extends NotAcceptable {
+  override id: string = 'EDIT_MESSAGE_TEMP_RESTRICTED';
+  override message: string =
+    'Message editing is temporarily forbidden for this user due to regulatory restrictions.';
+}
 export class FilerefUpgradeNeeded extends NotAcceptable {
   override id: string = 'FILEREF_UPGRADE_NEEDED';
   override message: string =
@@ -104,6 +109,11 @@ export class PhoneNumberInvalid extends NotAcceptable {
 export class PhonePasswordFlood extends NotAcceptable {
   override id: string = 'PHONE_PASSWORD_FLOOD';
   override message: string = 'You have tried logging in too many times.';
+}
+export class PollCountryRestricted extends NotAcceptable {
+  override id: string = 'POLL_COUNTRY_RESTRICTED';
+  override message: string =
+    "Users from the current user's country cannot vote in this [country-restricted poll &raquo;](https://core.telegram.org/api/poll#country-restricted-polls).";
 }
 export class PollMemberRestricted extends NotAcceptable {
   override id: string = 'POLL_MEMBER_RESTRICTED';

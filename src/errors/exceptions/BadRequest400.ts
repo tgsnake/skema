@@ -60,6 +60,11 @@ export class AdExpired extends BadRequest {
   override id: string = 'AD_EXPIRED';
   override message: string = 'The ad has expired (too old or not found).';
 }
+export class AicomposeFloodPremium extends BadRequest {
+  override id: string = 'AICOMPOSE_FLOOD_PREMIUM';
+  override message: string =
+    "You've reached the daily limit of AI text transformations, upgrade to [Telegram Premium](https://core.telegram.org/api/premium) to get **50x** times more AI text transformations per day!";
+}
 export class AicomposeToneInvalid extends BadRequest {
   override id: string = 'AICOMPOSE_TONE_INVALID';
   override message: string = 'The specified tone is invalid.';
@@ -70,7 +75,8 @@ export class AicomposeToneTitleInvalid extends BadRequest {
 }
 export class AiComposeTaskMissing extends BadRequest {
   override id: string = 'AI_COMPOSE_TASK_MISSING';
-  override message: string = '';
+  override message: string =
+    'No AI task was specified. The caller must provide at least one of: proofread, translate (with a target language), tone, or emojify.';
 }
 export class AlbumPhotosTooMany extends BadRequest {
   override id: string = 'ALBUM_PHOTOS_TOO_MANY';
@@ -211,7 +217,7 @@ export class BotCommandInvalid extends BadRequest {
 export class BotCreateLimitExceeded extends BadRequest {
   override id: string = 'BOT_CREATE_LIMIT_EXCEEDED';
   override message: string =
-    "The current user already owns the maximum allowed number of owned bots, as specified by [`bots_create_limit_default` &raquo;](https://core.telegram.org/api/config#bots-create-limit-default) and [`bots_create_limit_premium` &raquo;](https://core.telegram.org/api/config#bots-create-limit-premium); if the current user doesn't have Telegram Premium, upgrading to Premium will allow them to create more bots.  .";
+    "The current user already owns the maximum allowed number of owned bots, as specified by [`bots_create_limit_default` &raquo;](https://core.telegram.org/api/config#bots-create-limit-default) and [`bots_create_limit_premium` &raquo;](https://core.telegram.org/api/config#bots-create-limit-premium); if the current user doesn't have Telegram Premium, upgrading to Premium will allow them to create more bots.";
 }
 export class BotDomainInvalid extends BadRequest {
   override id: string = 'BOT_DOMAIN_INVALID';
@@ -711,7 +717,8 @@ export class DocumentInvalid extends BadRequest {
 }
 export class EffectChatInvalid extends BadRequest {
   override id: string = 'EFFECT_CHAT_INVALID';
-  override message: string = '';
+  override message: string =
+    'Message [effects](https://core.telegram.org/api/effects) can only be used in private 1-on-1 chats, but the caller tried to send a message with an effect to a group or channel.';
 }
 export class EffectIdInvalid extends BadRequest {
   override id: string = 'EFFECT_ID_INVALID';
@@ -817,7 +824,8 @@ export class EntityDateInvalid extends BadRequest {
 }
 export class EntityDateTooLong extends BadRequest {
   override id: string = 'ENTITY_DATE_TOO_LONG';
-  override message: string = '';
+  override message: string =
+    'The maximum text span that can be covered by a date entity is 31 UTF-16 code units if any of the date formatting flags is set, or 127 UTF-16 code units without.  .';
 }
 export class EntityMentionUserInvalid extends BadRequest {
   override id: string = 'ENTITY_MENTION_USER_INVALID';
@@ -854,7 +862,7 @@ export class ExtendedMediaInvalid extends BadRequest {
 }
 export class ExtendedMediaPeerInvalid extends BadRequest {
   override id: string = 'EXTENDED_MEDIA_PEER_INVALID';
-  override message: string = '';
+  override message: string = 'Paid media is not allowed for the target peer.';
 }
 export class ExternalUrlInvalid extends BadRequest {
   override id: string = 'EXTERNAL_URL_INVALID';
@@ -1092,7 +1100,7 @@ export class GroupcallAlreadyDiscarded extends BadRequest {
 }
 export class GroupcallForbidden extends BadRequest {
   override id: string = 'GROUPCALL_FORBIDDEN';
-  override message: string = 'The group call has already ended.';
+  override message: string = 'The specified group call cannot be used in this context.';
 }
 export class GroupcallInvalid extends BadRequest {
   override id: string = 'GROUPCALL_INVALID';
@@ -1505,7 +1513,8 @@ export class NameInvalid extends BadRequest {
 }
 export class NeedActionMissing extends BadRequest {
   override id: string = 'NEED_ACTION_MISSING';
-  override message: string = '';
+  override message: string =
+    "The caller didn't specify a valid action (either save or suggest) for the contact profile photo upload.";
 }
 export class NewSaltInvalid extends BadRequest {
   override id: string = 'NEW_SALT_INVALID';
@@ -1919,6 +1928,10 @@ export class QuoteTextInvalid extends BadRequest {
 export class RaiseHandForbidden extends BadRequest {
   override id: string = 'RAISE_HAND_FORBIDDEN';
   override message: string = 'You cannot raise your hand.';
+}
+export class RandomIdDuplicate extends BadRequest {
+  override id: string = 'RANDOM_ID_DUPLICATE';
+  override message: string = 'You provided a random ID that was already used.';
 }
 export class RandomIdEmpty extends BadRequest {
   override id: string = 'RANDOM_ID_EMPTY';
@@ -2523,7 +2536,7 @@ export class TermsUrlInvalid extends BadRequest {
 }
 export class TextdraftPeerInvalid extends BadRequest {
   override id: string = 'TEXTDRAFT_PEER_INVALID';
-  override message: string = '';
+  override message: string = 'sendMessageTextDraftAction can only be used in private 1-on-1 chats.';
 }
 export class ThemeFileInvalid extends BadRequest {
   override id: string = 'THEME_FILE_INVALID';
@@ -2774,7 +2787,8 @@ export class UserBotRequired extends BadRequest {
 }
 export class UserBotToBotDisabled extends BadRequest {
   override id: string = 'USER_BOT_TO_BOT_DISABLED';
-  override message: string = '';
+  override message: string =
+    "Bot-to-bot messaging is disabled because one of the two bots hasn't enabled the Bot to Bot setting in @BotFather.";
 }
 export class UserChannelsTooMuch extends BadRequest {
   override id: string = 'USER_CHANNELS_TOO_MUCH';

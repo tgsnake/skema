@@ -14,9 +14,10 @@ code	id	message
 400	ADMIN_RANK_INVALID	The specified admin rank is invalid.
 400	ADMIN_RIGHTS_EMPTY	The chatAdminRights constructor passed in keyboardButtonRequestPeer.peer_type.user_admin_rights has no rights set (i.e. flags is 0).
 400	AD_EXPIRED	The ad has expired (too old or not found).
+400	AICOMPOSE_FLOOD_PREMIUM	You've reached the daily limit of AI text transformations, upgrade to [Telegram Premium](https://core.telegram.org/api/premium) to get **50x** times more AI text transformations per day!
 400	AICOMPOSE_TONE_INVALID	The specified tone is invalid.
 400	AICOMPOSE_TONE_TITLE_INVALID	The specified tone title is invalid.
-400	AI_COMPOSE_TASK_MISSING	
+400	AI_COMPOSE_TASK_MISSING	No AI task was specified. The caller must provide at least one of: proofread, translate (with a target language), tone, or emojify.
 400	ALBUM_PHOTOS_TOO_MANY	You have uploaded too many profile photos, delete some before retrying.
 400	API_ID_INVALID	API ID invalid.
 400	API_ID_PUBLISHED_FLOOD	This API id was published somewhere, you can't use it now.
@@ -49,7 +50,7 @@ code	id	message
 400	BOT_CHANNELS_NA	Bots can't edit admin privileges.
 400	BOT_COMMAND_DESCRIPTION_INVALID	The specified command description is invalid.
 400	BOT_COMMAND_INVALID	The specified command is invalid.
-400	BOT_CREATE_LIMIT_EXCEEDED	The current user already owns the maximum allowed number of owned bots, as specified by [`bots_create_limit_default` &raquo;](https://core.telegram.org/api/config#bots-create-limit-default) and [`bots_create_limit_premium` &raquo;](https://core.telegram.org/api/config#bots-create-limit-premium); if the current user doesn't have Telegram Premium, upgrading to Premium will allow them to create more bots.  .
+400	BOT_CREATE_LIMIT_EXCEEDED	The current user already owns the maximum allowed number of owned bots, as specified by [`bots_create_limit_default` &raquo;](https://core.telegram.org/api/config#bots-create-limit-default) and [`bots_create_limit_premium` &raquo;](https://core.telegram.org/api/config#bots-create-limit-premium); if the current user doesn't have Telegram Premium, upgrading to Premium will allow them to create more bots.
 400	BOT_DOMAIN_INVALID	Bot domain invalid.
 400	BOT_FALLBACK_UNSUPPORTED	The fallback flag can't be set for bots.
 400	BOT_GAMES_DISABLED	Games can't be sent to channels.
@@ -168,7 +169,7 @@ code	id	message
 400	DC_ID_INVALID	The provided DC ID is invalid.
 400	DH_G_A_INVALID	g_a invalid.
 400	DOCUMENT_INVALID	The specified document is invalid.
-400	EFFECT_CHAT_INVALID	
+400	EFFECT_CHAT_INVALID	Message [effects](https://core.telegram.org/api/effects) can only be used in private 1-on-1 chats, but the caller tried to send a message with an effect to a group or channel.
 400	EFFECT_ID_INVALID	The specified effect ID is invalid.
 400	EMAIL_HASH_EXPIRED	Email hash expired.
 400	EMAIL_INSTALL_MISSING	Attempting to send a code to the recovery email, but no email is configured.
@@ -193,7 +194,7 @@ code	id	message
 400	ENTITY_BOUNDS_INVALID	A specified [entity offset or length](https://core.telegram.org/api/entities#entity-length) is invalid, see [here &raquo;](https://core.telegram.org/api/entities#entity-length) for info on how to properly compute the entity offset/length.
 400	ENTITY_DATE_FORMAT_INVALID	One of the passed messageEntityFormattedDate objects has an invalid format (i.e. an invalid combination of the format flags).
 400	ENTITY_DATE_INVALID	One of the passed messageEntityFormattedDate objects has an invalid date: the allowed value ranges from `0` to the current date plus 1098 days (`time()+1098*86400`).
-400	ENTITY_DATE_TOO_LONG	
+400	ENTITY_DATE_TOO_LONG	The maximum text span that can be covered by a date entity is 31 UTF-16 code units if any of the date formatting flags is set, or 127 UTF-16 code units without.  .
 400	ENTITY_MENTION_USER_INVALID	You mentioned an invalid user.
 400	ERROR_TEXT_EMPTY	The provided error message is empty.
 400	EXPIRES_AT_INVALID	The specified `expires_at` timestamp is invalid.
@@ -202,7 +203,7 @@ code	id	message
 400	EXTENDED_MEDIA_AMOUNT_INVALID	The specified `stars_amount` of the passed [inputMediaPaidMedia](https://core.telegram.org/constructor/inputMediaPaidMedia) is invalid.
 400	EXTENDED_MEDIA_EMPTY	The specified extended media is empty.
 400	EXTENDED_MEDIA_INVALID	The specified paid media is invalid.
-400	EXTENDED_MEDIA_PEER_INVALID	
+400	EXTENDED_MEDIA_PEER_INVALID	Paid media is not allowed for the target peer.
 400	EXTERNAL_URL_INVALID	External URL invalid.
 400	FIELD_NAME_EMPTY	The field with the name FIELD_NAME is missing
 400	FIELD_NAME_INVALID	The field with the name FIELD_NAME is invalid
@@ -257,7 +258,7 @@ code	id	message
 400	GRAPH_INVALID_RELOAD	Invalid graph token provided, please reload the stats and provide the updated token.
 400	GRAPH_OUTDATED_RELOAD	The graph is outdated, please get a new async token using stats.getBroadcastStats.
 400	GROUPCALL_ALREADY_DISCARDED	The group call was already discarded.
-400	GROUPCALL_FORBIDDEN	The group call has already ended.
+400	GROUPCALL_FORBIDDEN	The specified group call cannot be used in this context.
 400	GROUPCALL_INVALID	The specified group call is invalid.
 400	GROUPCALL_JOIN_MISSING	You haven't joined this group call.
 400	GROUPCALL_NOT_MODIFIED	Group call settings weren't modified.
@@ -357,7 +358,7 @@ code	id	message
 400	MSG_WAIT_FAILED	A waiting call returned an error.
 400	MULTI_MEDIA_TOO_LONG	Too many media files for album.
 400	NAME_INVALID	The specified bot name is invalid.
-400	NEED_ACTION_MISSING	
+400	NEED_ACTION_MISSING	The caller didn't specify a valid action (either save or suggest) for the contact profile photo upload.
 400	NEW_SALT_INVALID	The new salt is invalid.
 400	NEW_SETTINGS_EMPTY	No password is set on the current account, and no new password was specified in `new_settings`.
 400	NEW_SETTINGS_INVALID	The new password settings are invalid.
@@ -457,6 +458,7 @@ code	id	message
 400	QUIZ_MULTIPLE_INVALID	Quizzes can't have the multiple_choice flag set!
 400	QUOTE_TEXT_INVALID	The specified `reply_to`.`quote_text` field is invalid.
 400	RAISE_HAND_FORBIDDEN	You cannot raise your hand.
+400	RANDOM_ID_DUPLICATE	You provided a random ID that was already used.
 400	RANDOM_ID_EMPTY	Random ID empty.
 400	RANDOM_ID_EXPIRED	The specified `random_id` was expired (most likely it didn't follow the required `uint64_t random_id = (time() << 32) | ((uint64_t)random_uint32_t())` format, or the specified time is too far in the past).
 400	RANDOM_ID_INVALID	A provided random ID is invalid.
@@ -599,7 +601,7 @@ code	id	message
 400	TEMP_AUTH_KEY_ALREADY_BOUND	The passed temporary key is already bound to another **perm_auth_key_id**.
 400	TEMP_AUTH_KEY_EMPTY	No temporary auth key provided.
 400	TERMS_URL_INVALID	The specified [invoice](https://core.telegram.org/constructor/invoice).`terms_url` is invalid.
-400	TEXTDRAFT_PEER_INVALID	
+400	TEXTDRAFT_PEER_INVALID	sendMessageTextDraftAction can only be used in private 1-on-1 chats.
 400	THEME_FILE_INVALID	Invalid theme file provided.
 400	THEME_FORMAT_INVALID	Invalid theme format provided.
 400	THEME_INVALID	Invalid theme provided.
@@ -659,7 +661,7 @@ code	id	message
 400	USER_BOT	Bots can only be admins in channels.
 400	USER_BOT_INVALID	User accounts must provide the `bot` method parameter when calling this method. If there is no such method parameter, this method can only be invoked by bot accounts.
 400	USER_BOT_REQUIRED	This method can only be called by a bot.
-400	USER_BOT_TO_BOT_DISABLED	
+400	USER_BOT_TO_BOT_DISABLED	Bot-to-bot messaging is disabled because one of the two bots hasn't enabled the Bot to Bot setting in @BotFather.
 400	USER_CHANNELS_TOO_MUCH	One of the users you tried to add is already in too many channels/supergroups.
 400	USER_CREATOR	For channels.editAdmin: you've tried to edit the admin rights of the owner, but you're not the owner; for channels.leaveChannel: you can't leave this channel, because you're its creator.
 400	USER_GIFT_UNAVAILABLE	Gifts are not available in the current region ([stars_gifts_enabled](https://core.telegram.org/api/config#stars-gifts-enabled) is equal to false).
@@ -710,12 +712,12 @@ code	id	message
 401	SESSION_REVOKED	The session was revoked by the user.
 401	USER_DEACTIVATED	The current account was deleted by the user.
 401	USER_DEACTIVATED_BAN	The current account was deleted and banned by Telegram's antispam system.
-403	ACCESS_DENIED	
+403	ACCESS_DENIED	The account was deactivated, or is a bot/service account.
 403	ALLOW_PAYMENT_REQUIRED_X	This peer charges {value} [Telegram Stars](https://core.telegram.org/api/stars) per message, but the `allow_paid_stars` was not set or its value is smaller than {value}.
 403	ANONYMOUS_REACTIONS_DISABLED	Sorry, anonymous administrators cannot leave reactions or participate in polls.
 403	BOT_ACCESS_FORBIDDEN	The specified method *can* be used over a [business connection](https://core.telegram.org/api/bots/connected-business-bots) for some operations, but the specified query attempted an operation that is not allowed over a business connection.
 403	BOT_FORUM_CREATE_FORBIDDEN	Since the bot's user.bot_forum_can_manage_topics flag is **not** set, the user cannot create or modify bot forum topics.
-403	BOT_GUARD_NOT_SUPPORTED	
+403	BOT_GUARD_NOT_SUPPORTED	This bot is not designated as a join guard bot. This method is only available to bots that mediate user joins to chats. .
 403	BOT_VERIFIER_FORBIDDEN	This bot cannot assign [verification icons](https://core.telegram.org/api/bots/verification).
 403	BROADCAST_FORBIDDEN	Channel poll voters and reactions cannot be fetched to prevent deanonymization.
 403	CHANNEL_PRIVATE	You haven't joined this channel/supergroup.
@@ -744,7 +746,7 @@ code	id	message
 403	EDIT_BOT_INVITE_FORBIDDEN	Normal users can't edit invites that were created by bots.
 403	GROUPCALL_ALREADY_STARTED	The groupcall has already started, you can join directly using [phone.joinGroupCall](https://core.telegram.org/method/phone.joinGroupCall).
 403	GROUPCALL_CHANGE_FORBIDDEN	You cannot change this group call setting.
-403	GROUPCALL_FORBIDDEN	The group call has already ended.
+403	GROUPCALL_FORBIDDEN	The specified group call cannot be used in this context.
 403	INLINE_BOT_REQUIRED	Only the inline bot can edit message.
 403	MESSAGE_AUTHOR_REQUIRED	Message author required.
 403	MESSAGE_DELETE_FORBIDDEN	You can't delete one of the messages you tried to delete, most likely because it is a service message.
@@ -762,7 +764,7 @@ code	id	message
 403	USER_BOT_INVALID	User accounts must provide the `bot` method parameter when calling this method. If there is no such method parameter, this method can only be invoked by bot accounts.
 403	USER_CHANNELS_TOO_MUCH	One of the users you tried to add is already in too many channels/supergroups.
 403	USER_DELETED	You can't send this secret message because the other participant deleted their account.
-403	USER_DISALLOWED_STARGIFTS	
+403	USER_DISALLOWED_STARGIFTS	The recipient user has configured restrictions on which categories of star gifts they're willing to accept (unique, limited, or unlimited): the sender attempted to get a payment form for a gift that falls into a category the recipient has blocked.
 403	USER_INVALID	Invalid user provided.
 403	USER_IS_BLOCKED	You were blocked by this user.
 403	USER_NOT_MUTUAL_CONTACT	The provided user is not a mutual contact.
@@ -783,6 +785,7 @@ code	id	message
 406	CHANNEL_PRIVATE	You haven't joined this channel/supergroup.
 406	CHANNEL_TOO_LARGE	Channel is too large to be deleted; this error is issued when trying to delete channels with more than 1000 members (subject to change).
 406	CHAT_FORWARDS_RESTRICTED	You can't forward messages from a protected chat.
+406	EDIT_MESSAGE_TEMP_RESTRICTED	Message editing is temporarily forbidden for this user due to regulatory restrictions.
 406	FILEREF_UPGRADE_NEEDED	The client has to be updated in order to support [file references](https://core.telegram.org/api/file-references).
 406	FRESH_CHANGE_ADMINS_FORBIDDEN	You were just elected admin, you can't add or modify other admins yet.
 406	FRESH_CHANGE_PHONE_FORBIDDEN	You can't change phone number right after logging in, please wait at least 24 hours.
@@ -793,6 +796,7 @@ code	id	message
 406	PEER_ID_INVALID	The provided peer id is invalid.
 406	PHONE_NUMBER_INVALID	The phone number is invalid.
 406	PHONE_PASSWORD_FLOOD	You have tried logging in too many times.
+406	POLL_COUNTRY_RESTRICTED	Users from the current user's country cannot vote in this [country-restricted poll &raquo;](https://core.telegram.org/api/poll#country-restricted-polls).
 406	POLL_MEMBER_RESTRICTED	Only channel subscribers can vote in this poll.
 406	PRECHECKOUT_FAILED	Precheckout failed, a detailed and localized description for the error will be emitted via an [updateServiceNotification as specified here &raquo;](https://core.telegram.org/api/errors#406-not-acceptable).
 406	PREMIUM_CURRENTLY_UNAVAILABLE	You cannot currently purchase a Premium subscription.

@@ -91,6 +91,12 @@
   },
   {
     "code": 400,
+    "msg": "AICOMPOSE_FLOOD_PREMIUM",
+    "desc": "You've reached the daily limit of AI text transformations, upgrade to [Telegram Premium](https://core.telegram.org/api/premium) to get **50x** times more AI text transformations per day!",
+    "affected": ["messages.ComposeMessageWithAI"]
+  },
+  {
+    "code": 400,
     "msg": "AICOMPOSE_TONE_INVALID",
     "desc": "The specified tone is invalid.",
     "affected": [
@@ -110,7 +116,7 @@
   {
     "code": 400,
     "msg": "AI_COMPOSE_TASK_MISSING",
-    "desc": "",
+    "desc": "No AI task was specified. The caller must provide at least one of: proofread, translate (with a target language), tone, or emojify.",
     "affected": ["messages.ComposeMessageWithAI"]
   },
   {
@@ -314,7 +320,7 @@
   {
     "code": 400,
     "msg": "BOT_CREATE_LIMIT_EXCEEDED",
-    "desc": "The current user already owns the maximum allowed number of owned bots, as specified by [`bots_create_limit_default` &raquo;](https://core.telegram.org/api/config#bots-create-limit-default) and [`bots_create_limit_premium` &raquo;](https://core.telegram.org/api/config#bots-create-limit-premium); if the current user doesn't have Telegram Premium, upgrading to Premium will allow them to create more bots.  .",
+    "desc": "The current user already owns the maximum allowed number of owned bots, as specified by [`bots_create_limit_default` &raquo;](https://core.telegram.org/api/config#bots-create-limit-default) and [`bots_create_limit_premium` &raquo;](https://core.telegram.org/api/config#bots-create-limit-premium); if the current user doesn't have Telegram Premium, upgrading to Premium will allow them to create more bots.",
     "affected": ["bots.CreateBot"]
   },
   {
@@ -1506,7 +1512,8 @@
       "channels.GetForumTopics",
       "channels.GetForumTopicsByID",
       "channels.UpdatePinnedForumTopic",
-      "messages.CreateForumTopic"
+      "messages.CreateForumTopic",
+      "messages.GetForumTopics"
     ]
   },
   {
@@ -2419,7 +2426,7 @@
   {
     "code": 400,
     "msg": "EFFECT_CHAT_INVALID",
-    "desc": "",
+    "desc": "Message [effects](https://core.telegram.org/api/effects) can only be used in private 1-on-1 chats, but the caller tried to send a message with an effect to a group or channel.",
     "affected": ["messages.SendMedia", "messages.SendMessage"]
   },
   {
@@ -2589,7 +2596,12 @@
     "desc": "One of the passed messageEntityFormattedDate objects has an invalid date: the allowed value ranges from `0` to the current date plus 1098 days (`time()+1098*86400`).",
     "affected": ["messages.SendMessage"]
   },
-  { "code": 400, "msg": "ENTITY_DATE_TOO_LONG", "desc": "", "affected": ["messages.SendMessage"] },
+  {
+    "code": 400,
+    "msg": "ENTITY_DATE_TOO_LONG",
+    "desc": "The maximum text span that can be covered by a date entity is 31 UTF-16 code units if any of the date formatting flags is set, or 127 UTF-16 code units without.  .",
+    "affected": ["messages.SendMessage"]
+  },
   {
     "code": 400,
     "msg": "ENTITY_MENTION_USER_INVALID",
@@ -2641,7 +2653,7 @@
   {
     "code": 400,
     "msg": "EXTENDED_MEDIA_PEER_INVALID",
-    "desc": "",
+    "desc": "Paid media is not allowed for the target peer.",
     "affected": ["messages.SendMedia"]
   },
   {
@@ -3014,7 +3026,7 @@
   {
     "code": 400,
     "msg": "GROUPCALL_FORBIDDEN",
-    "desc": "The group call has already ended.",
+    "desc": "The specified group call cannot be used in this context.",
     "affected": ["phone.EditGroupCallParticipant"]
   },
   {
@@ -3540,7 +3552,7 @@
     "code": 400,
     "msg": "MEDIA_FILE_INVALID",
     "desc": "The specified media file is invalid.",
-    "affected": ["messages.ForwardMessages", "stories.SendStory"]
+    "affected": ["messages.ForwardMessages", "messages.SendMedia", "stories.SendStory"]
   },
   {
     "code": 400,
@@ -3684,8 +3696,7 @@
       "payments.ValidateRequestedInfo",
       "phone.DeclineConferenceCallInvite",
       "stats.GetMessagePublicForwards",
-      "stats.GetMessageStats",
-      "Test"
+      "stats.GetMessageStats"
     ]
   },
   {
@@ -3887,7 +3898,7 @@
   {
     "code": 400,
     "msg": "NEED_ACTION_MISSING",
-    "desc": "",
+    "desc": "The caller didn't specify a valid action (either save or suggest) for the contact profile photo upload.",
     "affected": ["photos.UploadContactProfilePhoto"]
   },
   {
@@ -4166,7 +4177,6 @@
       "contacts.Block",
       "contacts.ResetTopPeerRating",
       "contacts.Unblock",
-      "GetDialogs",
       "messages.AddChatUser",
       "messages.AddPollAnswer",
       "messages.AppendTodoList",
@@ -4816,6 +4826,12 @@
   },
   {
     "code": 400,
+    "msg": "RANDOM_ID_DUPLICATE",
+    "desc": "You provided a random ID that was already used.",
+    "affected": ["messages.RequestEncryption"]
+  },
+  {
+    "code": 400,
     "msg": "RANDOM_ID_EMPTY",
     "desc": "Random ID empty.",
     "affected": ["messages.SendMessage", "messages.SendMultiMedia", "messages.SendPaidReaction"]
@@ -5064,7 +5080,7 @@
       "payments.UpgradeStarGift"
     ]
   },
-  { "code": 400, "msg": "SAVED_PEER_INVALID", "desc": "", "affected": ["messages.ReadMentions"] },
+  { "code": 400, "msg": "SAVED_PEER_INVALID", "desc": "", "affected": [] },
   {
     "code": 400,
     "msg": "SCHEDULE_BOT_NOT_ALLOWED",
@@ -5808,7 +5824,12 @@
     "desc": "The specified [invoice](https://core.telegram.org/constructor/invoice).`terms_url` is invalid.",
     "affected": ["messages.SendMedia"]
   },
-  { "code": 400, "msg": "TEXTDRAFT_PEER_INVALID", "desc": "", "affected": ["messages.SetTyping"] },
+  {
+    "code": 400,
+    "msg": "TEXTDRAFT_PEER_INVALID",
+    "desc": "sendMessageTextDraftAction can only be used in private 1-on-1 chats.",
+    "affected": ["messages.SetTyping"]
+  },
   {
     "code": 400,
     "msg": "THEME_FILE_INVALID",
@@ -6128,7 +6149,7 @@
     "code": 400,
     "msg": "USERNAME_NOT_OCCUPIED",
     "desc": "The provided username is not occupied.",
-    "affected": ["contacts.ResolveUsername", "Test"]
+    "affected": ["contacts.ResolveUsername"]
   },
   {
     "code": 400,
@@ -6293,7 +6314,7 @@
   {
     "code": 400,
     "msg": "USER_BOT_TO_BOT_DISABLED",
-    "desc": "",
+    "desc": "Bot-to-bot messaging is disabled because one of the two bots hasn't enabled the Bot to Bot setting in @BotFather.",
     "affected": ["messages.ForwardMessages", "messages.SendMedia", "messages.SendMessage"]
   },
   {
@@ -7402,12 +7423,7 @@
       "users.SuggestBirthday"
     ]
   },
-  {
-    "code": 401,
-    "msg": "SESSION_EXPIRED",
-    "desc": "The session has expired.",
-    "affected": ["Test"]
-  },
+  { "code": 401, "msg": "SESSION_EXPIRED", "desc": "The session has expired.", "affected": [] },
   {
     "code": 401,
     "msg": "SESSION_PASSWORD_NEEDED",
@@ -7435,7 +7451,7 @@
   {
     "code": 403,
     "msg": "ACCESS_DENIED",
-    "desc": "",
+    "desc": "The account was deactivated, or is a bot/service account.",
     "affected": ["account.InitPasskeyRegistration"]
   },
   {
@@ -7479,7 +7495,7 @@
   {
     "code": 403,
     "msg": "BOT_GUARD_NOT_SUPPORTED",
-    "desc": "",
+    "desc": "This bot is not designated as a \"join guard\" bot. This method is only available to bots that mediate user joins to chats. .",
     "affected": ["bots.SetJoinChatResults"]
   },
   {
@@ -7498,7 +7514,7 @@
     "code": 403,
     "msg": "CHANNEL_PRIVATE",
     "desc": "You haven't joined this channel/supergroup.",
-    "affected": ["GetDialogs", "GetHistory"]
+    "affected": []
   },
   {
     "code": 403,
@@ -7748,7 +7764,7 @@
   {
     "code": 403,
     "msg": "GROUPCALL_FORBIDDEN",
-    "desc": "The group call has already ended.",
+    "desc": "The specified group call cannot be used in this context.",
     "affected": [
       "messages.SetTyping",
       "phone.DiscardGroupCall",
@@ -7821,6 +7837,7 @@
       "channels.CreateForumTopic",
       "channels.SearchPosts",
       "messages.CheckQuickReplyShortcut",
+      "messages.CreateForumTopic",
       "messages.EditQuickReplyShortcut",
       "messages.ForwardMessages",
       "messages.ReorderQuickReplies",
@@ -7903,7 +7920,7 @@
   {
     "code": 403,
     "msg": "USER_DISALLOWED_STARGIFTS",
-    "desc": "",
+    "desc": "The recipient user has configured restrictions on which categories of star gifts they're willing to accept (unique, limited, or unlimited): the sender attempted to get a payment form for a gift that falls into a category the recipient has blocked.",
     "affected": ["payments.GetPaymentForm"]
   },
   {
@@ -7924,8 +7941,7 @@
       "messages.SendMedia",
       "messages.SendMessage",
       "messages.SetTyping",
-      "phone.RequestCall",
-      "SendMessage"
+      "phone.RequestCall"
     ]
   },
   {
@@ -8073,6 +8089,12 @@
   },
   {
     "code": 406,
+    "msg": "EDIT_MESSAGE_TEMP_RESTRICTED",
+    "desc": "Message editing is temporarily forbidden for this user due to regulatory restrictions.",
+    "affected": ["messages.EditMessage"]
+  },
+  {
+    "code": 406,
     "msg": "FILEREF_UPGRADE_NEEDED",
     "desc": "The client has to be updated in order to support [file references](https://core.telegram.org/api/file-references).",
     "affected": ["upload.GetFile"]
@@ -8150,6 +8172,12 @@
     "msg": "PHONE_PASSWORD_FLOOD",
     "desc": "You have tried logging in too many times.",
     "affected": ["auth.SendCode"]
+  },
+  {
+    "code": 406,
+    "msg": "POLL_COUNTRY_RESTRICTED",
+    "desc": "Users from the current user's country cannot vote in this [country-restricted poll &raquo;](https://core.telegram.org/api/poll#country-restricted-polls).",
+    "affected": ["messages.SendVote"]
   },
   {
     "code": 406,
@@ -8420,7 +8448,7 @@
     "code": 500,
     "msg": "GROUPCALL_ADD_PARTICIPANTS_FAILED",
     "desc": "Failure while adding voice chat member due to Telegram having internal problems. Please try again later",
-    "affected": ["phone.JoinGroupCall"]
+    "affected": []
   },
   {
     "code": 500,
@@ -8514,12 +8542,7 @@
     "desc": "The provided chat is invalid",
     "affected": []
   },
-  {
-    "code": 500,
-    "msg": "NEED_DOC_INVALID",
-    "desc": "",
-    "affected": ["messages.ForwardMessages", "messages.GetHistory", "updates.GetChannelDifference"]
-  },
+  { "code": 500, "msg": "NEED_DOC_INVALID", "desc": "", "affected": [] },
   {
     "code": 500,
     "msg": "NEED_MEMBER_INVALID",
@@ -8544,12 +8567,7 @@
     "desc": "Failure while making call due to Telegram having internal problems. Please try again later",
     "affected": []
   },
-  {
-    "code": 500,
-    "msg": "PASSKEY_AUTH_RESTART",
-    "desc": "",
-    "affected": ["auth.FinishPasskeyLogin", "auth.InitPasskeyLogin"]
-  },
+  { "code": 500, "msg": "PASSKEY_AUTH_RESTART", "desc": "", "affected": [] },
   {
     "code": 500,
     "msg": "PERSISTENT_TIMESTAMP_OUTDATED",

@@ -14,7 +14,7 @@
  *         All change made in this file will be lost!       *
  ***********************************************************/
 
-const count = 884;
+const count = 888;
 const Exceptions = {
   303: {
     _: 'SeeOther.SeeOther',
@@ -36,6 +36,7 @@ const Exceptions = {
     ADMIN_RANK_INVALID: 'BadRequest.AdminRankInvalid',
     ADMIN_RIGHTS_EMPTY: 'BadRequest.AdminRightsEmpty',
     AD_EXPIRED: 'BadRequest.AdExpired',
+    AICOMPOSE_FLOOD_PREMIUM: 'BadRequest.AicomposeFloodPremium',
     AICOMPOSE_TONE_INVALID: 'BadRequest.AicomposeToneInvalid',
     AICOMPOSE_TONE_TITLE_INVALID: 'BadRequest.AicomposeToneTitleInvalid',
     AI_COMPOSE_TASK_MISSING: 'BadRequest.AiComposeTaskMissing',
@@ -479,6 +480,7 @@ const Exceptions = {
     QUIZ_MULTIPLE_INVALID: 'BadRequest.QuizMultipleInvalid',
     QUOTE_TEXT_INVALID: 'BadRequest.QuoteTextInvalid',
     RAISE_HAND_FORBIDDEN: 'BadRequest.RaiseHandForbidden',
+    RANDOM_ID_DUPLICATE: 'BadRequest.RandomIdDuplicate',
     RANDOM_ID_EMPTY: 'BadRequest.RandomIdEmpty',
     RANDOM_ID_EXPIRED: 'BadRequest.RandomIdExpired',
     RANDOM_ID_INVALID: 'BadRequest.RandomIdInvalid',
@@ -817,6 +819,7 @@ const Exceptions = {
     CHANNEL_PRIVATE: 'NotAcceptable.ChannelPrivate',
     CHANNEL_TOO_LARGE: 'NotAcceptable.ChannelTooLarge',
     CHAT_FORWARDS_RESTRICTED: 'NotAcceptable.ChatForwardsRestricted',
+    EDIT_MESSAGE_TEMP_RESTRICTED: 'NotAcceptable.EditMessageTempRestricted',
     FILEREF_UPGRADE_NEEDED: 'NotAcceptable.FilerefUpgradeNeeded',
     FRESH_CHANGE_ADMINS_FORBIDDEN: 'NotAcceptable.FreshChangeAdminsForbidden',
     FRESH_CHANGE_PHONE_FORBIDDEN: 'NotAcceptable.FreshChangePhoneForbidden',
@@ -827,6 +830,7 @@ const Exceptions = {
     PEER_ID_INVALID: 'NotAcceptable.PeerIdInvalid',
     PHONE_NUMBER_INVALID: 'NotAcceptable.PhoneNumberInvalid',
     PHONE_PASSWORD_FLOOD: 'NotAcceptable.PhonePasswordFlood',
+    POLL_COUNTRY_RESTRICTED: 'NotAcceptable.PollCountryRestricted',
     POLL_MEMBER_RESTRICTED: 'NotAcceptable.PollMemberRestricted',
     PRECHECKOUT_FAILED: 'NotAcceptable.PrecheckoutFailed',
     PREMIUM_CURRENTLY_UNAVAILABLE: 'NotAcceptable.PremiumCurrentlyUnavailable',
