@@ -36,7 +36,7 @@ export namespace Raw {
   /**
    * The Telegram layer we using.
    */
-  export const Layer: number = 232;
+  export const Layer: number = 233;
   /**
    * The highest telegram secret chat schema layer.
    */
@@ -521,6 +521,14 @@ export namespace Raw {
     | Raw.messages.RequestChatJoinWebView
     | Raw.messages.SetShareTheme
     | Raw.messages.GetShareThemeBackdrops
+    | Raw.messages.GetBotWidgetQueryAnswer
+    | Raw.messages.SetBotWidgetQueryAnswer
+    | Raw.messages.EditMessageWidgetData
+    | Raw.messages.EditInlineBotMessageWidgetData
+    | Raw.messages.EditWidgetData
+    | Raw.messages.GetWidgetPublicData
+    | Raw.messages.TranscribeAudioFile
+    | Raw.messages.GetTranscriptionLangs
     | Raw.updates.GetState
     | Raw.updates.GetDifference
     | Raw.updates.GetChannelDifference
@@ -1167,6 +1175,7 @@ export namespace Raw {
     Raw.EmailVerificationCode | Raw.EmailVerificationGoogle | Raw.EmailVerificationApple;
   export type TypeCodeSettings = Raw.CodeSettings;
   export type TypeInputClientProxy = Raw.InputClientProxy;
+  export type TypeUserWallet = Raw.UserWallet;
   export type TypeShareThemeBackdropOption = Raw.ShareThemeBackdropOption;
   export type TypeTonConnectRequest = Raw.TonConnectRequest;
   export type TypeTonConnectManifest = Raw.TonConnectManifest;
@@ -1589,7 +1598,8 @@ export namespace Raw {
     | Raw.BotInlineMessageMediaContact
     | Raw.BotInlineMessageMediaInvoice
     | Raw.BotInlineMessageMediaWebPage
-    | Raw.BotInlineMessageRichMessage;
+    | Raw.BotInlineMessageRichMessage
+    | Raw.BotInlineMessageWidget;
   export type TypeInputBotInlineMessage =
     | Raw.InputBotInlineMessageMediaAuto
     | Raw.InputBotInlineMessageText
@@ -1599,7 +1609,9 @@ export namespace Raw {
     | Raw.InputBotInlineMessageGame
     | Raw.InputBotInlineMessageMediaInvoice
     | Raw.InputBotInlineMessageMediaWebPage
-    | Raw.InputBotInlineMessageRichMessage;
+    | Raw.InputBotInlineMessageRichMessage
+    | Raw.InputBotInlineMessageWidget
+    | Raw.InputBotInlineMessageWidgetId;
   export type TypeMessageRange = Raw.MessageRange;
   export type TypeKeyboardInlineButtonRow = Raw.KeyboardInlineButtonRow;
   export type TypeKeyboardButtonRow = Raw.KeyboardButtonRow;
@@ -1814,7 +1826,15 @@ export namespace Raw {
     | Raw.UpdateWalletGaslessInfo
     | Raw.UpdateWalletTonConnectSession
     | Raw.UpdateWalletTonConnectPendingDisconnect
+    | Raw.UpdateEditForumTopic
+    | Raw.UpdateBotWidgetQuery
+    | Raw.UpdateInlineBotWidgetQuery
+    | Raw.UpdateBotWidgetCopyQuery
+    | Raw.UpdateMessageWidgetData
+    | Raw.UpdateTranscribedAudioFile
     | UpdateSecretChatMessage;
+  export type TypeWidgetQueryType =
+    Raw.WidgetQueryTypeData | Raw.WidgetQueryTypeSignData | Raw.WidgetQueryTypeSentTransaction;
   export type TypeTonConnectSession = Raw.TonConnectSession;
   export type TypeWalletTransaction = Raw.WalletTransaction;
   export type TypeWalletState = Raw.WalletStateEmpty | Raw.WalletState;
@@ -2137,7 +2157,8 @@ export namespace Raw {
     | Raw.MessageMediaGiveawayResults
     | Raw.MessageMediaPaidMedia
     | Raw.MessageMediaToDo
-    | Raw.MessageMediaVideoStream;
+    | Raw.MessageMediaVideoStream
+    | Raw.MessageMediaWidget;
   export type TypeMessageReplyHeader = Raw.MessageReplyHeader | Raw.MessageReplyStoryHeader;
   export type TypeMessageFwdHeader = Raw.MessageFwdHeader;
   export type TypeChatParticipant =
@@ -2259,7 +2280,9 @@ export namespace Raw {
     | Raw.InputMediaWebPage
     | Raw.InputMediaPaidMedia
     | Raw.InputMediaTodo
-    | Raw.InputMediaStakeDice;
+    | Raw.InputMediaStakeDice
+    | Raw.InputMediaWidget
+    | Raw.InputMediaWidgetId;
   export type TypeDataJSON = Raw.DataJSON;
   export type TypeInvoice = Raw.Invoice;
   export type TypeInputWebDocument = Raw.InputWebDocument;
@@ -6696,6 +6719,155 @@ export namespace Raw {
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
   }
+  export class InputMediaWidget extends TLObject {
+    allowQueries?: boolean;
+    sharedWidget?: boolean;
+    width!: int;
+    height!: int;
+    html!: string;
+    publicData?: string;
+    chatData?: string;
+
+    constructor(params: {
+      allowQueries?: boolean;
+      sharedWidget?: boolean;
+      width: int;
+      height: int;
+      html: string;
+      publicData?: string;
+      chatData?: string;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputMediaWidget';
+      this.constructorId = 0x44f6c04e;
+      this.subclassOfId = 0xfaf846f4;
+      this._slots = [
+        'allowQueries',
+        'sharedWidget',
+        'width',
+        'height',
+        'html',
+        'publicData',
+        'chatData',
+      ];
+      this.allowQueries = params.allowQueries;
+      this.sharedWidget = params.sharedWidget;
+      this.width = params.width;
+      this.height = params.height;
+      this.html = params.html;
+      this.publicData = params.publicData;
+      this.chatData = params.chatData;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.InputMediaWidget> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let allowQueries = flags & (1 << 0) ? true : false;
+      let sharedWidget = flags & (1 << 1) ? true : false;
+      let width = await Primitive.Int.read(_data);
+      let height = await Primitive.Int.read(_data);
+      let html = await Primitive.String.read(_data);
+      let publicData = flags & (1 << 2) ? await Primitive.String.read(_data) : undefined;
+      let chatData = flags & (1 << 3) ? await Primitive.String.read(_data) : undefined;
+      return new Raw.InputMediaWidget({
+        allowQueries: allowQueries,
+        sharedWidget: sharedWidget,
+        width: width,
+        height: height,
+        html: html,
+        publicData: publicData,
+        chatData: chatData,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.allowQueries ? 1 << 0 : 0;
+      flags |= this.sharedWidget ? 1 << 1 : 0;
+      flags |= this.publicData !== undefined ? 1 << 2 : 0;
+      flags |= this.chatData !== undefined ? 1 << 3 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.width !== undefined) {
+        b.write(Primitive.Int.write(this.width) as unknown as Buffer);
+      }
+      if (this.height !== undefined) {
+        b.write(Primitive.Int.write(this.height) as unknown as Buffer);
+      }
+      if (this.html !== undefined) {
+        b.write(Primitive.String.write(this.html) as unknown as Buffer);
+      }
+      if (this.publicData !== undefined) {
+        b.write(Primitive.String.write(this.publicData) as unknown as Buffer);
+      }
+      if (this.chatData !== undefined) {
+        b.write(Primitive.String.write(this.chatData) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class InputMediaWidgetId extends TLObject {
+    widgetId!: long;
+    chatData?: string;
+
+    constructor(params: { widgetId: long; chatData?: string }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputMediaWidgetId';
+      this.constructorId = 0x7c855cb5;
+      this.subclassOfId = 0xfaf846f4;
+      this._slots = ['widgetId', 'chatData'];
+      this.widgetId = params.widgetId;
+      this.chatData = params.chatData;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.InputMediaWidgetId> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let widgetId = await Primitive.Long.read(_data);
+      let chatData = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+      return new Raw.InputMediaWidgetId({ widgetId: widgetId, chatData: chatData });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.chatData !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.widgetId !== undefined) {
+        b.write(Primitive.Long.write(this.widgetId) as unknown as Buffer);
+      }
+      if (this.chatData !== undefined) {
+        b.write(Primitive.String.write(this.chatData) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
   export class InputChatPhotoEmpty extends TLObject {
     constructor() {
       super();
@@ -7708,6 +7880,7 @@ export namespace Raw {
     botCanManageBots?: boolean;
     botGuestchat?: boolean;
     botGuard?: boolean;
+    botForumSidebar?: boolean;
     id!: long;
     accessHash?: long;
     firstName?: string;
@@ -7761,6 +7934,7 @@ export namespace Raw {
       botCanManageBots?: boolean;
       botGuestchat?: boolean;
       botGuard?: boolean;
+      botForumSidebar?: boolean;
       id: long;
       accessHash?: long;
       firstName?: string;
@@ -7819,6 +7993,7 @@ export namespace Raw {
         'botCanManageBots',
         'botGuestchat',
         'botGuard',
+        'botForumSidebar',
         'id',
         'accessHash',
         'firstName',
@@ -7871,6 +8046,7 @@ export namespace Raw {
       this.botCanManageBots = params.botCanManageBots;
       this.botGuestchat = params.botGuestchat;
       this.botGuard = params.botGuard;
+      this.botForumSidebar = params.botForumSidebar;
       this.id = params.id;
       this.accessHash = params.accessHash;
       this.firstName = params.firstName;
@@ -7932,6 +8108,7 @@ export namespace Raw {
       let botCanManageBots = flags2 & (1 << 18) ? true : false;
       let botGuestchat = flags2 & (1 << 19) ? true : false;
       let botGuard = flags2 & (1 << 20) ? true : false;
+      let botForumSidebar = flags2 & (1 << 22) ? true : false;
       let id = await Primitive.Long.read(_data);
       let accessHash = flags & (1 << 0) ? await Primitive.Long.read(_data) : undefined;
       let firstName = flags & (1 << 1) ? await Primitive.String.read(_data) : undefined;
@@ -7984,6 +8161,7 @@ export namespace Raw {
         botCanManageBots: botCanManageBots,
         botGuestchat: botGuestchat,
         botGuard: botGuard,
+        botForumSidebar: botForumSidebar,
         id: id,
         accessHash: accessHash,
         firstName: firstName,
@@ -8062,6 +8240,7 @@ export namespace Raw {
       flags2 |= this.botCanManageBots ? 1 << 18 : 0;
       flags2 |= this.botGuestchat ? 1 << 19 : 0;
       flags2 |= this.botGuard ? 1 << 20 : 0;
+      flags2 |= this.botForumSidebar ? 1 << 22 : 0;
       flags2 |= this.usernames ? 1 << 0 : 0;
       flags2 |= this.storiesMaxId !== undefined ? 1 << 5 : 0;
       flags2 |= this.color !== undefined ? 1 << 8 : 0;
@@ -8730,6 +8909,7 @@ export namespace Raw {
     monoforum?: boolean;
     forumTabs?: boolean;
     inNews?: boolean;
+    forumSidebar?: boolean;
     id!: long;
     accessHash?: long;
     title!: string;
@@ -8784,6 +8964,7 @@ export namespace Raw {
       monoforum?: boolean;
       forumTabs?: boolean;
       inNews?: boolean;
+      forumSidebar?: boolean;
       id: long;
       accessHash?: long;
       title: string;
@@ -8843,6 +9024,7 @@ export namespace Raw {
         'monoforum',
         'forumTabs',
         'inNews',
+        'forumSidebar',
         'id',
         'accessHash',
         'title',
@@ -8896,6 +9078,7 @@ export namespace Raw {
       this.monoforum = params.monoforum;
       this.forumTabs = params.forumTabs;
       this.inNews = params.inNews;
+      this.forumSidebar = params.forumSidebar;
       this.id = params.id;
       this.accessHash = params.accessHash;
       this.title = params.title;
@@ -8958,6 +9141,7 @@ export namespace Raw {
       let monoforum = flags2 & (1 << 17) ? true : false;
       let forumTabs = flags2 & (1 << 19) ? true : false;
       let inNews = flags2 & (1 << 21) ? true : false;
+      let forumSidebar = flags2 & (1 << 23) ? true : false;
       let id = await Primitive.Long.read(_data);
       let accessHash = flags & (1 << 13) ? await Primitive.Long.read(_data) : undefined;
       let title = await Primitive.String.read(_data);
@@ -9011,6 +9195,7 @@ export namespace Raw {
         monoforum: monoforum,
         forumTabs: forumTabs,
         inNews: inNews,
+        forumSidebar: forumSidebar,
         id: id,
         accessHash: accessHash,
         title: title,
@@ -9085,6 +9270,7 @@ export namespace Raw {
       flags2 |= this.monoforum ? 1 << 17 : 0;
       flags2 |= this.forumTabs ? 1 << 19 : 0;
       flags2 |= this.inNews ? 1 << 21 : 0;
+      flags2 |= this.forumSidebar ? 1 << 23 : 0;
       flags2 |= this.usernames ? 1 << 0 : 0;
       flags2 |= this.storiesMaxId !== undefined ? 1 << 4 : 0;
       flags2 |= this.color !== undefined ? 1 << 7 : 0;
@@ -12885,6 +13071,133 @@ export namespace Raw {
 
       if (this.call !== undefined) {
         b.write(this.call.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class MessageMediaWidget extends TLObject {
+    isCopy?: boolean;
+    canQuery?: boolean;
+    backgroundQuery?: boolean;
+    width!: int;
+    height!: int;
+    payload!: bytes;
+    publicData?: string;
+    publicDataHash?: long;
+    chatData?: string;
+    widgetId?: long;
+
+    constructor(params: {
+      isCopy?: boolean;
+      canQuery?: boolean;
+      backgroundQuery?: boolean;
+      width: int;
+      height: int;
+      payload: bytes;
+      publicData?: string;
+      publicDataHash?: long;
+      chatData?: string;
+      widgetId?: long;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'MessageMediaWidget';
+      this.constructorId = 0x2238f214;
+      this.subclassOfId = 0x476cbe32;
+      this._slots = [
+        'isCopy',
+        'canQuery',
+        'backgroundQuery',
+        'width',
+        'height',
+        'payload',
+        'publicData',
+        'publicDataHash',
+        'chatData',
+        'widgetId',
+      ];
+      this.isCopy = params.isCopy;
+      this.canQuery = params.canQuery;
+      this.backgroundQuery = params.backgroundQuery;
+      this.width = params.width;
+      this.height = params.height;
+      this.payload = params.payload;
+      this.publicData = params.publicData;
+      this.publicDataHash = params.publicDataHash;
+      this.chatData = params.chatData;
+      this.widgetId = params.widgetId;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.MessageMediaWidget> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let isCopy = flags & (1 << 0) ? true : false;
+      let canQuery = flags & (1 << 1) ? true : false;
+      let backgroundQuery = flags & (1 << 2) ? true : false;
+      let width = await Primitive.Int.read(_data);
+      let height = await Primitive.Int.read(_data);
+      let payload = await Primitive.Bytes.read(_data);
+      let publicData = flags & (1 << 3) ? await Primitive.String.read(_data) : undefined;
+      let publicDataHash = flags & (1 << 3) ? await Primitive.Long.read(_data) : undefined;
+      let chatData = flags & (1 << 4) ? await Primitive.String.read(_data) : undefined;
+      let widgetId = flags & (1 << 5) ? await Primitive.Long.read(_data) : undefined;
+      return new Raw.MessageMediaWidget({
+        isCopy: isCopy,
+        canQuery: canQuery,
+        backgroundQuery: backgroundQuery,
+        width: width,
+        height: height,
+        payload: payload,
+        publicData: publicData,
+        publicDataHash: publicDataHash,
+        chatData: chatData,
+        widgetId: widgetId,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.isCopy ? 1 << 0 : 0;
+      flags |= this.canQuery ? 1 << 1 : 0;
+      flags |= this.backgroundQuery ? 1 << 2 : 0;
+      flags |= this.publicData !== undefined ? 1 << 3 : 0;
+      flags |= this.publicDataHash !== undefined ? 1 << 3 : 0;
+      flags |= this.chatData !== undefined ? 1 << 4 : 0;
+      flags |= this.widgetId !== undefined ? 1 << 5 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.width !== undefined) {
+        b.write(Primitive.Int.write(this.width) as unknown as Buffer);
+      }
+      if (this.height !== undefined) {
+        b.write(Primitive.Int.write(this.height) as unknown as Buffer);
+      }
+      if (this.payload !== undefined) {
+        b.write(Primitive.Bytes.write(this.payload) as unknown as Buffer);
+      }
+      if (this.publicData !== undefined) {
+        b.write(Primitive.String.write(this.publicData) as unknown as Buffer);
+      }
+      if (this.publicDataHash !== undefined) {
+        b.write(Primitive.Long.write(this.publicDataHash) as unknown as Buffer);
+      }
+      if (this.chatData !== undefined) {
+        b.write(Primitive.String.write(this.chatData) as unknown as Buffer);
+      }
+      if (this.widgetId !== undefined) {
+        b.write(Primitive.Long.write(this.widgetId) as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -29006,6 +29319,597 @@ export namespace Raw {
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
   }
+  export class UpdateEditForumTopic extends TLObject {
+    peer!: Raw.TypePeer;
+    topicId!: int;
+    title?: string;
+    iconEmojiId?: long;
+    closed?: Bool;
+    hidden?: Bool;
+
+    constructor(params: {
+      peer: Raw.TypePeer;
+      topicId: int;
+      title?: string;
+      iconEmojiId?: long;
+      closed?: Bool;
+      hidden?: Bool;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateEditForumTopic';
+      this.constructorId = 0x2366665c;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['peer', 'topicId', 'title', 'iconEmojiId', 'closed', 'hidden'];
+      this.peer = params.peer;
+      this.topicId = params.topicId;
+      this.title = params.title;
+      this.iconEmojiId = params.iconEmojiId;
+      this.closed = params.closed;
+      this.hidden = params.hidden;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.UpdateEditForumTopic> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let peer = await TLObject.read(_data);
+      let topicId = await Primitive.Int.read(_data);
+      let title = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+      let iconEmojiId = flags & (1 << 1) ? await Primitive.Long.read(_data) : undefined;
+      let closed = flags & (1 << 2) ? await Primitive.Bool.read(_data) : undefined;
+      let hidden = flags & (1 << 3) ? await Primitive.Bool.read(_data) : undefined;
+      return new Raw.UpdateEditForumTopic({
+        peer: peer,
+        topicId: topicId,
+        title: title,
+        iconEmojiId: iconEmojiId,
+        closed: closed,
+        hidden: hidden,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.title !== undefined ? 1 << 0 : 0;
+      flags |= this.iconEmojiId !== undefined ? 1 << 1 : 0;
+      flags |= this.closed !== undefined ? 1 << 2 : 0;
+      flags |= this.hidden !== undefined ? 1 << 3 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.peer !== undefined) {
+        b.write(this.peer.write() as unknown as Buffer);
+      }
+      if (this.topicId !== undefined) {
+        b.write(Primitive.Int.write(this.topicId) as unknown as Buffer);
+      }
+      if (this.title !== undefined) {
+        b.write(Primitive.String.write(this.title) as unknown as Buffer);
+      }
+      if (this.iconEmojiId !== undefined) {
+        b.write(Primitive.Long.write(this.iconEmojiId) as unknown as Buffer);
+      }
+      if (this.closed !== undefined) {
+        b.write(Primitive.Bool.write(this.closed) as unknown as Buffer);
+      }
+      if (this.hidden !== undefined) {
+        b.write(Primitive.Bool.write(this.hidden) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class UpdateBotWidgetQuery extends TLObject {
+    queryId!: long;
+    queryType!: Raw.TypeWidgetQueryType;
+    userId!: long;
+    peer!: Raw.TypePeer;
+    msgId!: int;
+    chatInstance!: long;
+    chatType!: string;
+    data!: bytes;
+    widgetId?: long;
+    walletCard?: Raw.wallet.TypeCard;
+
+    constructor(params: {
+      queryId: long;
+      queryType: Raw.TypeWidgetQueryType;
+      userId: long;
+      peer: Raw.TypePeer;
+      msgId: int;
+      chatInstance: long;
+      chatType: string;
+      data: bytes;
+      widgetId?: long;
+      walletCard?: Raw.wallet.TypeCard;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateBotWidgetQuery';
+      this.constructorId = 0xb373fe68;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = [
+        'queryId',
+        'queryType',
+        'userId',
+        'peer',
+        'msgId',
+        'chatInstance',
+        'chatType',
+        'data',
+        'widgetId',
+        'walletCard',
+      ];
+      this.queryId = params.queryId;
+      this.queryType = params.queryType;
+      this.userId = params.userId;
+      this.peer = params.peer;
+      this.msgId = params.msgId;
+      this.chatInstance = params.chatInstance;
+      this.chatType = params.chatType;
+      this.data = params.data;
+      this.widgetId = params.widgetId;
+      this.walletCard = params.walletCard;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.UpdateBotWidgetQuery> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let queryId = await Primitive.Long.read(_data);
+      let queryType = await TLObject.read(_data);
+      let userId = await Primitive.Long.read(_data);
+      let peer = await TLObject.read(_data);
+      let msgId = await Primitive.Int.read(_data);
+      let chatInstance = await Primitive.Long.read(_data);
+      let chatType = await Primitive.String.read(_data);
+      let data = await Primitive.Bytes.read(_data);
+      let widgetId = flags & (1 << 0) ? await Primitive.Long.read(_data) : undefined;
+      let walletCard = flags & (1 << 1) ? await TLObject.read(_data) : undefined;
+      return new Raw.UpdateBotWidgetQuery({
+        queryId: queryId,
+        queryType: queryType,
+        userId: userId,
+        peer: peer,
+        msgId: msgId,
+        chatInstance: chatInstance,
+        chatType: chatType,
+        data: data,
+        widgetId: widgetId,
+        walletCard: walletCard,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.widgetId !== undefined ? 1 << 0 : 0;
+      flags |= this.walletCard !== undefined ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.queryId !== undefined) {
+        b.write(Primitive.Long.write(this.queryId) as unknown as Buffer);
+      }
+      if (this.queryType !== undefined) {
+        b.write(this.queryType.write() as unknown as Buffer);
+      }
+      if (this.userId !== undefined) {
+        b.write(Primitive.Long.write(this.userId) as unknown as Buffer);
+      }
+      if (this.peer !== undefined) {
+        b.write(this.peer.write() as unknown as Buffer);
+      }
+      if (this.msgId !== undefined) {
+        b.write(Primitive.Int.write(this.msgId) as unknown as Buffer);
+      }
+      if (this.chatInstance !== undefined) {
+        b.write(Primitive.Long.write(this.chatInstance) as unknown as Buffer);
+      }
+      if (this.chatType !== undefined) {
+        b.write(Primitive.String.write(this.chatType) as unknown as Buffer);
+      }
+      if (this.data !== undefined) {
+        b.write(Primitive.Bytes.write(this.data) as unknown as Buffer);
+      }
+      if (this.widgetId !== undefined) {
+        b.write(Primitive.Long.write(this.widgetId) as unknown as Buffer);
+      }
+      if (this.walletCard !== undefined) {
+        b.write(this.walletCard.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class UpdateInlineBotWidgetQuery extends TLObject {
+    queryId!: long;
+    queryType!: Raw.TypeWidgetQueryType;
+    userId!: long;
+    inlineMessageId!: Raw.TypeInputBotInlineMessageID;
+    chatInstance!: long;
+    chatType!: string;
+    data!: bytes;
+    widgetId?: long;
+    walletCard?: Raw.wallet.TypeCard;
+
+    constructor(params: {
+      queryId: long;
+      queryType: Raw.TypeWidgetQueryType;
+      userId: long;
+      inlineMessageId: Raw.TypeInputBotInlineMessageID;
+      chatInstance: long;
+      chatType: string;
+      data: bytes;
+      widgetId?: long;
+      walletCard?: Raw.wallet.TypeCard;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateInlineBotWidgetQuery';
+      this.constructorId = 0xa5f07e08;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = [
+        'queryId',
+        'queryType',
+        'userId',
+        'inlineMessageId',
+        'chatInstance',
+        'chatType',
+        'data',
+        'widgetId',
+        'walletCard',
+      ];
+      this.queryId = params.queryId;
+      this.queryType = params.queryType;
+      this.userId = params.userId;
+      this.inlineMessageId = params.inlineMessageId;
+      this.chatInstance = params.chatInstance;
+      this.chatType = params.chatType;
+      this.data = params.data;
+      this.widgetId = params.widgetId;
+      this.walletCard = params.walletCard;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.UpdateInlineBotWidgetQuery> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let queryId = await Primitive.Long.read(_data);
+      let queryType = await TLObject.read(_data);
+      let userId = await Primitive.Long.read(_data);
+      let inlineMessageId = await TLObject.read(_data);
+      let chatInstance = await Primitive.Long.read(_data);
+      let chatType = await Primitive.String.read(_data);
+      let data = await Primitive.Bytes.read(_data);
+      let widgetId = flags & (1 << 0) ? await Primitive.Long.read(_data) : undefined;
+      let walletCard = flags & (1 << 1) ? await TLObject.read(_data) : undefined;
+      return new Raw.UpdateInlineBotWidgetQuery({
+        queryId: queryId,
+        queryType: queryType,
+        userId: userId,
+        inlineMessageId: inlineMessageId,
+        chatInstance: chatInstance,
+        chatType: chatType,
+        data: data,
+        widgetId: widgetId,
+        walletCard: walletCard,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.widgetId !== undefined ? 1 << 0 : 0;
+      flags |= this.walletCard !== undefined ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.queryId !== undefined) {
+        b.write(Primitive.Long.write(this.queryId) as unknown as Buffer);
+      }
+      if (this.queryType !== undefined) {
+        b.write(this.queryType.write() as unknown as Buffer);
+      }
+      if (this.userId !== undefined) {
+        b.write(Primitive.Long.write(this.userId) as unknown as Buffer);
+      }
+      if (this.inlineMessageId !== undefined) {
+        b.write(this.inlineMessageId.write() as unknown as Buffer);
+      }
+      if (this.chatInstance !== undefined) {
+        b.write(Primitive.Long.write(this.chatInstance) as unknown as Buffer);
+      }
+      if (this.chatType !== undefined) {
+        b.write(Primitive.String.write(this.chatType) as unknown as Buffer);
+      }
+      if (this.data !== undefined) {
+        b.write(Primitive.Bytes.write(this.data) as unknown as Buffer);
+      }
+      if (this.widgetId !== undefined) {
+        b.write(Primitive.Long.write(this.widgetId) as unknown as Buffer);
+      }
+      if (this.walletCard !== undefined) {
+        b.write(this.walletCard.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class UpdateBotWidgetCopyQuery extends TLObject {
+    queryId!: long;
+    queryType!: Raw.TypeWidgetQueryType;
+    userId!: long;
+    data!: bytes;
+    widgetId!: long;
+    walletCard?: Raw.wallet.TypeCard;
+
+    constructor(params: {
+      queryId: long;
+      queryType: Raw.TypeWidgetQueryType;
+      userId: long;
+      data: bytes;
+      widgetId: long;
+      walletCard?: Raw.wallet.TypeCard;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateBotWidgetCopyQuery';
+      this.constructorId = 0xfa89bef7;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['queryId', 'queryType', 'userId', 'data', 'widgetId', 'walletCard'];
+      this.queryId = params.queryId;
+      this.queryType = params.queryType;
+      this.userId = params.userId;
+      this.data = params.data;
+      this.widgetId = params.widgetId;
+      this.walletCard = params.walletCard;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.UpdateBotWidgetCopyQuery> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let queryId = await Primitive.Long.read(_data);
+      let queryType = await TLObject.read(_data);
+      let userId = await Primitive.Long.read(_data);
+      let data = await Primitive.Bytes.read(_data);
+      let widgetId = await Primitive.Long.read(_data);
+      let walletCard = flags & (1 << 1) ? await TLObject.read(_data) : undefined;
+      return new Raw.UpdateBotWidgetCopyQuery({
+        queryId: queryId,
+        queryType: queryType,
+        userId: userId,
+        data: data,
+        widgetId: widgetId,
+        walletCard: walletCard,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.walletCard !== undefined ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.queryId !== undefined) {
+        b.write(Primitive.Long.write(this.queryId) as unknown as Buffer);
+      }
+      if (this.queryType !== undefined) {
+        b.write(this.queryType.write() as unknown as Buffer);
+      }
+      if (this.userId !== undefined) {
+        b.write(Primitive.Long.write(this.userId) as unknown as Buffer);
+      }
+      if (this.data !== undefined) {
+        b.write(Primitive.Bytes.write(this.data) as unknown as Buffer);
+      }
+      if (this.widgetId !== undefined) {
+        b.write(Primitive.Long.write(this.widgetId) as unknown as Buffer);
+      }
+      if (this.walletCard !== undefined) {
+        b.write(this.walletCard.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class UpdateMessageWidgetData extends TLObject {
+    peer!: Raw.TypePeer;
+    msgId!: int;
+    publicData?: string;
+    publicDataHash?: long;
+    chatData?: string;
+    pts!: int;
+    ptsCount!: int;
+
+    constructor(params: {
+      peer: Raw.TypePeer;
+      msgId: int;
+      publicData?: string;
+      publicDataHash?: long;
+      chatData?: string;
+      pts: int;
+      ptsCount: int;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateMessageWidgetData';
+      this.constructorId = 0xbbb078dd;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = [
+        'peer',
+        'msgId',
+        'publicData',
+        'publicDataHash',
+        'chatData',
+        'pts',
+        'ptsCount',
+      ];
+      this.peer = params.peer;
+      this.msgId = params.msgId;
+      this.publicData = params.publicData;
+      this.publicDataHash = params.publicDataHash;
+      this.chatData = params.chatData;
+      this.pts = params.pts;
+      this.ptsCount = params.ptsCount;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.UpdateMessageWidgetData> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let peer = await TLObject.read(_data);
+      let msgId = await Primitive.Int.read(_data);
+      let publicData = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+      let publicDataHash = flags & (1 << 0) ? await Primitive.Long.read(_data) : undefined;
+      let chatData = flags & (1 << 1) ? await Primitive.String.read(_data) : undefined;
+      let pts = await Primitive.Int.read(_data);
+      let ptsCount = await Primitive.Int.read(_data);
+      return new Raw.UpdateMessageWidgetData({
+        peer: peer,
+        msgId: msgId,
+        publicData: publicData,
+        publicDataHash: publicDataHash,
+        chatData: chatData,
+        pts: pts,
+        ptsCount: ptsCount,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.publicData !== undefined ? 1 << 0 : 0;
+      flags |= this.publicDataHash !== undefined ? 1 << 0 : 0;
+      flags |= this.chatData !== undefined ? 1 << 1 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.peer !== undefined) {
+        b.write(this.peer.write() as unknown as Buffer);
+      }
+      if (this.msgId !== undefined) {
+        b.write(Primitive.Int.write(this.msgId) as unknown as Buffer);
+      }
+      if (this.publicData !== undefined) {
+        b.write(Primitive.String.write(this.publicData) as unknown as Buffer);
+      }
+      if (this.publicDataHash !== undefined) {
+        b.write(Primitive.Long.write(this.publicDataHash) as unknown as Buffer);
+      }
+      if (this.chatData !== undefined) {
+        b.write(Primitive.String.write(this.chatData) as unknown as Buffer);
+      }
+      if (this.pts !== undefined) {
+        b.write(Primitive.Int.write(this.pts) as unknown as Buffer);
+      }
+      if (this.ptsCount !== undefined) {
+        b.write(Primitive.Int.write(this.ptsCount) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class UpdateTranscribedAudioFile extends TLObject {
+    pending?: boolean;
+    transcriptionId!: long;
+    text!: string;
+
+    constructor(params: { pending?: boolean; transcriptionId: long; text: string }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UpdateTranscribedAudioFile';
+      this.constructorId = 0x734c2e7b;
+      this.subclassOfId = 0x9f89304e;
+      this._slots = ['pending', 'transcriptionId', 'text'];
+      this.pending = params.pending;
+      this.transcriptionId = params.transcriptionId;
+      this.text = params.text;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.UpdateTranscribedAudioFile> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let pending = flags & (1 << 0) ? true : false;
+      let transcriptionId = await Primitive.Long.read(_data);
+      let text = await Primitive.String.read(_data);
+      return new Raw.UpdateTranscribedAudioFile({
+        pending: pending,
+        transcriptionId: transcriptionId,
+        text: text,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.pending ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.transcriptionId !== undefined) {
+        b.write(Primitive.Long.write(this.transcriptionId) as unknown as Buffer);
+      }
+      if (this.text !== undefined) {
+        b.write(Primitive.String.write(this.text) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
   export class UpdatesTooLong extends TLObject {
     constructor() {
       super();
@@ -39625,6 +40529,229 @@ export namespace Raw {
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
   }
+  export class InputBotInlineMessageWidget extends TLObject {
+    allowQueries?: boolean;
+    sharedWidget?: boolean;
+    invertMedia?: boolean;
+    width!: int;
+    height!: int;
+    html!: string;
+    publicData?: string;
+    chatData?: string;
+    replyMarkup?: Raw.TypeReplyMarkup;
+    message!: string;
+    entities?: Vector<Raw.TypeMessageEntity>;
+
+    constructor(params: {
+      allowQueries?: boolean;
+      sharedWidget?: boolean;
+      invertMedia?: boolean;
+      width: int;
+      height: int;
+      html: string;
+      publicData?: string;
+      chatData?: string;
+      replyMarkup?: Raw.TypeReplyMarkup;
+      message: string;
+      entities?: Vector<Raw.TypeMessageEntity>;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputBotInlineMessageWidget';
+      this.constructorId = 0xf597a3f0;
+      this.subclassOfId = 0x53fb4010;
+      this._slots = [
+        'allowQueries',
+        'sharedWidget',
+        'invertMedia',
+        'width',
+        'height',
+        'html',
+        'publicData',
+        'chatData',
+        'replyMarkup',
+        'message',
+        'entities',
+      ];
+      this.allowQueries = params.allowQueries;
+      this.sharedWidget = params.sharedWidget;
+      this.invertMedia = params.invertMedia;
+      this.width = params.width;
+      this.height = params.height;
+      this.html = params.html;
+      this.publicData = params.publicData;
+      this.chatData = params.chatData;
+      this.replyMarkup = params.replyMarkup;
+      this.message = params.message;
+      this.entities = params.entities;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.InputBotInlineMessageWidget> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let allowQueries = flags & (1 << 0) ? true : false;
+      let sharedWidget = flags & (1 << 1) ? true : false;
+      let invertMedia = flags & (1 << 6) ? true : false;
+      let width = await Primitive.Int.read(_data);
+      let height = await Primitive.Int.read(_data);
+      let html = await Primitive.String.read(_data);
+      let publicData = flags & (1 << 2) ? await Primitive.String.read(_data) : undefined;
+      let chatData = flags & (1 << 3) ? await Primitive.String.read(_data) : undefined;
+      let replyMarkup = flags & (1 << 4) ? await TLObject.read(_data) : undefined;
+      let message = await Primitive.String.read(_data);
+      let entities = flags & (1 << 5) ? await TLObject.read(_data) : [];
+      return new Raw.InputBotInlineMessageWidget({
+        allowQueries: allowQueries,
+        sharedWidget: sharedWidget,
+        invertMedia: invertMedia,
+        width: width,
+        height: height,
+        html: html,
+        publicData: publicData,
+        chatData: chatData,
+        replyMarkup: replyMarkup,
+        message: message,
+        entities: entities,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.allowQueries ? 1 << 0 : 0;
+      flags |= this.sharedWidget ? 1 << 1 : 0;
+      flags |= this.invertMedia ? 1 << 6 : 0;
+      flags |= this.publicData !== undefined ? 1 << 2 : 0;
+      flags |= this.chatData !== undefined ? 1 << 3 : 0;
+      flags |= this.replyMarkup !== undefined ? 1 << 4 : 0;
+      flags |= this.entities ? 1 << 5 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.width !== undefined) {
+        b.write(Primitive.Int.write(this.width) as unknown as Buffer);
+      }
+      if (this.height !== undefined) {
+        b.write(Primitive.Int.write(this.height) as unknown as Buffer);
+      }
+      if (this.html !== undefined) {
+        b.write(Primitive.String.write(this.html) as unknown as Buffer);
+      }
+      if (this.publicData !== undefined) {
+        b.write(Primitive.String.write(this.publicData) as unknown as Buffer);
+      }
+      if (this.chatData !== undefined) {
+        b.write(Primitive.String.write(this.chatData) as unknown as Buffer);
+      }
+      if (this.replyMarkup !== undefined) {
+        b.write(this.replyMarkup.write() as unknown as Buffer);
+      }
+      if (this.message !== undefined) {
+        b.write(Primitive.String.write(this.message) as unknown as Buffer);
+      }
+      if (this.entities) {
+        b.write(Primitive.Vector.write(this.entities) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class InputBotInlineMessageWidgetId extends TLObject {
+    invertMedia?: boolean;
+    widgetId!: long;
+    chatData?: string;
+    replyMarkup?: Raw.TypeReplyMarkup;
+    message!: string;
+    entities?: Vector<Raw.TypeMessageEntity>;
+
+    constructor(params: {
+      invertMedia?: boolean;
+      widgetId: long;
+      chatData?: string;
+      replyMarkup?: Raw.TypeReplyMarkup;
+      message: string;
+      entities?: Vector<Raw.TypeMessageEntity>;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'InputBotInlineMessageWidgetId';
+      this.constructorId = 0xfe8b792b;
+      this.subclassOfId = 0x53fb4010;
+      this._slots = ['invertMedia', 'widgetId', 'chatData', 'replyMarkup', 'message', 'entities'];
+      this.invertMedia = params.invertMedia;
+      this.widgetId = params.widgetId;
+      this.chatData = params.chatData;
+      this.replyMarkup = params.replyMarkup;
+      this.message = params.message;
+      this.entities = params.entities;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.InputBotInlineMessageWidgetId> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let invertMedia = flags & (1 << 3) ? true : false;
+      let widgetId = await Primitive.Long.read(_data);
+      let chatData = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+      let replyMarkup = flags & (1 << 1) ? await TLObject.read(_data) : undefined;
+      let message = await Primitive.String.read(_data);
+      let entities = flags & (1 << 2) ? await TLObject.read(_data) : [];
+      return new Raw.InputBotInlineMessageWidgetId({
+        invertMedia: invertMedia,
+        widgetId: widgetId,
+        chatData: chatData,
+        replyMarkup: replyMarkup,
+        message: message,
+        entities: entities,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.invertMedia ? 1 << 3 : 0;
+      flags |= this.chatData !== undefined ? 1 << 0 : 0;
+      flags |= this.replyMarkup !== undefined ? 1 << 1 : 0;
+      flags |= this.entities ? 1 << 2 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.widgetId !== undefined) {
+        b.write(Primitive.Long.write(this.widgetId) as unknown as Buffer);
+      }
+      if (this.chatData !== undefined) {
+        b.write(Primitive.String.write(this.chatData) as unknown as Buffer);
+      }
+      if (this.replyMarkup !== undefined) {
+        b.write(this.replyMarkup.write() as unknown as Buffer);
+      }
+      if (this.message !== undefined) {
+        b.write(Primitive.String.write(this.message) as unknown as Buffer);
+      }
+      if (this.entities) {
+        b.write(Primitive.Vector.write(this.entities) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
   export class InputBotInlineResult extends TLObject {
     id!: string;
     type!: string;
@@ -40623,6 +41750,148 @@ export namespace Raw {
       }
       if (this.richMessage !== undefined) {
         b.write(this.richMessage.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class BotInlineMessageWidget extends TLObject {
+    invertMedia?: boolean;
+    width!: int;
+    height!: int;
+    payload!: bytes;
+    publicData?: string;
+    publicDataHash?: long;
+    chatData?: string;
+    replyMarkup?: Raw.TypeReplyMarkup;
+    widgetId?: long;
+    message!: string;
+    entities?: Vector<Raw.TypeMessageEntity>;
+
+    constructor(params: {
+      invertMedia?: boolean;
+      width: int;
+      height: int;
+      payload: bytes;
+      publicData?: string;
+      publicDataHash?: long;
+      chatData?: string;
+      replyMarkup?: Raw.TypeReplyMarkup;
+      widgetId?: long;
+      message: string;
+      entities?: Vector<Raw.TypeMessageEntity>;
+    }) {
+      super();
+      this.classType = 'types';
+      this.className = 'BotInlineMessageWidget';
+      this.constructorId = 0xbaa17834;
+      this.subclassOfId = 0xc4910f88;
+      this._slots = [
+        'invertMedia',
+        'width',
+        'height',
+        'payload',
+        'publicData',
+        'publicDataHash',
+        'chatData',
+        'replyMarkup',
+        'widgetId',
+        'message',
+        'entities',
+      ];
+      this.invertMedia = params.invertMedia;
+      this.width = params.width;
+      this.height = params.height;
+      this.payload = params.payload;
+      this.publicData = params.publicData;
+      this.publicDataHash = params.publicDataHash;
+      this.chatData = params.chatData;
+      this.replyMarkup = params.replyMarkup;
+      this.widgetId = params.widgetId;
+      this.message = params.message;
+      this.entities = params.entities;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.BotInlineMessageWidget> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let invertMedia = flags & (1 << 5) ? true : false;
+      let width = await Primitive.Int.read(_data);
+      let height = await Primitive.Int.read(_data);
+      let payload = await Primitive.Bytes.read(_data);
+      let publicData = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+      let publicDataHash = flags & (1 << 0) ? await Primitive.Long.read(_data) : undefined;
+      let chatData = flags & (1 << 1) ? await Primitive.String.read(_data) : undefined;
+      let replyMarkup = flags & (1 << 2) ? await TLObject.read(_data) : undefined;
+      let widgetId = flags & (1 << 3) ? await Primitive.Long.read(_data) : undefined;
+      let message = await Primitive.String.read(_data);
+      let entities = flags & (1 << 4) ? await TLObject.read(_data) : [];
+      return new Raw.BotInlineMessageWidget({
+        invertMedia: invertMedia,
+        width: width,
+        height: height,
+        payload: payload,
+        publicData: publicData,
+        publicDataHash: publicDataHash,
+        chatData: chatData,
+        replyMarkup: replyMarkup,
+        widgetId: widgetId,
+        message: message,
+        entities: entities,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.invertMedia ? 1 << 5 : 0;
+      flags |= this.publicData !== undefined ? 1 << 0 : 0;
+      flags |= this.publicDataHash !== undefined ? 1 << 0 : 0;
+      flags |= this.chatData !== undefined ? 1 << 1 : 0;
+      flags |= this.replyMarkup !== undefined ? 1 << 2 : 0;
+      flags |= this.widgetId !== undefined ? 1 << 3 : 0;
+      flags |= this.entities ? 1 << 4 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.width !== undefined) {
+        b.write(Primitive.Int.write(this.width) as unknown as Buffer);
+      }
+      if (this.height !== undefined) {
+        b.write(Primitive.Int.write(this.height) as unknown as Buffer);
+      }
+      if (this.payload !== undefined) {
+        b.write(Primitive.Bytes.write(this.payload) as unknown as Buffer);
+      }
+      if (this.publicData !== undefined) {
+        b.write(Primitive.String.write(this.publicData) as unknown as Buffer);
+      }
+      if (this.publicDataHash !== undefined) {
+        b.write(Primitive.Long.write(this.publicDataHash) as unknown as Buffer);
+      }
+      if (this.chatData !== undefined) {
+        b.write(Primitive.String.write(this.chatData) as unknown as Buffer);
+      }
+      if (this.replyMarkup !== undefined) {
+        b.write(this.replyMarkup.write() as unknown as Buffer);
+      }
+      if (this.widgetId !== undefined) {
+        b.write(Primitive.Long.write(this.widgetId) as unknown as Buffer);
+      }
+      if (this.message !== undefined) {
+        b.write(Primitive.String.write(this.message) as unknown as Buffer);
+      }
+      if (this.entities) {
+        b.write(Primitive.Vector.write(this.entities) as unknown as Buffer);
       }
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
@@ -81824,6 +83093,196 @@ export namespace Raw {
       return Buffer.from(b.buffer as unknown as Uint8Array);
     }
   }
+  export class UserWallet extends TLObject {
+    address!: string;
+    balance!: long;
+    publicKey?: bytes;
+    stateInit?: bytes;
+
+    constructor(params: { address: string; balance: long; publicKey?: bytes; stateInit?: bytes }) {
+      super();
+      this.classType = 'types';
+      this.className = 'UserWallet';
+      this.constructorId = 0x454d2737;
+      this.subclassOfId = 0x5c63833d;
+      this._slots = ['address', 'balance', 'publicKey', 'stateInit'];
+      this.address = params.address;
+      this.balance = params.balance;
+      this.publicKey = params.publicKey;
+      this.stateInit = params.stateInit;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(_data: BytesIO, ..._args: Array<any>): Promise<Raw.UserWallet> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let address = await Primitive.String.read(_data);
+      let balance = await Primitive.Long.read(_data);
+      let publicKey = flags & (1 << 0) ? await Primitive.Bytes.read(_data) : undefined;
+      let stateInit = flags & (1 << 0) ? await Primitive.Bytes.read(_data) : undefined;
+      return new Raw.UserWallet({
+        address: address,
+        balance: balance,
+        publicKey: publicKey,
+        stateInit: stateInit,
+      });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.publicKey !== undefined ? 1 << 0 : 0;
+      flags |= this.stateInit !== undefined ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      if (this.address !== undefined) {
+        b.write(Primitive.String.write(this.address) as unknown as Buffer);
+      }
+      if (this.balance !== undefined) {
+        b.write(Primitive.Long.write(this.balance) as unknown as Buffer);
+      }
+      if (this.publicKey !== undefined) {
+        b.write(Primitive.Bytes.write(this.publicKey) as unknown as Buffer);
+      }
+      if (this.stateInit !== undefined) {
+        b.write(Primitive.Bytes.write(this.stateInit) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class WidgetQueryTypeData extends TLObject {
+    withWallet?: boolean;
+
+    constructor(params: { withWallet?: boolean }) {
+      super();
+      this.classType = 'types';
+      this.className = 'WidgetQueryTypeData';
+      this.constructorId = 0x16d8cf0b;
+      this.subclassOfId = 0x4bf6128d;
+      this._slots = ['withWallet'];
+      this.withWallet = params.withWallet;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.WidgetQueryTypeData> {
+      // @ts-ignore
+      let flags = await Primitive.Int.read(_data);
+      let withWallet = flags & (1 << 0) ? true : false;
+      return new Raw.WidgetQueryTypeData({ withWallet: withWallet });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+      // @ts-ignore
+      let flags = 0;
+      flags |= this.withWallet ? 1 << 0 : 0;
+      b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class WidgetQueryTypeSignData extends TLObject {
+    wallet!: Raw.TypeUserWallet;
+    signData!: Raw.TypeDataJSON;
+
+    constructor(params: { wallet: Raw.TypeUserWallet; signData: Raw.TypeDataJSON }) {
+      super();
+      this.classType = 'types';
+      this.className = 'WidgetQueryTypeSignData';
+      this.constructorId = 0x192047dc;
+      this.subclassOfId = 0x4bf6128d;
+      this._slots = ['wallet', 'signData'];
+      this.wallet = params.wallet;
+      this.signData = params.signData;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.WidgetQueryTypeSignData> {
+      // no flags
+      let wallet = await TLObject.read(_data);
+      let signData = await TLObject.read(_data);
+      return new Raw.WidgetQueryTypeSignData({ wallet: wallet, signData: signData });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.wallet !== undefined) {
+        b.write(this.wallet.write() as unknown as Buffer);
+      }
+      if (this.signData !== undefined) {
+        b.write(this.signData.write() as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
+  export class WidgetQueryTypeSentTransaction extends TLObject {
+    wallet!: Raw.TypeUserWallet;
+    msgHash!: string;
+
+    constructor(params: { wallet: Raw.TypeUserWallet; msgHash: string }) {
+      super();
+      this.classType = 'types';
+      this.className = 'WidgetQueryTypeSentTransaction';
+      this.constructorId = 0xff3b33b4;
+      this.subclassOfId = 0x4bf6128d;
+      this._slots = ['wallet', 'msgHash'];
+      this.wallet = params.wallet;
+      this.msgHash = params.msgHash;
+    }
+    /**
+     * Generate the TLObject from buffer.
+     * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+     */
+    static override async read(
+      _data: BytesIO,
+      ..._args: Array<any>
+    ): Promise<Raw.WidgetQueryTypeSentTransaction> {
+      // no flags
+      let wallet = await TLObject.read(_data);
+      let msgHash = await Primitive.String.read(_data);
+      return new Raw.WidgetQueryTypeSentTransaction({ wallet: wallet, msgHash: msgHash });
+    }
+    /**
+     * Generate buffer from TLObject.
+     */
+    override write(): Buffer {
+      const b: BytesIO = new BytesIO();
+      b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+      // no flags
+      if (this.wallet !== undefined) {
+        b.write(this.wallet.write() as unknown as Buffer);
+      }
+      if (this.msgHash !== undefined) {
+        b.write(Primitive.String.write(this.msgHash) as unknown as Buffer);
+      }
+      return Buffer.from(b.buffer as unknown as Uint8Array);
+    }
+  }
   export class InvokeAfterMsg extends TLObject {
     __response__!: X;
     msgId!: long;
@@ -93413,6 +94872,9 @@ export namespace Raw {
   }
   export namespace messages {
     export type TypeInactiveChats = Raw.messages.InactiveChats;
+    export type TypeWidgetPublicData =
+      Raw.messages.WidgetPublicDataNotModified | Raw.messages.WidgetPublicData;
+    export type TypeBotWidgetQueryAnswer = Raw.messages.BotWidgetQueryAnswer;
     export type TypeComposedRichMessageWithAI = Raw.messages.ComposedRichMessageWithAI;
     export type TypeTranslatedRichMessage = Raw.messages.TranslatedRichMessage;
     export type TypeComposedMessageWithAI = Raw.messages.ComposedMessageWithAI;
@@ -98508,6 +99970,135 @@ export namespace Raw {
         // no flags
         if (this.result !== undefined) {
           b.write(this.result.write() as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class BotWidgetQueryAnswer extends TLObject {
+      result?: string;
+
+      constructor(params: { result?: string }) {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.BotWidgetQueryAnswer';
+        this.constructorId = 0x95b73023;
+        this.subclassOfId = 0xa7b102a;
+        this._slots = ['result'];
+        this.result = params.result;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.BotWidgetQueryAnswer> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let result = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+        return new Raw.messages.BotWidgetQueryAnswer({ result: result });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.result !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.result !== undefined) {
+          b.write(Primitive.String.write(this.result) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class WidgetPublicDataNotModified extends TLObject {
+      period!: int;
+
+      constructor(params: { period: int }) {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.WidgetPublicDataNotModified';
+        this.constructorId = 0xb9196e57;
+        this.subclassOfId = 0x30e16d71;
+        this._slots = ['period'];
+        this.period = params.period;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.WidgetPublicDataNotModified> {
+        // no flags
+        let period = await Primitive.Int.read(_data);
+        return new Raw.messages.WidgetPublicDataNotModified({ period: period });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.period !== undefined) {
+          b.write(Primitive.Int.write(this.period) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class WidgetPublicData extends TLObject {
+      hash!: long;
+      data!: string;
+      period!: int;
+
+      constructor(params: { hash: long; data: string; period: int }) {
+        super();
+        this.classType = 'types';
+        this.className = 'messages.WidgetPublicData';
+        this.constructorId = 0x4493bff;
+        this.subclassOfId = 0x30e16d71;
+        this._slots = ['hash', 'data', 'period'];
+        this.hash = params.hash;
+        this.data = params.data;
+        this.period = params.period;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.WidgetPublicData> {
+        // no flags
+        let hash = await Primitive.Long.read(_data);
+        let data = await Primitive.String.read(_data);
+        let period = await Primitive.Int.read(_data);
+        return new Raw.messages.WidgetPublicData({ hash: hash, data: data, period: period });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.hash !== undefined) {
+          b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+        }
+        if (this.data !== undefined) {
+          b.write(Primitive.String.write(this.data) as unknown as Buffer);
+        }
+        if (this.period !== undefined) {
+          b.write(Primitive.Int.write(this.period) as unknown as Buffer);
         }
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
@@ -114072,6 +115663,452 @@ export namespace Raw {
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
     }
+    export class GetBotWidgetQueryAnswer extends TLObject {
+      __response__!: Raw.messages.TypeBotWidgetQueryAnswer;
+      peer!: Raw.TypeInputPeer;
+      msgId!: int;
+      queryType!: Raw.TypeWidgetQueryType;
+      data!: bytes;
+
+      constructor(params: {
+        peer: Raw.TypeInputPeer;
+        msgId: int;
+        queryType: Raw.TypeWidgetQueryType;
+        data: bytes;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetBotWidgetQueryAnswer';
+        this.constructorId = 0x5c550579;
+        this.subclassOfId = 0xa7b102a;
+        this._slots = ['peer', 'msgId', 'queryType', 'data'];
+        this.peer = params.peer;
+        this.msgId = params.msgId;
+        this.queryType = params.queryType;
+        this.data = params.data;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.GetBotWidgetQueryAnswer> {
+        // no flags
+        let peer = await TLObject.read(_data);
+        let msgId = await Primitive.Int.read(_data);
+        let queryType = await TLObject.read(_data);
+        let data = await Primitive.Bytes.read(_data);
+        return new Raw.messages.GetBotWidgetQueryAnswer({
+          peer: peer,
+          msgId: msgId,
+          queryType: queryType,
+          data: data,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.msgId !== undefined) {
+          b.write(Primitive.Int.write(this.msgId) as unknown as Buffer);
+        }
+        if (this.queryType !== undefined) {
+          b.write(this.queryType.write() as unknown as Buffer);
+        }
+        if (this.data !== undefined) {
+          b.write(Primitive.Bytes.write(this.data) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class SetBotWidgetQueryAnswer extends TLObject {
+      __response__!: Bool;
+      queryId!: long;
+      result?: string;
+
+      constructor(params: { queryId: long; result?: string }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.SetBotWidgetQueryAnswer';
+        this.constructorId = 0xf8cdec6a;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['queryId', 'result'];
+        this.queryId = params.queryId;
+        this.result = params.result;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.SetBotWidgetQueryAnswer> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let queryId = await Primitive.Long.read(_data);
+        let result = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+        return new Raw.messages.SetBotWidgetQueryAnswer({ queryId: queryId, result: result });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.result !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.queryId !== undefined) {
+          b.write(Primitive.Long.write(this.queryId) as unknown as Buffer);
+        }
+        if (this.result !== undefined) {
+          b.write(Primitive.String.write(this.result) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class EditMessageWidgetData extends TLObject {
+      __response__!: Raw.TypeUpdates;
+      peer!: Raw.TypeInputPeer;
+      id!: int;
+      publicData?: string;
+      chatData?: string;
+
+      constructor(params: {
+        peer: Raw.TypeInputPeer;
+        id: int;
+        publicData?: string;
+        chatData?: string;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.EditMessageWidgetData';
+        this.constructorId = 0xf624bc1e;
+        this.subclassOfId = 0x8af52aac;
+        this._slots = ['peer', 'id', 'publicData', 'chatData'];
+        this.peer = params.peer;
+        this.id = params.id;
+        this.publicData = params.publicData;
+        this.chatData = params.chatData;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.EditMessageWidgetData> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let peer = await TLObject.read(_data);
+        let id = await Primitive.Int.read(_data);
+        let publicData = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+        let chatData = flags & (1 << 1) ? await Primitive.String.read(_data) : undefined;
+        return new Raw.messages.EditMessageWidgetData({
+          peer: peer,
+          id: id,
+          publicData: publicData,
+          chatData: chatData,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.publicData !== undefined ? 1 << 0 : 0;
+        flags |= this.chatData !== undefined ? 1 << 1 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.id !== undefined) {
+          b.write(Primitive.Int.write(this.id) as unknown as Buffer);
+        }
+        if (this.publicData !== undefined) {
+          b.write(Primitive.String.write(this.publicData) as unknown as Buffer);
+        }
+        if (this.chatData !== undefined) {
+          b.write(Primitive.String.write(this.chatData) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class EditInlineBotMessageWidgetData extends TLObject {
+      __response__!: Bool;
+      id!: Raw.TypeInputBotInlineMessageID;
+      publicData?: string;
+      chatData?: string;
+
+      constructor(params: {
+        id: Raw.TypeInputBotInlineMessageID;
+        publicData?: string;
+        chatData?: string;
+      }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.EditInlineBotMessageWidgetData';
+        this.constructorId = 0x6396ce2b;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['id', 'publicData', 'chatData'];
+        this.id = params.id;
+        this.publicData = params.publicData;
+        this.chatData = params.chatData;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.EditInlineBotMessageWidgetData> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let id = await TLObject.read(_data);
+        let publicData = flags & (1 << 0) ? await Primitive.String.read(_data) : undefined;
+        let chatData = flags & (1 << 1) ? await Primitive.String.read(_data) : undefined;
+        return new Raw.messages.EditInlineBotMessageWidgetData({
+          id: id,
+          publicData: publicData,
+          chatData: chatData,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.publicData !== undefined ? 1 << 0 : 0;
+        flags |= this.chatData !== undefined ? 1 << 1 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.id !== undefined) {
+          b.write(this.id.write() as unknown as Buffer);
+        }
+        if (this.publicData !== undefined) {
+          b.write(Primitive.String.write(this.publicData) as unknown as Buffer);
+        }
+        if (this.chatData !== undefined) {
+          b.write(Primitive.String.write(this.chatData) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class EditWidgetData extends TLObject {
+      __response__!: Bool;
+      widgetId!: long;
+      publicData!: string;
+      cacheTime?: int;
+
+      constructor(params: { widgetId: long; publicData: string; cacheTime?: int }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.EditWidgetData';
+        this.constructorId = 0xeac343c0;
+        this.subclassOfId = 0xf5b399ac;
+        this._slots = ['widgetId', 'publicData', 'cacheTime'];
+        this.widgetId = params.widgetId;
+        this.publicData = params.publicData;
+        this.cacheTime = params.cacheTime;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.EditWidgetData> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let widgetId = await Primitive.Long.read(_data);
+        let publicData = await Primitive.String.read(_data);
+        let cacheTime = flags & (1 << 0) ? await Primitive.Int.read(_data) : undefined;
+        return new Raw.messages.EditWidgetData({
+          widgetId: widgetId,
+          publicData: publicData,
+          cacheTime: cacheTime,
+        });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.cacheTime !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.widgetId !== undefined) {
+          b.write(Primitive.Long.write(this.widgetId) as unknown as Buffer);
+        }
+        if (this.publicData !== undefined) {
+          b.write(Primitive.String.write(this.publicData) as unknown as Buffer);
+        }
+        if (this.cacheTime !== undefined) {
+          b.write(Primitive.Int.write(this.cacheTime) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetWidgetPublicData extends TLObject {
+      __response__!: Raw.messages.TypeWidgetPublicData;
+      peer!: Raw.TypeInputPeer;
+      msgId!: int;
+      hash!: long;
+
+      constructor(params: { peer: Raw.TypeInputPeer; msgId: int; hash: long }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetWidgetPublicData';
+        this.constructorId = 0x6fc53181;
+        this.subclassOfId = 0x30e16d71;
+        this._slots = ['peer', 'msgId', 'hash'];
+        this.peer = params.peer;
+        this.msgId = params.msgId;
+        this.hash = params.hash;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.GetWidgetPublicData> {
+        // no flags
+        let peer = await TLObject.read(_data);
+        let msgId = await Primitive.Int.read(_data);
+        let hash = await Primitive.Long.read(_data);
+        return new Raw.messages.GetWidgetPublicData({ peer: peer, msgId: msgId, hash: hash });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        if (this.msgId !== undefined) {
+          b.write(Primitive.Int.write(this.msgId) as unknown as Buffer);
+        }
+        if (this.hash !== undefined) {
+          b.write(Primitive.Long.write(this.hash) as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class TranscribeAudioFile extends TLObject {
+      __response__!: Raw.messages.TypeTranscribedAudio;
+      file!: Raw.TypeInputFile;
+
+      constructor(params: { file: Raw.TypeInputFile }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.TranscribeAudioFile';
+        this.constructorId = 0x72d2ef7;
+        this.subclassOfId = 0x21b24936;
+        this._slots = ['file'];
+        this.file = params.file;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.TranscribeAudioFile> {
+        // no flags
+        let file = await TLObject.read(_data);
+        return new Raw.messages.TranscribeAudioFile({ file: file });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+        // no flags
+        if (this.file !== undefined) {
+          b.write(this.file.write() as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
+    export class GetTranscriptionLangs extends TLObject {
+      __response__!: Vector<string>;
+      peer?: Raw.TypeInputPeer;
+
+      constructor(params: { peer?: Raw.TypeInputPeer }) {
+        super();
+        this.classType = 'functions';
+        this.className = 'messages.GetTranscriptionLangs';
+        this.constructorId = 0xba6cd9aa;
+        this.subclassOfId = 0x1d97512;
+        this._slots = ['peer'];
+        this.peer = params.peer;
+      }
+      /**
+       * Generate the TLObject from buffer.
+       * @param {Object} _data - BytesIO class from TLObject will be convert to TLObject class.
+       */
+      static override async read(
+        _data: BytesIO,
+        ..._args: Array<any>
+      ): Promise<Raw.messages.GetTranscriptionLangs> {
+        // @ts-ignore
+        let flags = await Primitive.Int.read(_data);
+        let peer = flags & (1 << 0) ? await TLObject.read(_data) : undefined;
+        return new Raw.messages.GetTranscriptionLangs({ peer: peer });
+      }
+      /**
+       * Generate buffer from TLObject.
+       */
+      override write(): Buffer {
+        const b: BytesIO = new BytesIO();
+        b.write(Primitive.Int.write(this.constructorId, false) as unknown as Buffer);
+
+        // @ts-ignore
+        let flags = 0;
+        flags |= this.peer !== undefined ? 1 << 0 : 0;
+        b.write(Primitive.Int.write(flags) as unknown as Buffer);
+
+        if (this.peer !== undefined) {
+          b.write(this.peer.write() as unknown as Buffer);
+        }
+        return Buffer.from(b.buffer as unknown as Uint8Array);
+      }
+    }
   }
   export namespace updates {
     export type TypeChannelDifference =
@@ -126119,17 +128156,24 @@ export namespace Raw {
       channel!: Raw.TypeInputChannel;
       enabled!: Bool;
       tabs!: Bool;
+      sidebar!: Bool;
 
-      constructor(params: { channel: Raw.TypeInputChannel; enabled: Bool; tabs: Bool }) {
+      constructor(params: {
+        channel: Raw.TypeInputChannel;
+        enabled: Bool;
+        tabs: Bool;
+        sidebar: Bool;
+      }) {
         super();
         this.classType = 'functions';
         this.className = 'channels.ToggleForum';
-        this.constructorId = 0x3ff75734;
+        this.constructorId = 0xa2952b54;
         this.subclassOfId = 0x8af52aac;
-        this._slots = ['channel', 'enabled', 'tabs'];
+        this._slots = ['channel', 'enabled', 'tabs', 'sidebar'];
         this.channel = params.channel;
         this.enabled = params.enabled;
         this.tabs = params.tabs;
+        this.sidebar = params.sidebar;
       }
       /**
        * Generate the TLObject from buffer.
@@ -126143,7 +128187,13 @@ export namespace Raw {
         let channel = await TLObject.read(_data);
         let enabled = await Primitive.Bool.read(_data);
         let tabs = await Primitive.Bool.read(_data);
-        return new Raw.channels.ToggleForum({ channel: channel, enabled: enabled, tabs: tabs });
+        let sidebar = await Primitive.Bool.read(_data);
+        return new Raw.channels.ToggleForum({
+          channel: channel,
+          enabled: enabled,
+          tabs: tabs,
+          sidebar: sidebar,
+        });
       }
       /**
        * Generate buffer from TLObject.
@@ -126160,6 +128210,9 @@ export namespace Raw {
         }
         if (this.tabs !== undefined) {
           b.write(Primitive.Bool.write(this.tabs) as unknown as Buffer);
+        }
+        if (this.sidebar !== undefined) {
+          b.write(Primitive.Bool.write(this.sidebar) as unknown as Buffer);
         }
         return Buffer.from(b.buffer as unknown as Uint8Array);
       }
