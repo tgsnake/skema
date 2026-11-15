@@ -19,6 +19,7 @@ jobs:
           node-version: '22.x'
       - run: yarn config set enableImmutableInstalls false
       - run: yarn install
+      - run: yarn build:api
       - run: yarn build
   browser-build:
     name: Building package for Browser
@@ -30,6 +31,7 @@ jobs:
           node-version: '22.x'
       - run: yarn config set enableImmutableInstalls false
       - run: yarn install
+      - run: yarn build:api
       - run: yarn add buffer browserify-zlib @tgsnake/bytesio@browser @tgsnake/log@browser
       - run: node ./generator/build_browser/index.js
       - run: yarn build
@@ -45,4 +47,5 @@ jobs:
         with:
           deno-version: '2.x'
       - run: deno install
+      - run: yarn build:api
       - run: npx jsr publish --dry-run --allow-dirty

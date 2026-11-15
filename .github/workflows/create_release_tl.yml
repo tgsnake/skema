@@ -26,6 +26,7 @@ jobs:
           yarn build:jsr
       - name: Build package
         run: |
+          yarn build:api
           yarn build
           yarn prettier
           npm pack

@@ -15,6 +15,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: yarn config set enableImmutableInstalls false
       - run: yarn install
+      - run: yarn build:api
       - run: yarn build
       - run: npm publish --tag latest --access public
         env:
@@ -34,7 +35,9 @@ jobs:
       - run: yarn add buffer browserify-zlib @tgsnake/bytesio@browser @tgsnake/log@browser
       - run: node ./generator/build_browser/index.js
       - run: yarn install
+      - run: yarn build:api
       - run: yarn build
+      - run: yarn prettier
       - run: npm publish --tag browser --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -57,6 +60,8 @@ jobs:
       - run: git add deno.lock
       - run: |
           git commit -m "chore: Update deno.lock" || echo "No changes to commit"
+      - run: yarn build:api
+      - run: yarn prettier
       - run: npx jsr publish
   github-build:
     name: Publishing package to GitHub Packages
@@ -75,6 +80,8 @@ jobs:
           # Defaults to the user or organization that owns the workflow file
           scope: '@tgsnake'
       - run: yarn install
+      - run: yarn build:api
+      - run: yarn prettier
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
