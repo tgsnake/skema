@@ -53,16 +53,10 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: '22.x'
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: '2.x'
-      - run: deno install
-      - run: git add deno.lock
-      - run: |
-          git commit -m "chore: Update deno.lock" || echo "No changes to commit"
+      - run: yarn install
       - run: yarn build:api
       - run: yarn prettier
-      - run: npx jsr publish
+      - run: yarn dlx jsr publish
   github-build:
     name: Publishing package to GitHub Packages
     needs: node-build
