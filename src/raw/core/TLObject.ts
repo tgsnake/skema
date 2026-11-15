@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { AllTLObject } from '../All.js';
+import { AllTLObject } from '../class/All.js';
 import { BytesIO, Buffer, inspect } from '../../deps.js';
 import { Logger } from '../../Logger.js';
 import { Raw, Message, GzipPacked, Primitive, MsgContainer } from '../index.js';

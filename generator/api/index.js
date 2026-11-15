@@ -405,8 +405,10 @@ function start(source, template) {
     }
   }
   for (let [key, value] of typesMap) {
+    console.log(key, value);
     if (/Vector<(\w+\.?\w+?)>/i.test(key.trim())) {
       let [vf, vt] = key.trim().match(/Vector<(\w+\.?\w+?)>/i);
+      console.log(vf, vt);
       key = vt;
       value = crc32(vt.replace('Type', ''));
     }

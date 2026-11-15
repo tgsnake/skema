@@ -8,8 +8,8 @@
  * it under the terms of the MIT License as published.
  */
 
-import { Raw } from './Raw.js';
-import { TLObject } from './core/TLObject.js';
+import * as Raw from '../Raw.js';
+import { TLObject } from '../../core/TLObject.js';
 
 /**
  * Interface representing an E2E decryption generator context.

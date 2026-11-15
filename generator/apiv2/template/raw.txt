@@ -1,0 +1,14 @@
+{{ HEADER }}
+
+/**
+  * The Telegram layer we using.
+*/
+export const Layer:number = {{ TL-Layer }};
+/**
+  * The highest telegram secret chat schema layer.
+*/
+export const HighestSCLayer:number = {{ HSC-Layer }};
+
+export * from './types.js';
+
+{{ EXPORT-CLASSES }}

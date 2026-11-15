@@ -1,0 +1,11 @@
+{{ HEADER }}
+
+export const AllTLObject = {
+  0xbc799737 : "Primitive.BoolFalse",
+  0x997275b5 : "Primitive.BoolTrue",
+  0x1cb5c415 : "Primitive.Vector",
+  0x73f1f8dc : "MsgContainer",
+  0x3072cfa1 : "GzipPacked",
+  0x5bb8e511 : "Message",
+{{ ALL-OBJECT }}
+}

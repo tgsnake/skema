@@ -110,15 +110,18 @@ dist
 # TernJS port file
 .tern-port
 
-#database 
+#database
 ignore.json
 
-#tsc 
+#tsc
 lib
 test/**
 # src/raw/Raw.ts
 # src/raw/All.ts
 # src/errors/exceptions
 browser/**
+src/raw/class/*
+!src/raw/class/index.ts
+!src/raw/class/custom
 
 ./docs/**

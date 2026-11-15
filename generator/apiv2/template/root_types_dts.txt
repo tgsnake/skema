@@ -1,0 +1,32 @@
+{{ HEADER }}
+
+import type { TLObject, Primitive } from '../core/index.js';
+import type { Buffer, BytesIO } from '../../deps.js';
+
+declare global {
+  type int = number;
+  type double = number;
+  type float = number;
+  type int128 = bigint;
+  type int256 = bigint;
+  type long = bigint;
+  type bytes = Buffer;
+  type Vector<T> = Array<T>;
+  type Bool = boolean;
+  type X = TLObject;
+  type Type = TLObject;
+}
+
+export type X = TLObject;
+export type Type = TLObject;
+export type Bool = boolean;
+export type int = number;
+export type double = number;
+export type float = number;
+export type int128 = bigint;
+export type int256 = bigint;
+export type long = bigint;
+export type bytes = Buffer;
+export type Vector<T> = Array<T>;
+
+{{ Other-Types }}

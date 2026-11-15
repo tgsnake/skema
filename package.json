@@ -1,6 +1,6 @@
 {
   "name": "@tgsnake/skema",
-  "version": "2.9.0",
+  "version": "3.0.0",
   "description": "A compiled Telegram TL Schema and Telegram errors Schema into usable JavaScript classes with full TypeScript support",
   "main": "dist/mod.js",
   "types": "dist/mod.d.ts",
@@ -29,18 +29,18 @@
   },
   "scripts": {
     "build": "tsc",
-    "build:api": "node ./generator/api",
+    "build:api": "node ./generator/apiv2",
     "build:sync": "node ./generator/sync-tl",
     "build:error": "node ./generator/error",
     "build:jsr": "node ./generator/jsr_version/index.js",
     "build:docs": "typedoc --tsconfig tsconfig.json --out docs src/index.ts",
     "prepare": "yarn build",
-    "prettier": "NODE_OPTIONS=--max_old_space_size=4096 prettier -w ."
+    "prettier": "NODE_OPTIONS=--max_old_space_size=4096 prettier --ignore-path .prettierignore -w ."
   },
   "devDependencies": {
     "@types/bun": "^1.4.4",
     "@types/node": "^26.6.6",
-    "prettier": "^3.9.10",
+    "prettier": "^3.10.1",
     "typedoc": "^0.28.20",
     "typescript": "^7.0.2"
   },
