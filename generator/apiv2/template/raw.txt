@@ -9,6 +9,6 @@ export const Layer:number = {{ TL-Layer }};
 */
 export const HighestSCLayer:number = {{ HSC-Layer }};
 
-export * from './types.js';
+export type * from './types.js';
 
 {{ EXPORT-CLASSES }}

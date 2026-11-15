@@ -296,7 +296,7 @@ function getType(type, typesMap) {
       return 'boolean';
     case '!X':
     case 'X':
-      return 'X';
+      return 'Raw.X';
     case 'Object':
       return 'any';
     default:
@@ -305,9 +305,9 @@ function getType(type, typesMap) {
       if (reDefault.test(type.trim())) {
         if (/Vector<(\w+\.?\w+?)>/i.test(type.trim())) {
           let [_full, vectorType] = type.trim().match(/Vector<(\w+\.?\w+?)>/i);
-          return `Vector<${getType(vectorType, typesMap)}>`;
+          return `Raw.Vector<${getType(vectorType, typesMap)}>`;
         }
-        return type;
+        return /^(string|number)$/i.test(type.trim()) ? type : `Raw.${type}`;
       }
       let typeSplit = type.trim().split('.');
       let targetNs = typeSplit.length > 1 ? typeSplit[0] : 'root';
@@ -529,7 +529,7 @@ function generate(route) {
   let rootClassesExport = '';
   let importedRootFiles = new Set();
   for (let [namespace, collections] of classes) {
-    let exported = `export * from './types.js';\n`;
+    let exported = `export type * from './types.js';\n`;
     let namespaceDir = path.join(route, 'src/raw/class/tl', namespace);
     if (!fs.existsSync(namespaceDir)) {
       fs.mkdirSync(namespaceDir, {

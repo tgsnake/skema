@@ -3,20 +3,6 @@
 import type { TLObject, Primitive } from '../core/index.js';
 import type { Buffer, BytesIO } from '../../deps.js';
 
-declare global {
-  type int = number;
-  type double = number;
-  type float = number;
-  type int128 = bigint;
-  type int256 = bigint;
-  type long = bigint;
-  type bytes = Buffer;
-  type Vector<T> = Array<T>;
-  type Bool = boolean;
-  type X = TLObject;
-  type Type = TLObject;
-}
-
 export type X = TLObject;
 export type Type = TLObject;
 export type Bool = boolean;

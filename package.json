@@ -33,7 +33,6 @@
     "build:sync": "node ./generator/sync-tl",
     "build:error": "node ./generator/error",
     "build:jsr": "node ./generator/jsr_version/index.js",
-    "build:docs": "typedoc --tsconfig tsconfig.json --out docs src/index.ts",
     "prepare": "yarn build",
     "prettier": "NODE_OPTIONS=--max_old_space_size=4096 prettier --ignore-path .prettierignore -w ."
   },
@@ -41,7 +40,6 @@
     "@types/bun": "^1.4.4",
     "@types/node": "^26.6.6",
     "prettier": "^3.10.1",
-    "typedoc": "^0.28.20",
     "typescript": "^7.0.2"
   },
   "dependencies": {
