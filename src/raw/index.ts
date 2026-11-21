@@ -13,12 +13,12 @@
  * and decrypted secret chat message containers.
  */
 
-export { Raw } from './Raw.js';
-export { AllTLObject } from './All.js';
+export * as Raw from './class/Raw.js';
+export { AllTLObject } from './class/All.js';
 export { Primitive, TLObject, GzipPacked, Message, MsgContainer } from './core/index.js';
 export {
   SecretChatMessage,
   SecretChatMessageService,
   UpdateSecretChatMessage,
   TypeTGenerate,
-} from './UpdateSecretChat.js';
+} from './class/custom/UpdateSecretChat.js';

@@ -8,7 +8,7 @@
  * it under the terms of the MIT License as published.
  */
 
-import { AllTLObject } from '../All.js';
+import { AllTLObject } from '../class/All.js';
 import { BytesIO, Buffer, inspect } from '../../deps.js';
 import { Logger } from '../../Logger.js';
 import { Raw, Message, GzipPacked, Primitive, MsgContainer } from '../index.js';
@@ -121,7 +121,7 @@ export class TLObject {
   static async read(data: BytesIO, ...args: Array<any>): Promise<any> {
     const id = data.readUInt32LE(4);
     Logger.debug(
-      `[10] Reading TLObject with id: ${id.toString(16)} (${AllTLObject[id as unknown as keyof typeof AllTLObject]})`,
+      `[1.raw.core.TLObject] Reading TLObject with id: ${id.toString(16)} (${AllTLObject[id as unknown as keyof typeof AllTLObject]})`,
     );
     const _class = getModule(AllTLObject[id as unknown as keyof typeof AllTLObject]);
     return await _class.read(data, ...args);

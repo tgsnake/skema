@@ -5,6 +5,6 @@
   "license": "MIT",
   "publish": {
     "include": ["mod.ts", "src/**/**", "README.md", "LICENSE", "package.json", "yarn.lock"],
-    "exclude": ["test/**/**", "dist/**/**"]
+    "exclude": ["test/**/**", "dist/**/**", "!src/raw/class/**"]
   }
 }
