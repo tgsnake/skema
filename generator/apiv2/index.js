@@ -580,7 +580,7 @@ function generate(route) {
         tempTypes += `export type ${typeName} = ${temp.join('|')};\n`;
       }
       fs.writeFileSync(
-        path.join(namespaceDir, 'types.d.ts'),
+        path.join(namespaceDir, 'types.ts'),
         replacer(index, {
           HEADER: header,
           EXPORT: `${tempImport}\n${tempTypes}`,
@@ -591,7 +591,7 @@ function generate(route) {
       }
     } else {
       fs.writeFileSync(
-        path.join(namespaceDir, 'types.d.ts'),
+        path.join(namespaceDir, 'types.ts'),
         replacer(index, {
           HEADER: header,
           EXPORT: 'export {};\n',
@@ -635,7 +635,7 @@ function generate(route) {
     }
   }
   fs.writeFileSync(
-    path.join(route, 'src/raw/class', 'types.d.ts'),
+    path.join(route, 'src/raw/class', 'types.ts'),
     replacer(rootTypes, {
       HEADER: header,
       'Other-Types': `${rootTypesImport}\n${rootTypesExport}`,

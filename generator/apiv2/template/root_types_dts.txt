@@ -1,7 +1,7 @@
 {{ HEADER }}
 
-import type { TLObject, Primitive } from '../core/index.js';
-import type { Buffer, BytesIO } from '../../deps.js';
+import type { TLObject } from '../core/index.js';
+import type { Buffer } from '../../deps.js';
 
 export type X = TLObject;
 export type Type = TLObject;
