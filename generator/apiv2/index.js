@@ -376,7 +376,7 @@ function start(source, classTemplate, importTemplate) {
         allTLObject.set(`0x${id}`, `"Raw.${namespace ?? ''}${name}"`);
         passedId.push(id);
         if (section === 'functions') {
-          typeTLFn.push(`Raw.${namespace ?? ''}${name}`);
+          typeTLFn.push(`${namespace ?? 'root.'}${name}`);
           typesArgsString += `  __response__!: ${getType(results, typesMap)};\n`;
         }
         if (section === 'types') {
@@ -490,6 +490,7 @@ function start(source, classTemplate, importTemplate) {
     hsclayer,
     types: finalTypes,
     classes: namespaceMap,
+    functions: typeTLFn,
   };
 }
 
@@ -519,7 +520,7 @@ function generate(route) {
     path.join(route, 'generator/apiv2/template/root_types_dts.txt'),
     'utf8',
   );
-  let { layer, hsclayer, allTLObject, types, classes } = start(
+  let { layer, hsclayer, allTLObject, types, classes, functions } = start(
     mtproto + '\n---types---\n' + schema + '\n---types---\n' + secretchat,
     classname,
     packages,
@@ -633,6 +634,20 @@ function generate(route) {
         SOURCE: `'./tl/${namespace}/index.js'`,
       });
     }
+  }
+  if (functions.length) {
+    let importedFn = new Set();
+    for (let fn of functions) {
+      const [namespace] = fn.split('.');
+      if (importedFn.has(namespace)) continue;
+      rootTypesImport += replacer(packages, {
+        ACTION: 'import type',
+        PACKAGE: `* as ${namespace}`,
+        SOURCE: `'./tl/${namespace}/index.js'`,
+      });
+      importedFn.add(namespace);
+    }
+    rootTypesExport += `export type TypesTLRequest = ${functions.join('|')}`;
   }
   fs.writeFileSync(
     path.join(route, 'src/raw/class', 'types.ts'),
