@@ -187,3 +187,5 @@ export class CDNFileHashMismatch extends SecurityError {
     if (!cond) throw new CDNFileHashMismatch(description);
   }
 }
+
+export { BaseError };
