@@ -8,8 +8,4 @@
  * it under the terms of the MIT License as published.
 */
 
-/***********************************************************
-*                         Warning!!                        *
-*               This file is auto generate.                *
-*         All change made in this file will be lost!       *
-***********************************************************/
+// This file is auto generate. All change made in this file will be lost!

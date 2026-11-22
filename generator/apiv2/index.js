@@ -50,6 +50,19 @@ const VECTOR_CORE_TYPES = new Set([
   'Bool',
   'true',
 ]);
+const PRIMITIVE_TYPES = new Set([
+  'X',
+  'Type',
+  'Bool',
+  'int',
+  'double',
+  'float',
+  'int128',
+  'int256',
+  'long',
+  'bytes',
+  'Vector',
+]);
 
 // https://stackoverflow.com/questions/54242239/how-to-convert-snake-case-to-camelcase-in-typescripts
 const snakeCaseToCamelCase = (input) =>
@@ -108,16 +121,12 @@ function parseArgName(argname) {
   switch (argname) {
     case 'default':
       return '_default';
-      break;
     case 'delete':
       return '_delete';
-      break;
     case 'static':
       return '_static';
-      break;
     case 'public':
       return '_public';
-      break;
     case 'private':
       return '_private';
     default:
@@ -133,7 +142,7 @@ function getLastMatch(inputText, regex) {
   return match;
 }
 
-function parseTlLine(line, hasFlags, id, namespace, className, typesMap) {
+function parseTlLine(line, hasFlags, id, namespace, className, typesMap, usedTypes) {
   let constructorString = '';
   let classNameFull = `${namespace ? namespace : ''}${className}`;
   let reader = hasFlags ? '' : '// no flags';
@@ -184,7 +193,7 @@ function parseTlLine(line, hasFlags, id, namespace, className, typesMap) {
       if (!flagsArg.test(argName)) {
         types.push({
           name: argName,
-          type: getType(flagType, typesMap),
+          type: getType(flagType, typesMap, usedTypes),
           required: false,
         });
         if (!slots.includes(argName.trim())) slots.push(argName.trim());
@@ -233,7 +242,7 @@ function parseTlLine(line, hasFlags, id, namespace, className, typesMap) {
       if (!flagsArg.test(argName)) {
         types.push({
           name: argName,
-          type: getType(argType, typesMap),
+          type: getType(argType, typesMap, usedTypes),
           required: true,
         });
         if (!slots.includes(argName.trim())) slots.push(argName.trim());
@@ -289,14 +298,33 @@ function buildTypeContent({ name, type, required }) {
   return `${name}${required ? '!:' : '?:'}${type};`;
 }
 
-function getType(type, typesMap) {
+function formatTypeImports(usedTypes) {
+  const lines = [];
+  if (usedTypes && usedTypes.primitives && usedTypes.primitives.size > 0) {
+    const sorted = Array.from(usedTypes.primitives).sort().join(', ');
+    lines.push(`import type { ${sorted} } from '../../types.js';`);
+  }
+  if (usedTypes && (usedTypes.rawNamespaces?.size > 0 || usedTypes.rawRootTypes?.size > 0)) {
+    const rawItems = [
+      ...Array.from(usedTypes.rawNamespaces || []).sort(),
+      ...Array.from(usedTypes.rawRootTypes || []).sort(),
+    ];
+    if (rawItems.length > 0) {
+      lines.push(`import type { ${rawItems.join(', ')} } from '../../Raw.js';`);
+    }
+  }
+  return lines.length > 0 ? `\n${lines.join('\n')}` : '';
+}
+
+function getType(type, typesMap, usedTypes) {
   switch (type) {
     case 'true':
     case 'false':
       return 'boolean';
     case '!X':
     case 'X':
-      return 'Raw.X';
+      if (usedTypes) usedTypes.primitives.add('X');
+      return 'X';
     case 'Object':
       return 'any';
     default:
@@ -305,9 +333,21 @@ function getType(type, typesMap) {
       if (reDefault.test(type.trim())) {
         if (/Vector<(\w+\.?\w+?)>/i.test(type.trim())) {
           let [_full, vectorType] = type.trim().match(/Vector<(\w+\.?\w+?)>/i);
-          return `Raw.Vector<${getType(vectorType, typesMap)}>`;
+          if (usedTypes) usedTypes.primitives.add('Vector');
+          return `Vector<${getType(vectorType, typesMap, usedTypes)}>`;
         }
-        return /^(string|number)$/i.test(type.trim()) ? type : `Raw.${type}`;
+        if (/^(string|number)$/i.test(type.trim())) {
+          return type.trim();
+        }
+        let prim = type.trim();
+        for (let p of PRIMITIVE_TYPES) {
+          if (p.toLowerCase() === prim.toLowerCase()) {
+            prim = p;
+            break;
+          }
+        }
+        if (usedTypes) usedTypes.primitives.add(prim);
+        return prim;
       }
       let typeSplit = type.trim().split('.');
       let targetNs = typeSplit.length > 1 ? typeSplit[0] : 'root';
@@ -320,7 +360,13 @@ function getType(type, typesMap) {
       if (!typesMap.get(targetNs).has(typeName)) {
         typesMap.get(targetNs).set(typeName, crc32(type.trim()));
       }
-      return typeSplit.length > 1 ? `Raw.${targetNs}.${typeName}` : `Raw.${typeName}`;
+      if (targetNs === 'root') {
+        if (usedTypes) usedTypes.rawRootTypes.add(typeName);
+        return typeName;
+      } else {
+        if (usedTypes) usedTypes.rawNamespaces.add(targetNs);
+        return `${targetNs}.${typeName}`;
+      }
   }
 }
 
@@ -375,9 +421,14 @@ function start(source, classTemplate, importTemplate) {
       if (!passedId.includes(id)) {
         allTLObject.set(`0x${id}`, `"Raw.${namespace ?? ''}${name}"`);
         passedId.push(id);
+        let usedTypes = {
+          primitives: new Set(),
+          rawRootTypes: new Set(),
+          rawNamespaces: new Set(),
+        };
         if (section === 'functions') {
           typeTLFn.push(`${namespace ?? 'root.'}${name}`);
-          typesArgsString += `  __response__!: ${getType(results, typesMap)};\n`;
+          typesArgsString += `  __response__!: ${getType(results, typesMap, usedTypes)};\n`;
         }
         if (section === 'types') {
           getType(results, typesMap);
@@ -418,22 +469,13 @@ function start(source, classTemplate, importTemplate) {
             }
           }
         }
-        const parsed = parseTlLine(line, hasFlags, id, namespace, name, typesMap);
+        const parsed = parseTlLine(line, hasFlags, id, namespace, name, typesMap, usedTypes);
+        const importString = formatTypeImports(usedTypes);
         const content = replacer(classTemplate, {
           'CLASS-NAME': parsed.className,
           'CLASS-NAME-WITH-NAMESPACE': parsed.classNameFull,
           'CONSTRUCTOR-VALUES': `this.classType = "${section}"\n    this.className = "${namespace ?? ''}${name}"\n    this.constructorId = 0x${id}\n    this.subclassOfId = 0x${crc32(results).toString(16)}\n    this._slots = ${JSON.stringify(parsed.slots)}\n${parsed.constructorString}`,
-          IMPORT: parsed.imports.length
-            ? parsed.imports
-                .map((e) =>
-                  replacer(importTemplate, {
-                    ACTION: e.istypes ? 'import type' : 'import',
-                    PACKAGE: e.package,
-                    SOURCE: e.source,
-                  }),
-                )
-                .join('\n')
-            : '',
+          IMPORT: importString,
           READER: parsed.reader,
           WRITER: parsed.writer,
           VARIABLE: parsed.slots.length
