@@ -1,14 +1,22 @@
 {{ HEADER }}
 
+import { TLObject, Primitive } from '../core/index.js';
+import { Buffer, BytesIO } from '../../deps.js';
+{{ IMPORT }}
+
 /**
-  * The Telegram layer we using.
-*/
-export const Layer:number = {{ TL-Layer }};
+ * The Telegram layer we using.
+ */
+export const Layer: number = {{ TL-Layer }};
 /**
-  * The highest telegram secret chat schema layer.
-*/
-export const HighestSCLayer:number = {{ HSC-Layer }};
+ * The highest telegram secret chat schema layer.
+ */
+export const HighestSCLayer: number = {{ HSC-Layer }};
 
 export type * from './types.js';
 
-{{ EXPORT-CLASSES }}
+{{ EXPORT-NAMESPACES }}
+
+{{ TYPES }}
+
+{{ CLASSES }}

@@ -1,12 +1,4 @@
-{{ HEADER }}
-
-import { TLObject, Primitive } from '../../../core/index.js';
-import { Buffer, BytesIO } from '../../../../deps.js';
-{{ IMPORT }}
-
-{{ DOCS }}
-
-export default class {{ CLASS-NAME }} extends TLObject {
+export class {{ CLASS-NAME }} extends TLObject {
 {{ TYPES }}
   constructor ({{ PARAMETERS }}) {
     super();
@@ -18,15 +10,15 @@ export default class {{ CLASS-NAME }} extends TLObject {
   */
   static override async read(_data:BytesIO,..._args:Array<any>) : Promise<{{ CLASS-NAME }}> {
     {{ READER }}
-    return new {{ CLASS-NAME }}({{ VARIABLE }})
+    return new {{ CLASS-NAME }}({{ VARIABLE }});
   }
   /**
     * Generate buffer from TLObject.
   */
   override write() : Buffer {
     const b:BytesIO = new BytesIO()
-    b.write((Primitive.Int.write(this.constructorId,false)) as unknown as Buffer)
+    b.write(Primitive.Int.write(this.constructorId,false));
     {{ WRITER }}
-    return Buffer.from(b.buffer as unknown as Uint8Array)
+    return b.buffer;
   }
 }

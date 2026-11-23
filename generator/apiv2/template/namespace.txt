@@ -1,0 +1,9 @@
+{{ HEADER }}
+
+import { TLObject, Primitive } from '../../core/index.js';
+import { Buffer, BytesIO } from '../../../deps.js';
+{{ IMPORT }}
+
+{{ TYPES }}
+
+{{ CLASSES }}
