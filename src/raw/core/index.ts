@@ -15,7 +15,7 @@
 
 import * as Primitive from './primitive/index.js';
 export { Primitive };
-export { TLObject } from './TLObject.js';
+export { TLObject, setRaw } from './TLObject.js';
 export { GzipPacked } from './GzipPacked.js';
 export { Message } from './Message.js';
 export { MsgContainer } from './MsgContainer.js';

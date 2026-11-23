@@ -8,12 +8,15 @@
  * it under the terms of the MIT License as published.
  */
 
-export * as Exceptions from './exceptions/index.js';
+import * as Exceptions from './exceptions/index.js';
+import { setExceptions, RPCError, UnknownError } from './RpcError.js';
+setExceptions(Exceptions);
+export { Exceptions };
 export * as ClientError from './Client.js';
 export * as WSError from './WebSocket.js';
 export * as SecretChatError from './SecretChat.js';
 export * as FileErrors from './File.js';
-export { RPCError, UnknownError } from './RpcError.js';
+export { RPCError, UnknownError };
 
 import { BaseError } from './Base.js';
 

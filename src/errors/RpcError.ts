@@ -9,34 +9,47 @@
  */
 
 import { Logger } from '../Logger.js';
-import { Raw, TLObject } from '../raw/index.js';
+import type { Raw, TLObject } from '../raw/index.js';
 import { Exceptions } from './exceptions/All.js';
 import { inspect } from '../deps.js';
-import { Exceptions as AllExceptions } from './index.js';
 
 interface ExceptionModuleIndexSignature {
-  SeeOther: typeof AllExceptions.SeeOther;
-  BadRequest: typeof AllExceptions.BadRequest;
-  Unauthorized: typeof AllExceptions.Unauthorized;
-  Forbidden: typeof AllExceptions.Forbidden;
-  NotAcceptable: typeof AllExceptions.NotAcceptable;
-  Flood: typeof AllExceptions.Flood;
-  InternalServerError: typeof AllExceptions.InternalServerError;
-  ServiceUnavailable: typeof AllExceptions.ServiceUnavailable;
+  SeeOther: any;
+  BadRequest: any;
+  Unauthorized: any;
+  Forbidden: any;
+  NotAcceptable: any;
+  Flood: any;
+  InternalServerError: any;
+  ServiceUnavailable: any;
   [key: string]: { [key: string]: typeof RPCError };
 }
 
-function getModule(name: string) {
+let allExceptions: any = null;
+
+/**
+ * Explicitly sets or pre-populates the Exceptions module for RPCError constructor dispatch.
+ *
+ * @internal
+ */
+export function setExceptions(exceptions: any) {
+  allExceptions = exceptions;
+}
+
+async function getModule(name: string): Promise<any> {
   const [namespace, mod] = name.split('.');
+  if (!allExceptions) {
+    allExceptions = await import('./exceptions/index.js');
+  }
   if (
-    (AllExceptions as unknown as ExceptionModuleIndexSignature)[
+    (allExceptions as unknown as ExceptionModuleIndexSignature)[
       namespace as unknown as keyof ExceptionModuleIndexSignature
     ] &&
-    (AllExceptions as unknown as ExceptionModuleIndexSignature)[
+    (allExceptions as unknown as ExceptionModuleIndexSignature)[
       namespace as unknown as keyof ExceptionModuleIndexSignature
     ][mod]
   ) {
-    return (AllExceptions as unknown as ExceptionModuleIndexSignature)[
+    return (allExceptions as unknown as ExceptionModuleIndexSignature)[
       namespace as unknown as keyof ExceptionModuleIndexSignature
     ][mod];
   }
@@ -175,7 +188,7 @@ export class RPCError extends Error {
       // example: FILE_REFERENCE_*
       id = id.split('_').splice(-1, 1, '*').join('_');
       if (!(id in Exceptions[code as keyof typeof Exceptions])) {
-        const modules = getModule(Exceptions[code as keyof typeof Exceptions]['_']);
+        const modules = await getModule(Exceptions[code as keyof typeof Exceptions]['_']);
         const _module = new modules(value, name, true, isSigned);
         _module.message = `[${code} ${message}]`;
         _module.id = message.replace(/\_\d+/gm, '_X');

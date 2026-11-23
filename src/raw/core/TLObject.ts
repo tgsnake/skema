@@ -11,39 +11,55 @@
 import { AllTLObject } from '../class/All.js';
 import { BytesIO, Buffer, inspect } from '../../deps.js';
 import { Logger } from '../../Logger.js';
-import { Raw, Message, GzipPacked, Primitive, MsgContainer } from '../index.js';
 
 interface RawIndexSignature {
   [key: string]: any;
 }
 interface PrimitiveIndexSignature {
-  Int: typeof Primitive.Int;
-  Long: typeof Primitive.Long;
-  Int128: typeof Primitive.Int128;
-  Int256: typeof Primitive.Int256;
-  Bytes: typeof Primitive.Bytes;
-  String: typeof Primitive.String;
-  Bool: typeof Primitive.Bool;
-  BoolFalse: typeof Primitive.BoolFalse;
-  BoolTrue: typeof Primitive.BoolTrue;
-  Vector: typeof Primitive.Vector;
-  Double: typeof Primitive.Double;
-  Float: typeof Primitive.Float;
+  Int: any;
+  Long: any;
+  Int128: any;
+  Int256: any;
+  Bytes: any;
+  String: any;
+  Bool: any;
+  BoolFalse: any;
+  BoolTrue: any;
+  Vector: any;
+  Double: any;
+  Float: any;
   [key: string]: any;
 }
 
-function getModule(
-  name: string,
-): typeof TLObject | typeof Message | typeof GzipPacked | typeof MsgContainer {
+let Raw: any = null;
+let Primitive: any = null;
+let coreClasses: { Message?: any; GzipPacked?: any; MsgContainer?: any } = {};
+
+/**
+ * Explicitly sets or pre-populates the Raw namespace module for TLObject constructor dispatch.
+ *
+ * @internal
+ */
+export function setRaw(raw: any) {
+  Raw = raw;
+}
+
+async function getModule(name: string): Promise<any> {
   if (!name) {
     throw new Error("name of module can't be undefined");
   }
+  if (!Raw) {
+    Raw = await import('../class/Raw.js');
+  }
+  if (!Primitive) {
+    Primitive = await import('./primitive/index.js');
+  }
   if (name === 'Message') {
-    return Message;
+    return (coreClasses.Message ??= (await import('./Message.js')).Message);
   } else if (name === 'GzipPacked') {
-    return GzipPacked;
+    return (coreClasses.GzipPacked ??= (await import('./GzipPacked.js')).GzipPacked);
   } else if (name === 'MsgContainer') {
-    return MsgContainer;
+    return (coreClasses.MsgContainer ??= (await import('./MsgContainer.js')).MsgContainer);
   } else if (name.startsWith('Primitive')) {
     return (Primitive as PrimitiveIndexSignature)[name.split('.')[1]];
   } else {
@@ -123,7 +139,7 @@ export class TLObject {
     Logger.debug(
       `[1.raw.core.TLObject] Reading TLObject with id: ${id.toString(16)} (${AllTLObject[id as unknown as keyof typeof AllTLObject]})`,
     );
-    const _class = getModule(AllTLObject[id as unknown as keyof typeof AllTLObject]);
+    const _class = await getModule(AllTLObject[id as unknown as keyof typeof AllTLObject]);
     return await _class.read(data, ...args);
   }
 
