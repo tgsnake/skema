@@ -186,7 +186,9 @@ export class RPCError extends Error {
     if (!(id in Exceptions[code as keyof typeof Exceptions])) {
       // try to replace the last word with asterisk (*)
       // example: FILE_REFERENCE_*
-      id = id.split('_').splice(-1, 1, '*').join('_');
+      const parts = id.split('_');
+      parts.splice(-1, 1, '*');
+      id = parts.join('_');
       if (!(id in Exceptions[code as keyof typeof Exceptions])) {
         const modules = await getModule(Exceptions[code as keyof typeof Exceptions]['_']);
         const _module = new modules(value, name, true, isSigned);
