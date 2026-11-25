@@ -29,6 +29,11 @@ export class GzipPacked extends TLObject {
   static ID: number = 0x3072cfa1;
 
   /**
+   * The maximum allowed decompressed size (32 MB) to prevent zip-bomb denial of service.
+   */
+  static MAX_DECOMPRESSED_SIZE: number = 32 * 1024 * 1024;
+
+  /**
    * The underlying inner deserialized TLObject that was compressed.
    */
   packedData!: TLObject;
@@ -60,8 +65,12 @@ export class GzipPacked extends TLObject {
    * @returns A promise resolving to the decompressed `GzipPacked` instance wrapping the deserialized object.
    */
   static override async read(data: BytesIO, ..._args: Array<any>): Promise<GzipPacked> {
+    const compressed = await Primitive.Bytes.read(data);
+    const decompressed = gunzipSync(compressed, {
+      maxOutputLength: GzipPacked.MAX_DECOMPRESSED_SIZE,
+    });
     return (await TLObject.read(
-      new BytesIO(gunzipSync(await Primitive.Bytes.read(data))),
+      new BytesIO(decompressed),
     )) as unknown as GzipPacked;
   }
 
