@@ -40,7 +40,7 @@ export function bigintToBuffer(
   signed: boolean = false,
 ): Buffer {
   if (padding <= 0) {
-    throw new Error("Padding must be greater than 0");
+    throw new Error('Padding must be greater than 0');
   }
   const bits = BigInt(padding * 8);
   if (!signed && int < BigInt(0)) {

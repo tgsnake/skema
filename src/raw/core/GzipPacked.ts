@@ -69,9 +69,7 @@ export class GzipPacked extends TLObject {
     const decompressed = gunzipSync(compressed, {
       maxOutputLength: GzipPacked.MAX_DECOMPRESSED_SIZE,
     });
-    return (await TLObject.read(
-      new BytesIO(decompressed),
-    )) as unknown as GzipPacked;
+    return (await TLObject.read(new BytesIO(decompressed))) as unknown as GzipPacked;
   }
 
   /**

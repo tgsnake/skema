@@ -70,7 +70,9 @@ export class Bytes extends TLObject {
     if (length <= 253) {
       const x = data.read(length);
       if (Buffer.byteLength(x) !== length) {
-        throw new Error(`Unexpected EOF: expected ${length} bytes, received ${Buffer.byteLength(x)}`);
+        throw new Error(
+          `Unexpected EOF: expected ${length} bytes, received ${Buffer.byteLength(x)}`,
+        );
       }
       const padding = mod(-(length + 1), 4);
       const pad = data.read(padding);
@@ -86,7 +88,9 @@ export class Bytes extends TLObject {
       length = Number(bufferToBigint(lenBuf));
       const x = data.read(length);
       if (Buffer.byteLength(x) !== length) {
-        throw new Error(`Unexpected EOF: expected ${length} bytes, received ${Buffer.byteLength(x)}`);
+        throw new Error(
+          `Unexpected EOF: expected ${length} bytes, received ${Buffer.byteLength(x)}`,
+        );
       }
       const padding = mod(-length, 4);
       const pad = data.read(padding);
