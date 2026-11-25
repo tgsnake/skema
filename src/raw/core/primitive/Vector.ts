@@ -81,9 +81,17 @@ export class Vector extends TLObject {
   static override async read(data: BytesIO, tl?: any): Promise<Array<any>> {
     const results: Array<any> = [];
     const count = await Int.read(data);
-    const left = Buffer.byteLength(data.read());
-    const size = count ? left / count : 0;
-    data.seek(-left, 1);
+    if (count < 0) {
+      throw new Error(`Vector count cannot be negative: ${count}`);
+    }
+    if (count === 0) {
+      return results;
+    }
+    const remaining = data.length - data.tell();
+    if (count > remaining) {
+      throw new Error(`Vector count (${count}) exceeds remaining stream bytes (${remaining})`);
+    }
+    const size = remaining / count;
     for (let i = 0; i < count; i++) {
       if (tl) {
         results.push(await tl.read(data));
