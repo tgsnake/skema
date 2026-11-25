@@ -39,45 +39,31 @@ export function bigintToBuffer(
   litte: boolean = true,
   signed: boolean = false,
 ): Buffer {
-  const bigintLength = int.toString(2).length;
-  const bytes = Math.ceil(bigintLength / 8);
-  if (padding < bytes) {
-    throw new Error("Too big, Can't convert it to buffer with that padding.");
+  if (padding <= 0) {
+    throw new Error("Padding must be greater than 0");
   }
+  const bits = BigInt(padding * 8);
   if (!signed && int < BigInt(0)) {
     throw new Error('Too small, can convert it when unsigned.');
   }
-  let isBellow = false;
-  if (int < BigInt(0)) {
-    isBellow = true;
-    int = int * BigInt(-1);
+  if (signed) {
+    const minSigned = -(BigInt(1) << (bits - BigInt(1)));
+    const maxSigned = (BigInt(1) << (bits - BigInt(1))) - BigInt(1);
+    if (int < minSigned || int > maxSigned) {
+      throw new Error("Too big, Can't convert it to buffer with that padding.");
+    }
+    if (int < BigInt(0)) {
+      int = (BigInt(1) << bits) + int;
+    }
+  } else {
+    const maxUnsigned = (BigInt(1) << bits) - BigInt(1);
+    if (int > maxUnsigned) {
+      throw new Error("Too big, Can't convert it to buffer with that padding.");
+    }
   }
   const hex = int.toString(16).padStart(padding * 2, '0');
   let buffer = Buffer.from(hex, 'hex');
   if (litte) buffer = buffer.reverse();
-  if (isBellow && signed) {
-    if (litte) {
-      let isReminder = false;
-      if ((buffer as unknown as Uint8Array)[0]) (buffer as unknown as Uint8Array)[0] -= 1;
-      for (let b = 0; b < Buffer.byteLength(buffer); b++) {
-        if (!(buffer as unknown as Uint8Array)[b]) {
-          isReminder = true;
-          continue;
-        }
-        if (isReminder) {
-          (buffer as unknown as Uint8Array)[b] -= 1;
-          isReminder = false;
-        }
-        (buffer as unknown as Uint8Array)[b] = 255 - (buffer as unknown as Uint8Array)[b];
-      }
-    } else {
-      (buffer as unknown as Uint8Array)[Buffer.byteLength(buffer) - 1] =
-        256 - (buffer as unknown as Uint8Array)[Buffer.byteLength(buffer) - 1];
-      for (let b = 0; b < Buffer.byteLength(buffer); b++) {
-        (buffer as unknown as Uint8Array)[b] = 255 - (buffer as unknown as Uint8Array)[b];
-      }
-    }
-  }
   return buffer;
 }
 
@@ -173,7 +159,7 @@ export function bufferToBigint(
   signed: boolean = false,
 ): bigint {
   const length = Buffer.byteLength(buffer);
-  const value = little ? buffer.reverse().toString('hex') : buffer.toString('hex');
+  const value = little ? Buffer.from(buffer).reverse().toString('hex') : buffer.toString('hex');
   const _bigint = bigInt(value, 16);
   let bigint = BigInt(String(_bigint));
   if (signed && Math.floor(bigint.toString(2).length / 8) >= length) {
