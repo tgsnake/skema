@@ -62,15 +62,37 @@ export class Bytes extends TLObject {
    * @returns A promise resolving to the decoded Node.js Buffer.
    */
   static override async read(data: BytesIO, ..._args: Array<any>): Promise<Buffer> {
-    let length = (data.read(1) as unknown as Uint8Array)[0];
+    const lenPrefix = data.read(1);
+    if (Buffer.byteLength(lenPrefix) !== 1) {
+      throw new Error('Unexpected EOF while reading Bytes length prefix');
+    }
+    let length = (lenPrefix as unknown as Uint8Array)[0];
     if (length <= 253) {
       const x = data.read(length);
-      data.read(mod(-(length + 1), 4));
+      if (Buffer.byteLength(x) !== length) {
+        throw new Error(`Unexpected EOF: expected ${length} bytes, received ${Buffer.byteLength(x)}`);
+      }
+      const padding = mod(-(length + 1), 4);
+      const pad = data.read(padding);
+      if (Buffer.byteLength(pad) !== padding) {
+        throw new Error(`Unexpected EOF while reading ${padding} padding bytes`);
+      }
       return x;
     } else {
-      length = Number(bufferToBigint(data.read(3)));
+      const lenBuf = data.read(3);
+      if (Buffer.byteLength(lenBuf) !== 3) {
+        throw new Error('Unexpected EOF while reading 3-byte extended Bytes length');
+      }
+      length = Number(bufferToBigint(lenBuf));
       const x = data.read(length);
-      data.read(mod(-length, 4));
+      if (Buffer.byteLength(x) !== length) {
+        throw new Error(`Unexpected EOF: expected ${length} bytes, received ${Buffer.byteLength(x)}`);
+      }
+      const padding = mod(-length, 4);
+      const pad = data.read(padding);
+      if (Buffer.byteLength(pad) !== padding) {
+        throw new Error(`Unexpected EOF while reading ${padding} padding bytes`);
+      }
       return x;
     }
   }
